@@ -50,5 +50,5 @@ public final class ClienteEntity implements Serializable {
 
     @OneToOne(mappedBy = "cliente", cascade = {CascadeType.ALL}, orphanRemoval = true,
             fetch = FetchType.EAGER, targetEntity = EnderecoEntity.class)
-    private EnderecoEntity enderecos;
+    private EnderecoEntity endereco;
 }
