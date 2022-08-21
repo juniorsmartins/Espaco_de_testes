@@ -21,25 +21,25 @@ public final class EnderecoEntity implements Serializable {
     @Column(name = "endereco_id")
     private Long enderecoId;
 
-    @Column(name = "cep", nullable = false)
+    @Column(name = "cep", length = 10, nullable = false)
     private String cep;
 
-    @Column(name = "estado", nullable = false)
+    @Column(name = "estado", length = 100, nullable = false)
     private String estado;
 
-    @Column(name = "cidade", nullable = false)
+    @Column(name = "cidade",  length = 100, nullable = false)
     private String cidade;
 
-    @Column(name = "bairro", nullable = false)
+    @Column(name = "bairro",  length = 100, nullable = false)
     private String bairro;
 
-    @Column(name = "logradouro", nullable = false)
+    @Column(name = "logradouro", length = 150, nullable = false)
     private String logradouro;
 
     @Column(name = "numero")
     private int numero;
 
-    @Column(name = "complemento")
+    @Column(name = "complemento", length = 200)
     private String complemento;
 
     @OneToOne

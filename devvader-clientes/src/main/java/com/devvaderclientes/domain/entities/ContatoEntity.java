@@ -21,10 +21,10 @@ public final class ContatoEntity implements Serializable {
     @Column(name = "contato_id")
     private Long contatoId;
 
-    @Column(name = "fone")
+    @Column(name = "fone", length = 15)
     private String fone;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", length = 150, unique = true)
     private String email;
 
     @ManyToOne
