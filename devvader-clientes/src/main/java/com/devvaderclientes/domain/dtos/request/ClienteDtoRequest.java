@@ -2,10 +2,12 @@ package com.devvaderclientes.domain.dtos.request;
 
 import com.devvaderclientes.domain.entities.enuns.EscolaridadeEnum;
 import com.devvaderclientes.domain.entities.enuns.SexoEnum;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
+@Builder
 @Getter
 public final class ClienteDtoRequest {
 
