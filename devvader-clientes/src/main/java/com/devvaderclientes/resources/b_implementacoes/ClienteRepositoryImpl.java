@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Builder
@@ -30,21 +31,21 @@ public final class ClienteRepositoryImpl implements IClienteRepository {
 
     @Override
     public ClienteEntity salvarCliente(ClienteEntity clienteEntity) {
-        return null;
+        return clienteRepository.saveAndFlush(clienteEntity);
     }
 
     @Override
     public List<ClienteEntity> listarClientes() {
-        return null;
+        return clienteRepository.findAll();
     }
 
     @Override
-    public ClienteEntity consultarClientePorId(Long clienteId) {
-        return null;
+    public Optional<ClienteEntity> consultarClientePorId(Long id) {
+        return clienteRepository.findById(id);
     }
 
     @Override
     public void deletarCliente(ClienteEntity clienteEntity) {
-
+        clienteRepository.delete(clienteEntity);
     }
 }
