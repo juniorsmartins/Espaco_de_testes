@@ -2,8 +2,10 @@ package com.devvaderclientes.domain.dtos.request;
 
 import com.devvaderclientes.domain.entities.enuns.EscolaridadeEnum;
 import com.devvaderclientes.domain.entities.enuns.SexoEnum;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -13,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public final class ClienteDtoRequest {
 

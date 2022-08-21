@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -34,8 +35,8 @@ class ClienteControllerTest {
     public static final String ESTADO1 = "PB";
     public static final String CIDADE1 = "João Pessoa";
     public static final String BAIRRO1 = "Mangabeira";
-    public static final int NUMERO1 = 1840;
     public static final String LOGRADOURO1 = "Rua Comerciante Pedro Joaquim de Almeida";
+    public static final int NUMERO1 = 1840;
     public static final String COMPLEMENTO1 = "Edifício Blanc, apto 301";
 
     public static final String NOME1 = "Robert";
@@ -44,7 +45,7 @@ class ClienteControllerTest {
     public static final String CPF1 = "858.174.630-67";
 
     @Autowired
-    IClienteService iClienteService;
+    ClienteController clienteController;
 
     @Mock
     IClienteRepository iClienteRepository;
@@ -61,12 +62,14 @@ class ClienteControllerTest {
     void teste1_retornarPositivoQuando_cadastrar() {
         Mockito.when(iClienteRepository.saveAndFlush(Mockito.any())).thenReturn(clienteEntity1);
 
-        var response = iClienteService.cadastrar(clienteDtoRequest1);
+        var response = clienteController.cadastrar(clienteDtoRequest1);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(ResponseEntity.class, response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(ClienteDtoResponse.class, response.getBody());
+        Assertions.assertEquals(ClienteDtoResponse.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertEquals(NOME1, ((ClienteDtoResponse) response.getBody()).getNome());
     }
 
 
