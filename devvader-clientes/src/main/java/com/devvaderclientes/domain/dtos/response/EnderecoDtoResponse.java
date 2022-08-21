@@ -1,13 +1,12 @@
-package com.devvaderclientes.domain.dtos.request;
+package com.devvaderclientes.domain.dtos.response;
 
 import lombok.Builder;
-import lombok.Setter;
+import lombok.Getter;
 
 @Builder
-@Setter
-public final class EnderecoDtoRequest {
+@Getter
+public final class EnderecoDtoResponse {
 
-    private Long enderecoId;
     private String cep;
     private String estado;
     private String cidade;
