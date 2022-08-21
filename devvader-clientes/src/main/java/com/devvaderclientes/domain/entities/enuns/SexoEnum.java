@@ -1,4 +1,4 @@
-package com.devvaderclientes.domain.model.enuns;
+package com.devvaderclientes.domain.entities.enuns;
 
 import lombok.Getter;
 
