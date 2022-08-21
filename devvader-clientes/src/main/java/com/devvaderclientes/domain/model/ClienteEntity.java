@@ -1,7 +1,7 @@
-package com.devvaderclientes.model;
+package com.devvaderclientes.domain.model;
 
-import com.devvaderclientes.model.enuns.EscolaridadeEnum;
-import com.devvaderclientes.model.enuns.SexoEnum;
+import com.devvaderclientes.domain.model.enuns.EscolaridadeEnum;
+import com.devvaderclientes.domain.model.enuns.SexoEnum;
 import lombok.*;
 
 import javax.persistence.*;

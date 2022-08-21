@@ -1,4 +1,4 @@
-package com.devvaderclientes.model;
+package com.devvaderclientes.domain.model;
 
 import lombok.*;
 

@@ -1,6 +1,6 @@
-package com.devvaderclientes.repository;
+package com.devvaderclientes.resources.repository;
 
-import com.devvaderclientes.model.EnderecoEntity;
+import com.devvaderclientes.domain.model.EnderecoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long> {
