@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 public final class ClienteDtoResponse {
 
+    private Long clienteId;
     private String nome;
     private String sobrenome;
     private String cpf;

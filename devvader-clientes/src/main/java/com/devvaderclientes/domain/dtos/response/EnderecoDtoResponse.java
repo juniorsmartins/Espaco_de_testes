@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public final class EnderecoDtoResponse {
 
+    private Long enderecoId;
     private String cep;
     private String estado;
     private String cidade;

@@ -3,6 +3,7 @@ package com.devvaderclientes.application.controllers;
 import com.devvaderclientes.domain.dtos.request.ClienteDtoRequest;
 import com.devvaderclientes.domain.dtos.request.ContatoDtoRequest;
 import com.devvaderclientes.domain.dtos.request.EnderecoDtoRequest;
+import com.devvaderclientes.domain.dtos.response.ClienteDtoResponse;
 import com.devvaderclientes.domain.entities.ClienteEntity;
 import com.devvaderclientes.domain.entities.ContatoEntity;
 import com.devvaderclientes.domain.entities.EnderecoEntity;
