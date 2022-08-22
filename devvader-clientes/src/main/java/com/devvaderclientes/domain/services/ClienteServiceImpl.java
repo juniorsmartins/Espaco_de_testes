@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public final class ClienteServiceImpl implements IClienteService {
@@ -37,4 +38,23 @@ public final class ClienteServiceImpl implements IClienteService {
                 .created(URI.create("/".concat(String.valueOf(clienteDeSaida.getClienteId()))))
                 .body(clienteDeSaida);
     }
+
+    @Override
+    public ResponseEntity<?> lerTodos() {
+
+        return ResponseEntity.ok().body(iClienteRepository
+                .findAll()
+                .stream()
+                .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
+                .toList());
+    }
+
+    @Override
+    public ResponseEntity<?> consultarPorId(Long id) {
+        return iClienteRepository.findById(id)
+                .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
+                .orElseThrow(() -> new RecursoNaoEncontradoException.class);
+    }
+
+
 }

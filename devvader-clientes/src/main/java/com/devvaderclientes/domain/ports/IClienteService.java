@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 public interface IClienteService {
 
     ResponseEntity<?> cadastrar(ClienteDtoRequest clienteDtoRequest);
+    ResponseEntity<?> lerTodos();
+    ResponseEntity<?> consultarPorId(Long id);
 }
