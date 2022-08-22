@@ -24,15 +24,21 @@ public final class ControleDeExceptions {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> excecaoMethodNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
 
-        List<ApiDeErrorsDeBeanValidation> errosDeValidacao = new ArrayList<>();
+        List<ApiDeExceptionsDeBeanValidation> errosDeValidacao = new ArrayList<>();
         List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
 
         fieldErrors.forEach(erro -> {
             String mensagem = mensagemInternacionalizada.getMessage(erro, LocaleContextHolder.getLocale());
-            ApiDeErrorsDeBeanValidation erroPersonalizadoParaRetorno = new ApiDeErrorsDeBeanValidation(
+            ApiDeExceptionsDeBeanValidation erroPersonalizadoParaRetorno = new ApiDeExceptionsDeBeanValidation(
                     HttpStatus.BAD_REQUEST.toString(), mensagem, erro.getField(), erro.getCode());
             errosDeValidacao.add(erroPersonalizadoParaRetorno);
         });
         return ResponseEntity.badRequest().body(errosDeValidacao);
+    }
+
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiDeExceptionsGerais excecaoRecursoNaoEncontradoException(RecursoNaoEncontradoException recursoNaoEncontradoException) {
+        return new ApiDeExceptionsGerais(recursoNaoEncontradoException.getMessage(), HttpStatus.NOT_FOUND.toString());
     }
 }
