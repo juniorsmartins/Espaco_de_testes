@@ -3,6 +3,8 @@ package com.devvaderclientes.domain.services;
 import com.devvaderclientes.domain.dtos.request.ClienteDtoRequest;
 import com.devvaderclientes.domain.dtos.response.ClienteDtoResponse;
 import com.devvaderclientes.domain.entities.ClienteEntity;
+import com.devvaderclientes.domain.exceptions.MensagemPadronizada;
+import com.devvaderclientes.domain.exceptions.RecursoNaoEncontradoException;
 import com.devvaderclientes.domain.ports.IClienteService;
 import com.devvaderclientes.resources.repositories.IClienteRepository;
 import org.modelmapper.ModelMapper;
@@ -41,19 +43,23 @@ public final class ClienteServiceImpl implements IClienteService {
 
     @Override
     public ResponseEntity<?> lerTodos() {
-
-        return ResponseEntity.ok().body(iClienteRepository
-                .findAll()
-                .stream()
-                .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
-                .toList());
+        return ResponseEntity
+                .ok()
+                .body(iClienteRepository
+                        .findAll()
+                        .stream()
+                        .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
+                        .toList());
     }
 
     @Override
     public ResponseEntity<?> consultarPorId(Long id) {
-        return iClienteRepository.findById(id)
-                .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
-                .orElseThrow(() -> new RecursoNaoEncontradoException.class);
+        return ResponseEntity
+                .ok()
+                .body(iClienteRepository
+                        .findById(id)
+                        .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
+                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO)));
     }
 
 
