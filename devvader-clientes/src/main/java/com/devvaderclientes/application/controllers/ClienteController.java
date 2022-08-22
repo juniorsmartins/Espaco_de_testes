@@ -29,4 +29,9 @@ public class ClienteController {
     public ResponseEntity<?> consultarPorId(@PathVariable Long id) {
         return iClienteService.consultarPorId(id);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> atualizarPorId(@PathVariable Long id, @RequestBody @Valid ClienteDtoRequest clienteDtoRequest) {
+        return iClienteService.atualizarPorId(id, clienteDtoRequest);
+    }
 }

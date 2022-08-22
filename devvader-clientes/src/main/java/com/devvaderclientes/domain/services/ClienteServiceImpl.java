@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public final class ClienteServiceImpl implements IClienteService {
@@ -59,6 +58,23 @@ public final class ClienteServiceImpl implements IClienteService {
                 .body(iClienteRepository
                         .findById(id)
                         .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
+                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO)));
+    }
+
+    @Override
+    public ResponseEntity<?> atualizarPorId(Long id, ClienteDtoRequest clienteDtoRequest) {
+        return ResponseEntity
+                .ok()
+                .body(iClienteRepository.findById(id)
+                        .map(clienteEntity -> {
+                            var clienteAtual = modelMapper.map(clienteDtoRequest, ClienteEntity.class);
+                            clienteAtual.setClienteId(clienteEntity.getClienteId());
+                            clienteAtual.getEndereco().setEnderecoId(clienteEntity.getEndereco().getEnderecoId());
+                            clienteAtual.getEndereco().setCliente(clienteAtual);
+                            clienteEntity.getContatos().forEach(contatoEntity -> clienteEntity.getContatos().remove(contatoEntity));
+                            clienteAtual.getContatos().forEach(contatoEntity -> contatoEntity.setCliente(clienteAtual));
+                            return iClienteRepository.saveAndFlush(clienteAtual);
+                        }).map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
                         .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO)));
     }
 

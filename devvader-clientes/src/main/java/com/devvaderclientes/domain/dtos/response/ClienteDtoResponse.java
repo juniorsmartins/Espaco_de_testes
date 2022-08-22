@@ -2,6 +2,7 @@ package com.devvaderclientes.domain.dtos.response;
 
 import com.devvaderclientes.domain.entities.enuns.EscolaridadeEnum;
 import com.devvaderclientes.domain.entities.enuns.SexoEnum;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ClienteDtoResponse {
 
     private Long clienteId;

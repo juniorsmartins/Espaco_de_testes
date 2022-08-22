@@ -9,6 +9,8 @@ import com.devvaderclientes.domain.entities.ContatoEntity;
 import com.devvaderclientes.domain.entities.EnderecoEntity;
 import com.devvaderclientes.domain.entities.enuns.EscolaridadeEnum;
 import com.devvaderclientes.domain.entities.enuns.SexoEnum;
+import com.devvaderclientes.domain.exceptions.MensagemPadronizada;
+import com.devvaderclientes.domain.exceptions.RecursoNaoEncontradoException;
 import com.devvaderclientes.resources.repositories.IClienteRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +46,8 @@ class ClienteControllerTest {
     static final String SOBRENOME1 = "Martins";
     static final String DATA_NASCIMENTO1 = "17/06/1965";
     static final String CPF1 = "858.174.630-67";
+    public static final String EMAIL3 = "fulano@uol.com.br";
+    public static final String CPF3 = "187.056.180-53";
 
     @Autowired
     ClienteController clienteController;
@@ -64,6 +68,7 @@ class ClienteControllerTest {
     void criadorDeCenariosParaTeste() {
         teste1();
         teste2();
+        teste5();
     }
 
     @Test
@@ -105,6 +110,61 @@ class ClienteControllerTest {
         Assertions.assertEquals(ClienteDtoResponse.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals(CLIENTE_ID, ((ClienteDtoResponse) response.getBody()).getClienteId());
+    }
+
+    @Test
+    void teste4_retornarRecursoNaoEncontradoExceptionQuando_consultarPorId() {
+        Mockito.when(iClienteRepository.findById(Mockito.anyLong())).thenThrow(RecursoNaoEncontradoException.class);
+
+        Throwable thrown =  org.assertj.core.api.Assertions.catchThrowable(() -> clienteController.consultarPorId(100L));
+        // Funcionamento equivocado - a exception está a retornar de forma errada. Não pela ApiDeExceptionsGerais
+        org.assertj.core.api.Assertions.assertThat(thrown)
+                .isInstanceOf(RecursoNaoEncontradoException.class)
+                .hasMessage(MensagemPadronizada.RECURSO_NAO_ENCONTRADO);
+    }
+
+    @Test
+    void teste5_retornarPositivoQuando_atualizarPorId() {
+        Mockito.when(iClienteRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(clienteEntity1));
+        Mockito.when(iClienteRepository.saveAndFlush(Mockito.any())).thenReturn(clienteEntity1);
+
+        var response = clienteController.atualizarPorId(CLIENTE_ID, clienteDtoRequest2);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(ClienteDtoResponse.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(CLIENTE_ID, ((ClienteDtoResponse) response.getBody()).getClienteId());
+        Assertions.assertEquals(clienteEntity1.getNome(), ((ClienteDtoResponse) response.getBody()).getNome());
+    }
+
+    void teste5() {
+        var contatoDtoRequest1 = ContatoDtoRequest.builder()
+                .fone(FONE2)
+                .email(EMAIL3)
+                .build();
+
+        var enderecoDtoRequest1 = EnderecoDtoRequest.builder()
+                .cep(CEP1)
+                .estado(ESTADO1)
+                .cidade(CIDADE1)
+                .bairro(BAIRRO1)
+                .numero(NUMERO1)
+                .logradouro(LOGRADOURO1)
+                .complemento(COMPLEMENTO1)
+                .build();
+
+        clienteDtoRequest2 = ClienteDtoRequest.builder()
+                .nome(NOME1)
+                .sobrenome(SOBRENOME1)
+                .cpf(CPF3)
+                .sexo(SexoEnum.MASCULINO)
+                .escolaridade(EscolaridadeEnum.DOUTORADO)
+                .dataNascimento(DATA_NASCIMENTO1)
+                .contatos(List.of(contatoDtoRequest1))
+                .endereco(enderecoDtoRequest1)
+                .build();
     }
 
     void teste2() {

@@ -1,5 +1,6 @@
 package com.devvaderclientes.domain.dtos.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @Builder
@@ -7,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ContatoDtoResponse {
 
     private Long contatoId;
