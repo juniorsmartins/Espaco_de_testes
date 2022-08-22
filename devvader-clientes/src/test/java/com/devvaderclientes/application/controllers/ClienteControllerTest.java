@@ -9,8 +9,6 @@ import com.devvaderclientes.domain.entities.ContatoEntity;
 import com.devvaderclientes.domain.entities.EnderecoEntity;
 import com.devvaderclientes.domain.entities.enuns.EscolaridadeEnum;
 import com.devvaderclientes.domain.entities.enuns.SexoEnum;
-import com.devvaderclientes.domain.exceptions.ApiDeErrorsDeBeanValidation;
-import com.devvaderclientes.domain.ports.IClienteService;
 import com.devvaderclientes.resources.repositories.IClienteRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
