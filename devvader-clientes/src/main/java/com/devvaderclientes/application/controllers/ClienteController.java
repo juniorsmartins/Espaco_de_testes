@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(value = "/v1/clientes")
@@ -16,22 +17,27 @@ public class ClienteController {
     private IClienteService iClienteService;
 
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody @Valid ClienteDtoRequest clienteDtoRequest) {
-        return iClienteService.cadastrar(clienteDtoRequest);
+    public ResponseEntity<?> criar(@RequestBody @Valid ClienteDtoRequest clienteDtoRequest) {
+        return iClienteService.criar(clienteDtoRequest);
     }
 
     @GetMapping
-    public ResponseEntity<?> lerTodos() {
-        return iClienteService.lerTodos();
+    public ResponseEntity<?> ler() {
+        return iClienteService.ler();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> consultarPorId(@PathVariable Long id) {
+    public ResponseEntity<?> consultarPorId(@PathVariable @NotNull Long id) {
         return iClienteService.consultarPorId(id);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> atualizarPorId(@PathVariable Long id, @RequestBody @Valid ClienteDtoRequest clienteDtoRequest) {
+    public ResponseEntity<?> atualizarPorId(@PathVariable @NotNull Long id, @RequestBody @Valid ClienteDtoRequest clienteDtoRequest) {
         return iClienteService.atualizarPorId(id, clienteDtoRequest);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deletarPorId(@PathVariable @NotNull Long id) {
+        return iClienteService.deletarPorId(id);
     }
 }

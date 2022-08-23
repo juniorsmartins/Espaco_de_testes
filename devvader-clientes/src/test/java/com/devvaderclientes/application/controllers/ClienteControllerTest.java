@@ -57,6 +57,7 @@ class ClienteControllerTest {
 
     private ClienteEntity clienteEntity1;
     private ClienteEntity clienteEntity2;
+    private ClienteEntity clienteEntity3;
     private ContatoEntity contatoEntity1;
     private EnderecoEntity enderecoEntity1;
     private ClienteDtoRequest clienteDtoRequest1;
@@ -69,13 +70,14 @@ class ClienteControllerTest {
         teste1();
         teste2();
         teste5();
+        teste6();
     }
 
     @Test
     void teste1_retornarPositivoQuando_cadastrar() {
         Mockito.when(iClienteRepository.saveAndFlush(Mockito.any())).thenReturn(clienteEntity1);
 
-        var response = clienteController.cadastrar(clienteDtoRequest1);
+        var response = clienteController.criar(clienteDtoRequest1);
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
@@ -89,7 +91,7 @@ class ClienteControllerTest {
     void teste2_retornarPositivoQuando_lerTodos() {
         Mockito.when(iClienteRepository.findAll()).thenReturn(List.of(clienteEntity1, clienteEntity2));
 
-        var response = clienteController.lerTodos();
+        var response = clienteController.ler();
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
@@ -137,6 +139,28 @@ class ClienteControllerTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals(CLIENTE_ID, ((ClienteDtoResponse) response.getBody()).getClienteId());
         Assertions.assertEquals(clienteEntity1.getNome(), ((ClienteDtoResponse) response.getBody()).getNome());
+    }
+
+    @Test
+    void teste6_retornarPositivoQuando_deletarPorId() {
+        Mockito.when(iClienteRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(clienteEntity3));
+//        Mockito.doNothing().when(iClienteRepository.delete(Mockito.any())).getMock();
+
+   //     var response = clienteController.deletarPorId(CLIENTE_ID);
+    }
+
+    void teste6() {
+        clienteEntity3 = ClienteEntity.builder()
+                .clienteId(CLIENTE_ID)
+                .nome(NOME1)
+                .sobrenome(SOBRENOME1)
+                .cpf(CPF1)
+                .sexo(SexoEnum.MASCULINO)
+                .escolaridade(EscolaridadeEnum.DOUTORADO)
+                .dataNascimento(DATA_NASCIMENTO1)
+                .contatos(List.of(contatoEntity1))
+                .endereco(enderecoEntity1)
+                .build();
     }
 
     void teste5() {

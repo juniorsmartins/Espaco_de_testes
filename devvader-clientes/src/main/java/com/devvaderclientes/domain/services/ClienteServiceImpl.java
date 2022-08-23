@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.Comparator;
 import java.util.Optional;
 
 @Service
@@ -25,7 +26,7 @@ public final class ClienteServiceImpl implements IClienteService {
     private IClienteRepository iClienteRepository;
 
     @Override
-    public ResponseEntity<?> cadastrar(ClienteDtoRequest clienteDtoRequest) {
+    public ResponseEntity<?> criar(ClienteDtoRequest clienteDtoRequest) {
         final var clienteDeSaida = Optional.of(clienteDtoRequest)
                 .map(clienteDeEntrada -> modelMapper.map(clienteDeEntrada, ClienteEntity.class))
                 .map(clienteNovo -> {
@@ -41,14 +42,16 @@ public final class ClienteServiceImpl implements IClienteService {
     }
 
     @Override
-    public ResponseEntity<?> lerTodos() {
+    public ResponseEntity<?> ler() {
         return ResponseEntity
                 .ok()
                 .body(iClienteRepository
                         .findAll()
                         .stream()
                         .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
-                        .toList());
+                        .sorted(Comparator.comparing(ClienteDtoResponse::getClienteId).reversed())
+                        .toList()
+                );
     }
 
     @Override
@@ -58,7 +61,8 @@ public final class ClienteServiceImpl implements IClienteService {
                 .body(iClienteRepository
                         .findById(id)
                         .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
-                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO)));
+                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO))
+                );
     }
 
     @Override
@@ -75,8 +79,26 @@ public final class ClienteServiceImpl implements IClienteService {
                             clienteAtual.getContatos().forEach(contatoEntity -> contatoEntity.setCliente(clienteAtual));
                             return iClienteRepository.saveAndFlush(clienteAtual);
                         }).map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
-                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO)));
+                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO))
+                );
     }
 
-
+    @Override
+    public ResponseEntity<?> deletarPorId(Long id) {
+        return ResponseEntity
+                .ok()
+                .body(iClienteRepository
+                        .findById(id)
+                        .map(clienteEntity -> {
+                            iClienteRepository.delete(clienteEntity);
+                            return iClienteRepository
+                                    .findAll()
+                                    .stream()
+                                    .map(cliente -> modelMapper.map(cliente, ClienteDtoResponse.class))
+                                    .sorted(Comparator.comparing(ClienteDtoResponse::getClienteId).reversed())
+                                    .toList();
+                        })
+                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO))
+                );
+    }
 }
