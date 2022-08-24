@@ -47,6 +47,7 @@ class NoticiaControllerTest {
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(NoticiaDtoOut.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertEquals(ID_CLIENTE, ((NoticiaDtoOut) response.getBody()).getNoticiaId());
     }
 
     void teste1() {
@@ -55,7 +56,7 @@ class NoticiaControllerTest {
                 .titulo(TITULO)
                 .linhaFina(LINHA_FINA)
                 .texto(TEXTO)
-                .idCliente(ID_CLIENTE)
+                .cliente(ID_CLIENTE)
                 .build();
 
         noticiaEntity1 = NoticiaEntity.builder()
@@ -63,7 +64,7 @@ class NoticiaControllerTest {
                 .titulo(TITULO)
                 .linhaFina(LINHA_FINA)
                 .texto(TEXTO)
-                .idCliente(ID_CLIENTE)
+                .cliente(ID_CLIENTE)
                 .build();
     }
 }

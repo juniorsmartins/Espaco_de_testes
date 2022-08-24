@@ -35,6 +35,14 @@
 		</dependency>
 
 
+		<!-- Comunicação Microservices Dependências -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>3.1.3</version>
+		</dependency>
+
+
 		<!-- ORM e Database Dependências -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

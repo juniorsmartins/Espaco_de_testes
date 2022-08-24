@@ -37,5 +37,5 @@ public final class NoticiaEntity implements Serializable {
     private String texto;
 
     @Column(name = "id_cliente", nullable = false)
-    private Long idCliente;
+    private Long cliente;
 }

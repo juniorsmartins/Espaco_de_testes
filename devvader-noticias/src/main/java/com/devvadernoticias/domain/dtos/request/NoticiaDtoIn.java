@@ -33,5 +33,5 @@ public final class NoticiaDtoIn {
 
     @NotNull
     @Positive
-    private Long idCliente;
+    private Long cliente;
 }

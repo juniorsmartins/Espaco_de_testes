@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public final class NoticiaService implements INoticiaService {
+public final class NoticiaServiceImpl implements INoticiaService {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -32,7 +32,11 @@ public final class NoticiaService implements INoticiaService {
         final var noticiaDeSaida = Optional.of(noticiaDtoIn)
                 .map(noticiaDeEntrada -> modelMapper.map(noticiaDeEntrada, NoticiaEntity.class))
                 .map(noticiaEntityParaSalvar -> {
-                    Optional.of(devVaderClientes.consultarClientePorId(noticiaEntityParaSalvar.getCliente())).orElseThrow();
+
+                    Optional.of(devVaderClientes.consultarClientePorId(noticiaEntityParaSalvar.getCliente())
+                            .getBody())
+                            .orElseThrow();
+
                     return iNoticiaRepository.saveAndFlush(noticiaEntityParaSalvar);})
                 .map(noticiaEntitySalva -> modelMapper.map(noticiaEntitySalva, NoticiaDtoOut.class))
                 .orElseThrow();
