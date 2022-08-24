@@ -50,10 +50,10 @@ class ClienteControllerTest {
     public static final String CPF3 = "187.056.180-53";
 
     @Autowired
-    ClienteController clienteController;
+    private ClienteController clienteController;
 
     @Mock
-    IClienteRepository iClienteRepository;
+    private IClienteRepository iClienteRepository;
 
     private ClienteEntity clienteEntity1;
     private ClienteEntity clienteEntity2;
@@ -74,7 +74,7 @@ class ClienteControllerTest {
     }
 
     @Test
-    void teste1_retornarPositivoQuando_cadastrar() {
+    void teste1_retornarPositivoQuando_criar() {
         Mockito.when(iClienteRepository.saveAndFlush(Mockito.any())).thenReturn(clienteEntity1);
 
         var response = clienteController.criar(clienteDtoRequest1);
@@ -88,7 +88,7 @@ class ClienteControllerTest {
     }
 
     @Test
-    void teste2_retornarPositivoQuando_lerTodos() {
+    void teste2_retornarPositivoQuando_ler() {
         Mockito.when(iClienteRepository.findAll()).thenReturn(List.of(clienteEntity1, clienteEntity2));
 
         var response = clienteController.ler();
