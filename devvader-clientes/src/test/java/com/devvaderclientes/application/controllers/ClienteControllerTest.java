@@ -11,7 +11,7 @@ import com.devvaderclientes.domain.entities.enuns.EscolaridadeEnum;
 import com.devvaderclientes.domain.entities.enuns.SexoEnum;
 import com.devvaderclientes.domain.exceptions.MensagemPadronizada;
 import com.devvaderclientes.domain.exceptions.RecursoNaoEncontradoException;
-import com.devvaderclientes.resources.repositories.IClienteRepository;
+import com.devvaderclientes.infra.repositories.IClienteRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

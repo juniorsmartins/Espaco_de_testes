@@ -1,4 +1,4 @@
-package com.devvaderclientes.resources.repositories;
+package com.devvaderclientes.infra.repositories;
 
 import com.devvaderclientes.domain.entities.EnderecoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

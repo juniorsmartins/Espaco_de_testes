@@ -6,7 +6,7 @@ import com.devvaderclientes.domain.entities.ClienteEntity;
 import com.devvaderclientes.domain.exceptions.MensagemPadronizada;
 import com.devvaderclientes.domain.exceptions.RecursoNaoEncontradoException;
 import com.devvaderclientes.domain.ports.IClienteService;
-import com.devvaderclientes.resources.repositories.IClienteRepository;
+import com.devvaderclientes.infra.repositories.IClienteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
