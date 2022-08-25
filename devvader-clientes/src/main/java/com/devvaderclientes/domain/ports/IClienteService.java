@@ -7,7 +7,7 @@ public interface IClienteService {
 
     ResponseEntity<?> criar(ClienteDtoRequest clienteDtoRequest);
     ResponseEntity<?> ler();
-    ResponseEntity<?> consultarPorId(Long id);
+    ResponseEntity<?> consultarDetalhadoPorId(Long id);
     ResponseEntity<?> atualizarPorId(Long id, ClienteDtoRequest clienteDtoRequest);
     ResponseEntity<?> deletarPorId(Long id);
 }

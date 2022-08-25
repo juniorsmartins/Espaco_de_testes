@@ -104,7 +104,7 @@ class ClienteControllerTest {
     void teste3_retornarPositivoQuando_consultarPorId() {
         Mockito.when(iClienteRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(clienteEntity1));
 
-        var response = clienteController.consultarPorId(CLIENTE_ID);
+        var response = clienteController.consultarDetalhadoPorId(CLIENTE_ID);
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
@@ -118,7 +118,7 @@ class ClienteControllerTest {
     void teste4_retornarRecursoNaoEncontradoExceptionQuando_consultarPorId() {
         Mockito.when(iClienteRepository.findById(Mockito.anyLong())).thenThrow(RecursoNaoEncontradoException.class);
 
-        Throwable thrown =  org.assertj.core.api.Assertions.catchThrowable(() -> clienteController.consultarPorId(100L));
+        Throwable thrown =  org.assertj.core.api.Assertions.catchThrowable(() -> clienteController.consultarDetalhadoPorId(100L));
         // Funcionamento equivocado - a exception está a retornar de forma errada. Não pela ApiDeExceptionsGerais
         org.assertj.core.api.Assertions.assertThat(thrown)
                 .isInstanceOf(RecursoNaoEncontradoException.class)

@@ -2,16 +2,17 @@ package com.devvaderclientes.domain.services;
 
 import com.devvaderclientes.domain.dtos.request.ClienteDtoRequest;
 import com.devvaderclientes.domain.dtos.response.ClienteDtoResponse;
+import com.devvaderclientes.domain.dtos.response.ClienteDtoResponseDetalhado;
 import com.devvaderclientes.domain.entities.ClienteEntity;
 import com.devvaderclientes.domain.exceptions.MensagemPadronizada;
 import com.devvaderclientes.domain.exceptions.RecursoNaoEncontradoException;
+import com.devvaderclientes.domain.http.IDevVaderNoticias;
 import com.devvaderclientes.domain.ports.IClienteService;
 import com.devvaderclientes.infra.repositories.IClienteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.net.URI;
 import java.util.Comparator;
 import java.util.Optional;
@@ -24,6 +25,9 @@ public final class ClienteServiceImpl implements IClienteService {
 
     @Autowired
     private IClienteRepository iClienteRepository;
+
+    @Autowired
+    private IDevVaderNoticias iDevVaderNoticias;
 
     @Override
     public ResponseEntity<?> criar(ClienteDtoRequest clienteDtoRequest) {
@@ -55,7 +59,22 @@ public final class ClienteServiceImpl implements IClienteService {
     }
 
     @Override
-    public ResponseEntity<?> consultarPorId(Long id) {
+    public ResponseEntity<?> consultarDetalhadoPorId(Long id) {
+        return ResponseEntity
+                .ok()
+                .body(iClienteRepository
+                        .findById(id)
+                        .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponseDetalhado.class))
+                        .map(clienteDtoResponseDetalhado -> {
+                            clienteDtoResponseDetalhado.setNoticias(iDevVaderNoticias.buscarNoticiasPorIdDoCliente(
+                                    clienteDtoResponseDetalhado.getClienteId()));
+                            return clienteDtoResponseDetalhado;
+                        })
+                        .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO))
+                );
+    }
+
+    private ResponseEntity<?> consultarDetalhadoPorIdPendenteDeIntegracao(Long id, Exception e) {
         return ResponseEntity
                 .ok()
                 .body(iClienteRepository

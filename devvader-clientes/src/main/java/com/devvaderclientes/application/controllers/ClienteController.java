@@ -28,8 +28,8 @@ public class ClienteController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> consultarPorId(@PathVariable @NotNull Long id) {
-        return iClienteService.consultarPorId(id);
+    public ResponseEntity<?> consultarDetalhadoPorId(@PathVariable @NotNull Long id) {
+        return iClienteService.consultarDetalhadoPorId(id);
     }
 
     @PutMapping(value = "/{id}")

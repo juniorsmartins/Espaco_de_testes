@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,4 +46,14 @@ public final class NoticiaServiceImpl implements INoticiaService {
                 .created(URI.create("/".concat(String.valueOf(noticiaDeSaida.getNoticiaId()))))
                 .body(noticiaDeSaida);
     }
+
+    @Override
+    public List<NoticiaDtoOut> buscarNoticiasPorIdDoCliente(Long id) {
+        return iNoticiaRepository.findAllByCliente(id)
+                .stream()
+                .map(noticiaEntity -> modelMapper.map(noticiaEntity, NoticiaDtoOut.class))
+                .toList();
+    }
+
+
 }
