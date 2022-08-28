@@ -42,7 +42,6 @@ public final class ClienteServiceImpl implements IClienteService {
                 .map(clienteNovo -> {
                     clienteNovo.getContatos().forEach(contatoEntity -> contatoEntity.setCliente(clienteNovo));
                     clienteNovo.getEndereco().setCliente(clienteNovo);
-                    rabbitMQService.enviarMensagem(RabbitMQConstantes.FILA_ESTOQUE, clienteNovo);
                     return iClienteRepository.saveAndFlush(clienteNovo);})
                 .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
                 .orElseThrow();
