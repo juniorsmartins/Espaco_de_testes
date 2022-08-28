@@ -8,7 +8,10 @@ import com.devvaderclientes.domain.exceptions.MensagemPadronizada;
 import com.devvaderclientes.domain.exceptions.RecursoNaoEncontradoException;
 import com.devvaderclientes.domain.http.IDevVaderNoticias;
 import com.devvaderclientes.domain.ports.IClienteService;
+import com.devvaderclientes.domain.rabbitmq.RabbitMQConstantes;
+import com.devvaderclientes.domain.rabbitmq.RabbitMQService;
 import com.devvaderclientes.infra.repositories.IClienteRepository;
+import com.netflix.discovery.converters.Auto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,9 @@ public final class ClienteServiceImpl implements IClienteService {
     @Autowired
     private IDevVaderNoticias iDevVaderNoticias;
 
+    @Autowired
+    private RabbitMQService rabbitMQService;
+
     @Override
     public ResponseEntity<?> criar(ClienteDtoRequest clienteDtoRequest) {
         final var clienteDeSaida = Optional.of(clienteDtoRequest)
@@ -36,6 +42,7 @@ public final class ClienteServiceImpl implements IClienteService {
                 .map(clienteNovo -> {
                     clienteNovo.getContatos().forEach(contatoEntity -> contatoEntity.setCliente(clienteNovo));
                     clienteNovo.getEndereco().setCliente(clienteNovo);
+                    rabbitMQService.enviarMensagem(RabbitMQConstantes.FILA_ESTOQUE, clienteNovo);
                     return iClienteRepository.saveAndFlush(clienteNovo);})
                 .map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
                 .orElseThrow();
@@ -96,6 +103,7 @@ public final class ClienteServiceImpl implements IClienteService {
                             clienteAtual.getEndereco().setCliente(clienteAtual);
                             clienteEntity.getContatos().forEach(contatoEntity -> clienteEntity.getContatos().remove(contatoEntity));
                             clienteAtual.getContatos().forEach(contatoEntity -> contatoEntity.setCliente(clienteAtual));
+                            rabbitMQService.enviarMensagem(RabbitMQConstantes.FILA_ESTOQUE, clienteAtual);
                             return iClienteRepository.saveAndFlush(clienteAtual);
                         }).map(clienteEntity -> modelMapper.map(clienteEntity, ClienteDtoResponse.class))
                         .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadronizada.RECURSO_NAO_ENCONTRADO))
