@@ -11,5 +11,4 @@ public class DevvaderEurekaServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DevvaderEurekaServerApplication.class, args);
 	}
-
 }
