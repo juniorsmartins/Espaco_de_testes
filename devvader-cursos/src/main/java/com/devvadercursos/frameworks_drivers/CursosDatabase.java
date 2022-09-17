@@ -1,4 +1,6 @@
 package com.devvadercursos.frameworks_drivers;
 
-public interface CursosDatabase {
+import com.devvadercursos.entities.Entidade;
+
+public interface CursosDatabase<E extends Entidade<ID>, ID> {
 }
