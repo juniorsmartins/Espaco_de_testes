@@ -1,15 +1,15 @@
 package com.devvadercursos.usecases;
 
-import com.devvadercursos.entities.Entidade;
 import com.devvadercursos.usecases.dtos.request.DTOIn;
+import com.devvadercursos.usecases.dtos.response.DTOOut;
 import org.springframework.http.ResponseEntity;
 
 import java.awt.print.Pageable;
 
-public interface CursosService<T extends Entidade<ID>, DTO extends DTOIn<ID>, ID> {
+public interface CursosService<IN extends DTOIn<ID>, OUT extends DTOOut<ID>, ID> {
 
-    ResponseEntity<?> cadastrar(DTO dtoIn);
-    ResponseEntity<?> buscarTodos(Pageable paginacao, DTO filtro);
-    ResponseEntity<?> atualizar(Long id, DTO dtoIn);
-    void deletar(Long id);
+    ResponseEntity<OUT> cadastrar(IN dtoIn);
+    ResponseEntity<?> buscarTodos(Pageable paginacao, IN filtro);
+    ResponseEntity<OUT> atualizar(ID id, IN dtoIn);
+    void deletar(ID id);
 }

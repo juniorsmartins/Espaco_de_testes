@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class InstituicaoDTOOut {
+public final class InstituicaoDTOOut implements DTOOut<Long> {
 
     private Long id;
     private String nome;

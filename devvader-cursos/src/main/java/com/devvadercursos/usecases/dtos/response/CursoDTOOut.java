@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class CursoDTOOut {
+public final class CursoDTOOut implements DTOOut<Long> {
 
     private Long id;
     private String nome;

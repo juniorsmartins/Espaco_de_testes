@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class ValidacaoDTOOut {
+public final class ValidacaoDTOOut implements DTOOut<Long> {
 
     private Long id;
     private String linkCertificado;
