@@ -7,6 +7,9 @@ import com.devvadercursos.usecases.dtos.response.CursoDTOOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 
@@ -21,6 +24,7 @@ public class CursosServiceImpl implements CursosService<CursoDTOIn, Curso, Curso
         return cursosDatabase;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTOOut> cadastrar(CursoDTOIn dtoIn) {
         return null;
@@ -31,6 +35,7 @@ public class CursosServiceImpl implements CursosService<CursoDTOIn, Curso, Curso
         return null;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTOOut> atualizar(Long id, CursoDTOIn dtoIn) {
         return null;
