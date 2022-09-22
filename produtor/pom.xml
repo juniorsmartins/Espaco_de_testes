@@ -31,6 +31,11 @@
 			<artifactId>spring-rabbit</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.librabbitmq</groupId>
+			<artifactId>librabbitmq</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -43,6 +48,7 @@
 			<artifactId>spring-rabbit-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>

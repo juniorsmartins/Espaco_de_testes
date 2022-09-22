@@ -5,14 +5,12 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.stereotype.Component;
+import rabbitmq.ConstantesRabbitMQ;
 
 import javax.annotation.PostConstruct;
 
 @Component
 public class RabbitMQConnection {
-
-    public static final String FILA_NUM1 = "FILA_NUM1";
-    public static final String FILA_NUM2 = "FILA_NUM2";
 
     private static final String NOME_EXCHANGE = "amq.direct";
 
@@ -36,8 +34,8 @@ public class RabbitMQConnection {
 
     @PostConstruct
     private void adiciona() {
-        Queue filaNum1 = this.fila(FILA_NUM1);
-        Queue filaNum2 = this.fila(FILA_NUM2);
+        Queue filaNum1 = this.fila(ConstantesRabbitMQ.FILA_NUM1);
+        Queue filaNum2 = this.fila(ConstantesRabbitMQ.FILA_NUM2);
 
         DirectExchange trocaFila = this.trocaDireta();
 

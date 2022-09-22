@@ -1,11 +1,11 @@
-package com.rabbitmq.produtor.dtos;
+package dtos;
 
 import java.io.Serializable;
 
-public class PrecoDTO implements Serializable {
+public class EstoqueDTO implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
     public String codigo;
-    public double preco;
+    public int quantidade;
 }
