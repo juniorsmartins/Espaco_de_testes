@@ -1,23 +1,64 @@
 package io.produtor3.configs;
 
 import io.produtor3.uteis.RabbitMQConstantes;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Exchange;
-import org.springframework.amqp.core.ExchangeBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.core.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class RabbitMQConfig {
 
-    @Autowired
-    private AmqpAdmin amqpAdmin;
-
-    public DirectExchange criarCaixaDeCorreio() {
+    @Bean
+    public Exchange criarCarteiro() {
         return ExchangeBuilder
-                .directExchange(RabbitMQConstantes.NOME_EXCHANGE_PROJETO)
+                .directExchange(RabbitMQConstantes.EXCHANGE_PROJETO)
                 .durable(true)
                 .build();
     }
 
+    @Bean
+    public Queue enderecoDeDestinoParaCreate() {
+        return QueueBuilder
+                .durable(RabbitMQConstantes.FILA_CREATE_PROJETO)
+                .build();
+    }
+
+    @Bean
+    public Queue enderecoDeDestinoParaUpdate() {
+        return QueueBuilder
+                .durable(RabbitMQConstantes.FILA_UPDATE_PROJETO)
+                .build();
+    }
+
+    @Bean
+    public Queue enderecoDeDestinoParaDelete() {
+        return QueueBuilder
+                .durable(RabbitMQConstantes.FILA_DELETE_PROJETO)
+                .build();
+    }
+
+    @Bean
+    public Binding criarRotaDeEntregaParaCreate() {
+        return BindingBuilder.bind(enderecoDeDestinoParaCreate())
+                .to(criarCarteiro())
+                .with(RabbitMQConstantes.ROTA_CREATE_PROJETO)
+                .noargs();
+    }
+
+    @Bean
+    public Binding criarRotaDeEntregaParaUpdate() {
+        return BindingBuilder.bind(enderecoDeDestinoParaUpdate())
+                .to(criarCarteiro())
+                .with(RabbitMQConstantes.ROTA_UPDATE_PROJETO)
+                .noargs();
+    }
+
+    @Bean
+    public Binding criarRotaDeEntregaParaDelete() {
+        return BindingBuilder.bind(enderecoDeDestinoParaDelete())
+                .to(criarCarteiro())
+                .with(RabbitMQConstantes.ROTA_DELETE_PROJETO)
+                .noargs();
+    }
 
 }
