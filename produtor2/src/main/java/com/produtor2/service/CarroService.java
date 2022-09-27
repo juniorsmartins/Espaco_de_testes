@@ -36,7 +36,9 @@ public final class CarroService {
                 .map(carDTO -> modelMapper.map(carDTO, Carro.class))
                 .map(carEntity -> carroRepository.save(carEntity))
                 .map(carEntity -> modelMapper.map(carEntity, CarroDTO.class))
-                .map(carDTO -> {rabbitTemplate.convertAndSend(ConstantesRabbitMQ.NOME_FILA_CREATE, carDTO); return carDTO;})
+                .map(carDTO -> {
+                    rabbitTemplate.convertAndSend(ConstantesRabbitMQ.NOME_FILA_CREATE, carDTO);
+                    return carDTO;})
                 .map(carDTO -> ResponseEntity.created(URI.create("/" + carDTO.getId())).body(carDTO))
                 .orElseThrow();
     }
