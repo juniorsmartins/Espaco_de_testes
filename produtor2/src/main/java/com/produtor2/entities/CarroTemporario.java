@@ -6,14 +6,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "carros")
+@Table(name = "carros_temp")
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public final class Carro implements Serializable {
+public final class CarroTemporario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

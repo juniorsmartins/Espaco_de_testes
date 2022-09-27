@@ -3,6 +3,7 @@ package com.produtor2.rabbitmq;
 import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import rabbitmq.ConstantesRabbitMQ;
 
 import javax.annotation.PostConstruct;
 
@@ -12,19 +13,9 @@ public class ConnectionRabbitMQConfig {
     @Autowired
     private AmqpAdmin amqpAdmin;
 
-    public static final String NOME_EXCHANGE = "amq.direct";
-
-    public static final String NOME_FILA_CREATE = "FILA_CREATE";
-    public static final String NOME_FILA_UPDATE = "FILA_UPDATE";
-    public static final String NOME_FILA_DELETE = "FILA_DELETE";
-
-    public static final String NOME_ROTA_CREATE = "ROTA_CREATE";
-    public static final String NOME_ROTA_UPDATE = "ROTA_UPDATE";
-    public static final String NOME_ROTA_DELETE = "ROTA_DELETE";
-
     public DirectExchange declararExchange() {
         return ExchangeBuilder
-                .directExchange(NOME_EXCHANGE)
+                .directExchange(ConstantesRabbitMQ.NOME_EXCHANGE)
                 .durable(true)
                 .build();
     }
@@ -46,13 +37,13 @@ public class ConnectionRabbitMQConfig {
     private void construirConnectionRabbitMQ() {
         DirectExchange directExchange = this.declararExchange();
 
-        Queue filaCreate = this.declararFila(NOME_FILA_CREATE);
-        Queue filaUpdate = this.declararFila(NOME_FILA_UPDATE);
-        Queue filaDelete = this.declararFila(NOME_FILA_DELETE);
+        Queue filaCreate = this.declararFila(ConstantesRabbitMQ.NOME_FILA_CREATE);
+        Queue filaUpdate = this.declararFila(ConstantesRabbitMQ.NOME_FILA_UPDATE);
+        Queue filaDelete = this.declararFila(ConstantesRabbitMQ.NOME_FILA_DELETE);
 
-        Binding rotaCreate = this.declararRelacionamentoEntreExchangeAndFila(directExchange, filaCreate, NOME_ROTA_CREATE);
-        Binding rotaUpdate = this.declararRelacionamentoEntreExchangeAndFila(directExchange, filaUpdate, NOME_ROTA_UPDATE);
-        Binding rotaDelete = this.declararRelacionamentoEntreExchangeAndFila(directExchange, filaDelete, NOME_ROTA_DELETE);
+        Binding rotaCreate = this.declararRelacionamentoEntreExchangeAndFila(directExchange, filaCreate, ConstantesRabbitMQ.NOME_ROTA_CREATE);
+        Binding rotaUpdate = this.declararRelacionamentoEntreExchangeAndFila(directExchange, filaUpdate, ConstantesRabbitMQ.NOME_ROTA_UPDATE);
+        Binding rotaDelete = this.declararRelacionamentoEntreExchangeAndFila(directExchange, filaDelete, ConstantesRabbitMQ.NOME_ROTA_DELETE);
 
         this.amqpAdmin.declareExchange(directExchange);
         this.amqpAdmin.declareQueue(filaCreate);
