@@ -17,6 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@ToString
 public final class ProjetoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;

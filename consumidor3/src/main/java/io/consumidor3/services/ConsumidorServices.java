@@ -3,9 +3,9 @@ package io.consumidor3.services;
 import io.consumidor3.dtos.ProjetoDTO;
 import io.consumidor3.uteis.RabbitMQConstantes;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public final class ConsumidorServices {
 
     @RabbitListener(queues = RabbitMQConstantes.FILA_CREATE_PROJETO)
