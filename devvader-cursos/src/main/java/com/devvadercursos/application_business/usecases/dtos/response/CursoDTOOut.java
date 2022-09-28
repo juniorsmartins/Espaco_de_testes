@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class CursoDTOOut extends Entidade<Long> implements Serializable {
+public final class CursoDTOOut extends DTOOut<Long> implements Serializable {
 
     private Long id;
     private String titulo;

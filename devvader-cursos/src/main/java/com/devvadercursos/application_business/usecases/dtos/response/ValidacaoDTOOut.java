@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class ValidacaoDTOOut extends Entidade<Long> implements Serializable {
+public final class ValidacaoDTOOut extends DTOOut<Long> implements Serializable {
 
     private Long id;
     private String linkCertificado;

@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class RegistroDTOIn extends Entidade<Long> implements Serializable {
+public final class RegistroDTOIn extends DTOIn<Long> implements Serializable {
 
     private Long id;
     private String linkCertificado;

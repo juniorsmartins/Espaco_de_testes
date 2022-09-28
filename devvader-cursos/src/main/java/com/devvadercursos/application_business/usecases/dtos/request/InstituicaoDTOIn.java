@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class InstituicaoDTOIn extends Entidade<Long> implements Serializable {
+public final class InstituicaoDTOIn extends DTOIn<Long> implements Serializable {
 
     private String nome;
     private Long cursoId;
