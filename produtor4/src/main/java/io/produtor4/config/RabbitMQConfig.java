@@ -28,7 +28,6 @@ public class RabbitMQConfig {
         return event -> rabbitAdmin.initialize();
     }
 
-
     // ----- Os dois métodos abaixo servem para o transporte de objetos complexos - E também precisam estar no consumidor
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {

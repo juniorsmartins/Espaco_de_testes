@@ -20,17 +20,16 @@ public class MensagemController {
     private RabbitTemplate rabbitTemplate;
 
     @PostMapping
-    public Mensagem create(@RequestBody Mensagem mensagem) {
-        Message message = new Message(mensagem.getAssunto().getBytes());
+    public Mensagem createString(@RequestBody Mensagem mensagem) {
+        Message message = new Message(mensagem.getAssunto().toString().getBytes());
         rabbitTemplate.send(RabbitMQConstantes.FILA_CREATE_MENSAGEM, message);
-        log.info("\n\n" + mensagem + "\n");
+        log.info("\n\n" + mensagem.getAssunto() + "\n" + mensagem.getDescricao() + "\n");
         return mensagem;
     }
 
     @PostMapping(value = "/v2")
-    public Mensagem create2(@RequestBody Mensagem mensagem) {
-        Message message = new Message(mensagem.getAssunto().getBytes());
-        rabbitTemplate.send(RabbitMQConstantes.FILA_CREATE_MENSAGEM, message);
+    public Mensagem createMensagem(@RequestBody Mensagem mensagem) {
+        rabbitTemplate.convertAndSend(RabbitMQConstantes.FILA_CREATE_MENSAGEM, mensagem);
         log.info("\n\n" + mensagem + "\n");
         return mensagem;
     }

@@ -1,4 +1,4 @@
-package io.produtor4.entities;
+package io.consumidor4.entities;
 
 import lombok.*;
 
@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Mensagem {
 
     private String assunto;
