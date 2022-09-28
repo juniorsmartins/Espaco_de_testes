@@ -12,11 +12,6 @@ public class ConsumidorListener {
 
     @RabbitListener(queues = FILA_CREATE_MENSAGEM)
     public void receberString(String assunto) {
-        System.out.println(assunto + "\n");
+        System.out.println(assunto);
     }
-
-//    @RabbitListener(queues = FILA_CREATE_MENSAGEM)
-//    public void receberMensagem(Mensagem mensagem) {
-//        System.out.println(mensagem + "\n");
-//    }
 }

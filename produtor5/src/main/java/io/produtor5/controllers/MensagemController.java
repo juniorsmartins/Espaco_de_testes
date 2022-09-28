@@ -1,9 +1,8 @@
-package io.produtor4.controllers;
+package io.produtor5.controllers;
 
-import io.produtor4.config.RabbitMQConstantes;
-import io.produtor4.entities.Mensagem;
+import io.produtor5.config.RabbitMQConstantes;
+import io.produtor5.entities.Mensagem;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +18,10 @@ public class MensagemController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @PostMapping
-    public Mensagem createString(@RequestBody Mensagem mensagem) {
-        Message message = new Message(mensagem.getAssunto().toString().getBytes());
-        rabbitTemplate.send(RabbitMQConstantes.FILA_CREATE_MENSAGEM, message);
-        log.info("\n\n" + mensagem.getAssunto() + "\n" + mensagem.getDescricao() + "\n");
+    @PostMapping(value = "/v2")
+    public Mensagem createMensagem(@RequestBody Mensagem mensagem) {
+        rabbitTemplate.convertAndSend(RabbitMQConstantes.FILA_CREATE_MENSAGEM2, mensagem);
+        log.info("\n" + mensagem);
         return mensagem;
     }
 }
