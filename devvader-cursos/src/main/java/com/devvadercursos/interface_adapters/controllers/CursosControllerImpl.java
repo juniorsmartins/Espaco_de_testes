@@ -1,9 +1,9 @@
-package com.devvadercursos.interfaces;
+package com.devvadercursos.interface_adapters.controllers;
 
-import com.devvadercursos.entities.Curso;
-import com.devvadercursos.usecases.CursosService;
-import com.devvadercursos.usecases.dtos.request.CursoDTOIn;
-import com.devvadercursos.usecases.dtos.request.DTOIn;
+import com.devvadercursos.enterprise_business.entities.Curso;
+import com.devvadercursos.application_business.usecases.CursosService;
+import com.devvadercursos.application_business.usecases.dtos.request.CursoDTOIn;
+import com.devvadercursos.interface_adapters.controllers.CursosController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;

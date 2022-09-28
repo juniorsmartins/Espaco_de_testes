@@ -1,9 +1,9 @@
-package com.devvadercursos.usecases;
+package com.devvadercursos.application_business.usecases;
 
-import com.devvadercursos.entities.Curso;
+import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.CursosDatabase;
-import com.devvadercursos.usecases.dtos.request.CursoDTOIn;
-import com.devvadercursos.usecases.dtos.response.CursoDTOOut;
+import com.devvadercursos.application_business.usecases.dtos.request.CursoDTOIn;
+import com.devvadercursos.application_business.usecases.dtos.response.CursoDTOOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

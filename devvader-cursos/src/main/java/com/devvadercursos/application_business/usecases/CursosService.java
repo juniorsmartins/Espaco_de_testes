@@ -1,9 +1,9 @@
-package com.devvadercursos.usecases;
+package com.devvadercursos.application_business.usecases;
 
-import com.devvadercursos.entities.Entidade;
+import com.devvadercursos.enterprise_business.entities.Entidade;
 import com.devvadercursos.frameworks_drivers.CursosDatabase;
-import com.devvadercursos.usecases.dtos.request.DTOIn;
-import com.devvadercursos.usecases.dtos.response.DTOOut;
+import com.devvadercursos.application_business.usecases.dtos.request.DTOIn;
+import com.devvadercursos.application_business.usecases.dtos.response.DTOOut;
 import org.springframework.http.ResponseEntity;
 
 import java.awt.print.Pageable;

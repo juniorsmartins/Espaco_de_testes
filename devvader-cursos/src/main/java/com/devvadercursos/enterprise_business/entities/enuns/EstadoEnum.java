@@ -1,4 +1,4 @@
-package com.devvadercursos.entities.enuns;
+package com.devvadercursos.enterprise_business.entities.enuns;
 
 public enum EstadoEnum {
     RS,

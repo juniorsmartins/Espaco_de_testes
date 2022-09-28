@@ -1,4 +1,4 @@
-package com.devvadercursos.entities;
+package com.devvadercursos.enterprise_business.entities;
 
 import lombok.*;
 

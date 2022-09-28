@@ -1,7 +1,7 @@
-package com.devvadercursos.interfaces;
+package com.devvadercursos.interface_adapters.controllers;
 
-import com.devvadercursos.entities.Entidade;
-import com.devvadercursos.usecases.dtos.request.DTOIn;
+import com.devvadercursos.enterprise_business.entities.Entidade;
+import com.devvadercursos.application_business.usecases.dtos.request.DTOIn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

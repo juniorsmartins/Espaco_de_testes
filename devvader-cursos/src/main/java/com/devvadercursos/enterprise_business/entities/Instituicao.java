@@ -1,4 +1,4 @@
-package com.devvadercursos.entities;
+package com.devvadercursos.enterprise_business.entities;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "registros")
+@Table(name = "instituicoes")
 @Builder
 @Getter
 @Setter
@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
-public final class Registro extends Entidade<Long> implements Serializable {
+public final class Instituicao extends Entidade<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,12 +23,9 @@ public final class Registro extends Entidade<Long> implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "link_certificado")
-    private String linkCertificado;
+    @Column(name = "nome", length = 150, nullable = false)
+    private String nome;
 
-    @Column(name = "numero_certificado")
-    private String numeroCertificado;
-
-    @Column(name = "curso_id")
+    @Column(name = "curso_id", nullable = false)
     private Long cursoId;
 }

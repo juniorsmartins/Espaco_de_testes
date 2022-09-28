@@ -1,20 +1,22 @@
-package com.devvadercursos.usecases.dtos.response;
+package com.devvadercursos.application_business.usecases.dtos.response;
 
+import com.devvadercursos.enterprise_business.entities.Entidade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Builder
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class CursoDTOOut implements DTOOut<Long> {
+public final class CursoDTOOut extends Entidade<Long> implements Serializable {
 
     private Long id;
-    private String nome;
+    private String titulo;
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private Long clienteId;

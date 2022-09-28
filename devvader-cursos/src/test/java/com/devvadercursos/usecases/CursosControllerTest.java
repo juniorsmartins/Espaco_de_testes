@@ -1,7 +1,7 @@
 package com.devvadercursos.usecases;
 
-import com.devvadercursos.interfaces.CursosControllerImpl;
-import com.devvadercursos.usecases.dtos.request.CursoDTOIn;
+import com.devvadercursos.interface_adapters.controllers.CursosControllerImpl;
+import com.devvadercursos.application_business.usecases.dtos.request.CursoDTOIn;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
