@@ -1,9 +1,9 @@
-package com.devvadercursos.application_business.usecases;
+package com.devvadercursos.application_business.usecases.services;
 
-import com.devvadercursos.enterprise_business.entities.Curso;
-import com.devvadercursos.frameworks_drivers.CursosDatabase;
 import com.devvadercursos.application_business.usecases.dtos.request.CursoDTOIn;
 import com.devvadercursos.application_business.usecases.dtos.response.CursoDTOOut;
+import com.devvadercursos.enterprise_business.entities.Curso;
+import com.devvadercursos.frameworks_drivers.CursosDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,22 +12,25 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
+import java.util.Optional;
 
 @Service
-public class CursosServiceImpl implements CursosService<CursoDTOIn, Curso, CursoDTOOut, Long> {
+public class CursosServiceImpl extends CursosService<CursoDTOIn, Curso, CursoDTOOut, Long> {
 
     @Autowired
     private CursosDatabase cursosDatabase;
 
-    @Override
-    public CursosDatabase<Curso, Long> getCursosDatabase() {
-        return cursosDatabase;
-    }
+//    @Override
+//    public CursosDatabase<Curso, Long> getCursosDatabase() {
+//        return cursosDatabase;
+//    }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTOOut> cadastrar(CursoDTOIn dtoIn) {
-        return null;
+        return Optional.of(dtoIn)
+                .map()
+                .orElseThrow();
     }
 
     @Override

@@ -1,24 +1,24 @@
 package com.devvadercursos.interface_adapters.controllers;
 
-import com.devvadercursos.enterprise_business.entities.Entidade;
 import com.devvadercursos.application_business.usecases.dtos.request.DTOIn;
+import com.devvadercursos.application_business.usecases.dtos.response.DTOOut;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.awt.print.Pageable;
 
-public abstract class CursosController<T extends Entidade<ID>, DTO extends DTOIn<ID>, ID> {
+public abstract class CursosController<REQUEST extends DTOIn<ID>, RESPONSE extends DTOOut<ID>, ID> {
 
     @PostMapping
-    abstract ResponseEntity<?> cadastrar(@RequestBody @Valid DTO dto);
+    abstract ResponseEntity<RESPONSE> cadastrar(@RequestBody @Valid REQUEST dto);
 
     @GetMapping
-    abstract ResponseEntity<?> buscarTodos(Pageable paginacao, @RequestParam(required = false) DTO filtro);
+    abstract ResponseEntity<?> buscarTodos(Pageable paginacao, @RequestParam(required = false) REQUEST filtro);
 
     @PutMapping
-    abstract ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody @Valid DTO dto);
+    abstract ResponseEntity<RESPONSE> atualizar(@PathVariable ID id, @RequestBody @Valid REQUEST dto);
 
     @DeleteMapping
-    abstract void deletar(@PathVariable Long id);
+    abstract void deletar(@PathVariable ID id);
 }
