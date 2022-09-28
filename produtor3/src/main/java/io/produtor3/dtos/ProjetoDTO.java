@@ -6,7 +6,6 @@ import io.produtor3.entities.enuns.LinguagemEnum;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -17,6 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@ToString
 public final class ProjetoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,12 +30,12 @@ public final class ProjetoDTO implements Serializable {
     @Length(min = 8)
     private String descricao;
 
-    @NotBlank
+    @NotNull
     private LinguagemEnum linguagem;
 
-    @NotBlank
+    @NotNull
     private FrameworkEnum framework;
 
-    @NotBlank
+    @NotNull
     private DatabaseEnum database;
 }
