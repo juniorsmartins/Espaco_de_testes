@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "instituicoes")
+@Table(name = "registros")
 @Builder
 @Getter
 @Setter
@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
-public final class Instituicao extends Entidade<Long> implements Serializable {
+public final class Registro extends Entidade<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,9 +23,12 @@ public final class Instituicao extends Entidade<Long> implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nome", length = 150, nullable = false)
-    private String nome;
+    @Column(name = "link_certificado")
+    private String linkCertificado;
 
-    @Column(name = "curso_id", nullable = false)
+    @Column(name = "numero_certificado")
+    private String numeroCertificado;
+
+    @Column(name = "curso_id")
     private Long cursoId;
 }

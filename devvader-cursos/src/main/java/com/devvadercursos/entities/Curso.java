@@ -13,7 +13,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public final class Curso implements Serializable, Entidade<Long> {
+@EqualsAndHashCode(of = "id")
+@ToString
+public final class Curso extends Entidade<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,8 +24,8 @@ public final class Curso implements Serializable, Entidade<Long> {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nome", length = 150, nullable = false)
-    private String nome;
+    @Column(name = "titulo", length = 150, nullable = false)
+    private String titulo;
 
     @Column(name = "data_inicio", nullable = false)
     private LocalDate dataInicio;
