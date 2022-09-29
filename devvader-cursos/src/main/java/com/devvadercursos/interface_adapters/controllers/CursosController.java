@@ -1,6 +1,7 @@
 package com.devvadercursos.interface_adapters.controllers;
 
 import com.devvadercursos.application_business.usecases.dtos.GenericsDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public abstract class CursosController<T extends GenericsDTO<ID>, ID> {
     abstract ResponseEntity<?> buscarTodos(Pageable paginacao, @RequestParam(required = false) T filtro);
 
     @GetMapping(value = "/porta")
-    abstract ResponseEntity<T> buscarPorta();
+    abstract String consultarPorta(@Value("${local.server.port}") String porta);
 
     @PutMapping
     abstract ResponseEntity<T> atualizarTotalOuSalvar(@PathVariable ID id, @RequestBody @Valid T dto);
