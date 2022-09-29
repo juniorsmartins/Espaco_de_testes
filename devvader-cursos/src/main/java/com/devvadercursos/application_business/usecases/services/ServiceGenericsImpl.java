@@ -2,7 +2,7 @@ package com.devvadercursos.application_business.usecases.services;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.enterprise_business.entities.Curso;
-import com.devvadercursos.frameworks_drivers.Database;
+import com.devvadercursos.frameworks_drivers.GenericsDatabase;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +16,20 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public final class ServiceGenericsImpl extends ServiceGenerics<CursoDTO, Curso, Long> {
+public class ServiceGenericsImpl extends ServiceGenerics<CursoDTO, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
-    private Database cursosDatabase;
+    private GenericsDatabase genericsDatabase;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
-                .map(curso -> cursosDatabase.salvar(curso))
+                .map(curso -> genericsDatabase.salvar(curso))
                 .map(curso -> modelMapper.map(curso, CursoDTO.class))
                 .map(cursoDTO -> ResponseEntity.created(URI.create("/" + cursoDTO.getId())).body(cursoDTO))
                 .orElseThrow();

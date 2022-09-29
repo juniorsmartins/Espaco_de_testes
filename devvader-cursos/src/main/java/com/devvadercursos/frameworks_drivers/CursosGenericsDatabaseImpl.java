@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public final class CursosDatabaseImpl implements Database<Curso, Long> {
+public class CursosGenericsDatabaseImpl implements GenericsDatabase<Curso, Long> {
 
     @Autowired
     private CursosRepository cursosRepository;

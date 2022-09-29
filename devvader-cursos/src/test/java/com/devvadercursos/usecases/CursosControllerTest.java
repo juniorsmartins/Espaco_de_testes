@@ -23,7 +23,7 @@ class CursosControllerTest {
     @BeforeEach
     void criadorDeCenariosDeTeste() {
         cursoDTO = CursoDTO.builder()
-                .nome("Tecnologia Java")
+                .titulo("Tecnologia Java")
                 .dataInicio(LocalDate.of(2020, 07, 15))
                 .dataFim(LocalDate.of(2021, 07, 22))
                 .build();

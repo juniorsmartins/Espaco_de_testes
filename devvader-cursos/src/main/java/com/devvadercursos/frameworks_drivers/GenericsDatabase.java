@@ -2,9 +2,9 @@ package com.devvadercursos.frameworks_drivers;
 
 import com.devvadercursos.enterprise_business.entities.GenericsEntity;
 
-public interface Database<E extends GenericsEntity<ID>, ID> {
+public interface GenericsDatabase<T extends GenericsEntity<ID>, ID> {
 
-    E salvar(E entidade);
-    E atualizar(E entidade);
+    T salvar(T entidade);
+    T atualizar(T entidade);
     void deletar(ID id);
 }
