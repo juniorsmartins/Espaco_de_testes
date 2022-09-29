@@ -1,7 +1,6 @@
 package com.devvadercursos.application_business.usecases.services;
 
-import com.devvadercursos.application_business.usecases.dtos.request.CursoDTOIn;
-import com.devvadercursos.application_business.usecases.dtos.response.CursoDTOOut;
+import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.Database;
 import org.modelmapper.ModelMapper;
@@ -17,7 +16,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public final class CursosServiceImpl extends CursosService<CursoDTOIn, Curso, CursoDTOOut, Long> {
+public final class ServiceGenericsImpl extends ServiceGenerics<CursoDTO, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -25,30 +24,25 @@ public final class CursosServiceImpl extends CursosService<CursoDTOIn, Curso, Cu
     @Autowired
     private Database cursosDatabase;
 
-//    @Override
-//    public CursosDatabase<Curso, Long> getCursosDatabase() {
-//        return cursosDatabase;
-//    }
-
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTOOut> cadastrar(CursoDTOIn dtoIn) {
+    public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
         return Optional.of(dtoIn)
-                .map(cursoDTOIn -> modelMapper.map(cursoDTOIn, Curso.class))
+                .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> cursosDatabase.salvar(curso))
-                .map(curso -> modelMapper.map(curso, CursoDTOOut.class))
-                .map(cursoDTOOut -> ResponseEntity.created(URI.create("/" + cursoDTOOut.getId())).body(cursoDTOOut))
+                .map(curso -> modelMapper.map(curso, CursoDTO.class))
+                .map(cursoDTO -> ResponseEntity.created(URI.create("/" + cursoDTO.getId())).body(cursoDTO))
                 .orElseThrow();
     }
 
     @Override
-    public ResponseEntity<?> buscarTodos(Pageable paginacao, CursoDTOIn filtro) {
+    public ResponseEntity<?> buscarTodos(Pageable paginacao, CursoDTO filtro) {
         return null;
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTOOut> atualizar(Long id, CursoDTOIn dtoIn) {
+    public ResponseEntity<CursoDTO> atualizar(Long id, CursoDTO dtoIn) {
         return null;
     }
 

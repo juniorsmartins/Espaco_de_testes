@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
-public final class Instituicao extends Entidade<Long> implements Serializable {
+public final class Instituicao implements GenericsEntity<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
