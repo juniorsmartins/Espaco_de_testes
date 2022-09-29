@@ -30,5 +30,5 @@ public final class Registro implements GenericsEntity<Long>, Serializable {
     private String numeroCertificado;
 
     @Column(name = "curso_id")
-    private Long cursoId;
+    private Long curso;
 }

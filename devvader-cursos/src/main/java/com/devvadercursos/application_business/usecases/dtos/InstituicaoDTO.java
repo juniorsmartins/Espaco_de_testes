@@ -15,5 +15,5 @@ public final class InstituicaoDTO implements GenericsDTO<Long>, Serializable {
 
     private Long id;
     private String nome;
-    private Long cursoId;
+    private Long curso;
 }

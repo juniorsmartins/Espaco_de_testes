@@ -6,9 +6,11 @@ import com.devvadercursos.enterprise_business.entities.Curso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.awt.print.Pageable;
 
 @RestController
@@ -19,7 +21,7 @@ public class CursosControllerImpl extends CursosController<CursoDTO, Long> {
     private ServiceGenerics<CursoDTO, Curso, Long> serviceGenerics;
 
     @Override
-    public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
+    public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CursoDTO dtoIn) {
         return serviceGenerics.cadastrar(dtoIn);
     }
 

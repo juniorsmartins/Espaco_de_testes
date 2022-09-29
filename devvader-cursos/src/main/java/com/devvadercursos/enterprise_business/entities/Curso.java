@@ -1,5 +1,10 @@
 package com.devvadercursos.enterprise_business.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,19 +29,23 @@ public final class Curso implements GenericsEntity<Long>, Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "titulo", length = 150, nullable = false)
+    @Column(name = "titulo", length = 150)
     private String titulo;
 
     @Lob
-    @Column(name = "descricao", nullable = false)
+    @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "data_inicio", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @Column(name = "data_inicio")
     private LocalDate dataInicio;
 
+    @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
-    @Column(name = "cliente_id", nullable = false)
-    private Long clienteId;
+    @Column(name = "cliente_fk")
+    private Long cliente;
 }

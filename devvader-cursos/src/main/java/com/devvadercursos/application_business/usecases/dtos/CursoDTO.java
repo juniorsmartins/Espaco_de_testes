@@ -16,8 +16,8 @@ public final class CursoDTO implements GenericsDTO<Long>, Serializable {
 
     private Long id;
     private String titulo;
-    private String descricao;
+    private LocalDate descricao;
     private LocalDate dataInicio;
-    private LocalDate dataFim;
-    private Long clienteId;
+    private String dataFim;
+    private Long cliente;
 }

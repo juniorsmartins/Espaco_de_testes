@@ -16,5 +16,5 @@ public final class RegistroDTO implements GenericsDTO<Long>, Serializable {
     private Long id;
     private String linkCertificado;
     private String numeroCertificado;
-    private Long cursoId;
+    private Long curso;
 }

@@ -27,5 +27,5 @@ public final class Instituicao implements GenericsEntity<Long>, Serializable {
     private String nome;
 
     @Column(name = "curso_id", nullable = false)
-    private Long cursoId;
+    private Long curso;
 }
