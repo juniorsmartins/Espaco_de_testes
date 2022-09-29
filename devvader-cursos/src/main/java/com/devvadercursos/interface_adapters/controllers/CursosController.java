@@ -15,6 +15,9 @@ public abstract class CursosController<T extends GenericsDTO<ID>, ID> {
     @GetMapping
     abstract ResponseEntity<?> buscarTodos(Pageable paginacao, @RequestParam(required = false) T filtro);
 
+    @GetMapping(value = "/porta")
+    abstract ResponseEntity<T> buscarPorta();
+
     @PutMapping
     abstract ResponseEntity<T> atualizarTotalOuSalvar(@PathVariable ID id, @RequestBody @Valid T dto);
 

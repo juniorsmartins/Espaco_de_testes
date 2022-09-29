@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public class ServiceGenericsImpl extends ServiceGenerics<CursoDTO, Curso, Long> {
+public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;

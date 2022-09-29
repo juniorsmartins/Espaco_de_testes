@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.awt.print.Pageable;
 
-public abstract class ServiceGenerics<T extends GenericsDTO<ID>,E extends GenericsEntity<ID>, ID> {
+public interface ServiceGenerics<T extends GenericsDTO<ID>,E extends GenericsEntity<ID>, ID> {
 
     abstract ResponseEntity<T> cadastrar(T dto);
     abstract ResponseEntity<?> buscarTodos(Pageable paginacao, T filtro);
