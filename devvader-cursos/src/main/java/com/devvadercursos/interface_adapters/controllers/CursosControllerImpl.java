@@ -29,7 +29,12 @@ public class CursosControllerImpl extends CursosController<CursoDTOIn, CursoDTOO
     }
 
     @Override
-    public ResponseEntity<CursoDTOOut> atualizar(Long id, CursoDTOIn dtoIn) {
+    public ResponseEntity<CursoDTOOut> atualizarTotalOuSalvar(Long id, CursoDTOIn dtoIn) {
+        return null;
+    }
+
+    @Override
+    ResponseEntity<CursoDTOOut> atualizarParcialOuLancarExcecao(Long aLong, CursoDTOIn dtoIn) {
         return null;
     }
 

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
+import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -34,7 +35,9 @@ public final class CursosServiceImpl extends CursosService<CursoDTOIn, Curso, Cu
     public ResponseEntity<CursoDTOOut> cadastrar(CursoDTOIn dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTOIn -> modelMapper.map(cursoDTOIn, Curso.class))
-                .map(curso -> cursosDatabase)
+                .map(curso -> cursosDatabase.salvar(curso))
+                .map(curso -> modelMapper.map(curso, CursoDTOOut.class))
+                .map(cursoDTOOut -> ResponseEntity.created(URI.create("/" + cursoDTOOut.getId())).body(cursoDTOOut))
                 .orElseThrow();
     }
 

@@ -17,7 +17,10 @@ public abstract class CursosController<REQUEST extends DTOIn<ID>, RESPONSE exten
     abstract ResponseEntity<?> buscarTodos(Pageable paginacao, @RequestParam(required = false) REQUEST filtro);
 
     @PutMapping
-    abstract ResponseEntity<RESPONSE> atualizar(@PathVariable ID id, @RequestBody @Valid REQUEST dto);
+    abstract ResponseEntity<RESPONSE> atualizarTotalOuSalvar(@PathVariable ID id, @RequestBody @Valid REQUEST dtoIn);
+
+    @PatchMapping
+    abstract ResponseEntity<RESPONSE> atualizarParcialOuLancarExcecao(@PathVariable ID id, @RequestBody @Valid REQUEST dtoIn);
 
     @DeleteMapping
     abstract void deletar(@PathVariable ID id);
