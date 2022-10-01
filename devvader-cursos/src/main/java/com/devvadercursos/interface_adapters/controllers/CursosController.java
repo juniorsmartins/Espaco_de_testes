@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.awt.print.Pageable;
 
-public abstract class CursosController<T extends GenericsDTO<ID>, ID> {
+public abstract sealed class CursosController<T extends GenericsDTO<ID>, ID> permits CursosControllerImpl {
 
     @PostMapping
     abstract ResponseEntity<T> cadastrar(@RequestBody @Valid T dto);
@@ -26,5 +26,5 @@ public abstract class CursosController<T extends GenericsDTO<ID>, ID> {
     abstract ResponseEntity<T> atualizarParcialOuLancarExcecao(@PathVariable ID id, @RequestBody @Valid T dto);
 
     @DeleteMapping
-    abstract void deletar(@PathVariable ID id);
+    abstract ResponseEntity<?> deletar(@PathVariable ID id);
 }

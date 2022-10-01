@@ -1,13 +1,14 @@
 package com.devvadercursos.usecases;
 
-import com.devvadercursos.interface_adapters.controllers.CursosControllerImpl;
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
+import com.devvadercursos.interface_adapters.controllers.CursosControllerImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -15,32 +16,62 @@ import java.time.LocalDate;
 @SpringBootTest
 class CursosControllerTest {
 
-    @Autowired
-    private CursosControllerImpl cursosController;
+    private static final String TITULO_1 = "Java Avançado III";
+    private static final String TITULO_2 = "Java Avançado IV";
 
-    private CursoDTO cursoDTO;
+    @Autowired
+    private CursosControllerImpl cursosControllerImpl;
+
+    private CursoDTO cursoDTO1;
+    private ResponseEntity<CursoDTO> response1;
+    private CursoDTO cursoDTO2;
 
     @BeforeEach
     void criadorDeCenariosDeTeste() {
-//        cursoDTO = CursoDTO.builder()
-//                .titulo("Tecnologia Java")
-//                .dataInicio(LocalDate.of(2020, 07, 15))
-//                .dataFim(LocalDate.of(2021, 07, 22))
-//                .build();
+
+        // Teste01
+        cursoDTO1 = CursoDTO.builder()
+                .titulo(TITULO_1)
+                .descricao("Microserviços, API RestFul e RabbitMQ")
+                .dataInicio(LocalDate.of(2022, 05, 01))
+                .dataFim(LocalDate.of(2022, 06, 02))
+                .cliente(1001L)
+                .build();
+
+        // Teste02
+        cursoDTO2 = CursoDTO.builder()
+                .titulo(TITULO_2)
+                .descricao("Microserviços, API RestFul e Spring Cloud")
+                .dataInicio(LocalDate.of(2022, 06, 10))
+                .dataFim(LocalDate.of(2022, 07, 22))
+                .cliente(1002L)
+                .build();
     }
 
     @Test
-    void teste01_retornarPositivoQuando_cadastrarCursos() {
-//        var response = cursosController.cadastrar(cursoDTO);
-//
-//        Assertions.assertNotNull(response);
-//        Assertions.assertNotNull(response.getBody());
-//        Assertions.assertEquals(response, ResponseEntity.class);
-//        Assertions.assertEquals(response.getBody(), CursoDTO.class);
+    void teste1_retornar201Quando_cadastrar() {
+        response1 = cursosControllerImpl.cadastrar(cursoDTO1);
+
+        Assertions.assertNotNull(response1);
+        Assertions.assertEquals(ResponseEntity.class, response1.getClass());
+        Assertions.assertNotNull(response1.getBody());
+        Assertions.assertEquals(CursoDTO.class, (response1.getBody()).getClass());
+        Assertions.assertEquals(TITULO_1, response1.getBody().getTitulo());
+        Assertions.assertEquals(HttpStatus.CREATED, response1.getStatusCode());
+
+        cursosControllerImpl.deletar(response1.getBody().getId());
     }
 
-    @AfterEach
-    void destruidorDeCenariosDeTeste() {
+    @Test
+    void teste2_retornar200Quando_deletar() {
+        var response = cursosControllerImpl.cadastrar(cursoDTO2);
+        var responseDelete = cursosControllerImpl.deletar(response.getBody().getId());
 
+        Assertions.assertNotNull(responseDelete);
+        Assertions.assertEquals(ResponseEntity.class, responseDelete.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(String.class, responseDelete.getBody().getClass());
+        Assertions.assertEquals("DELETADO!", responseDelete.getBody());
+        Assertions.assertEquals(HttpStatus.OK, responseDelete.getStatusCode());
     }
 }

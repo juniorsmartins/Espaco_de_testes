@@ -15,7 +15,7 @@ import java.awt.print.Pageable;
 
 @RestController
 @RequestMapping(value = "/v1/cursos")
-public class CursosControllerImpl extends CursosController<CursoDTO, Long> {
+public final class CursosControllerImpl extends CursosController<CursoDTO, Long> {
 
     @Autowired
     private ServiceGenerics<CursoDTO, Curso, Long> serviceGenerics;
@@ -46,7 +46,7 @@ public class CursosControllerImpl extends CursosController<CursoDTO, Long> {
     }
 
     @Override
-    public void deletar(Long id) {
-
+    public ResponseEntity<?> deletar(Long id) {
+        return serviceGenerics.deletar(id);
     }
 }

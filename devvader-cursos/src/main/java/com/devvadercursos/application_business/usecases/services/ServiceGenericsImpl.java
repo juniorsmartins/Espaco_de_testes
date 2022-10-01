@@ -23,14 +23,14 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
     private ModelMapper modelMapper;
 
     @Autowired
-    private CursosRepository cursosRepository;
+    private GenericsDatabase genericsDatabase;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
-                .map(curso -> cursosRepository.saveAndFlush(curso))
+                .map(curso -> genericsDatabase.salvar(curso))
                 .map(curso -> modelMapper.map(curso, CursoDTO.class))
                 .map(cursoDTO -> ResponseEntity.created(URI.create("/" + cursoDTO.getId())).body(cursoDTO))
                 .orElseThrow();
@@ -49,7 +49,10 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public void deletar(Long id) {
-
+    public ResponseEntity<?> deletar(Long id) {
+        genericsDatabase.deletar(id);
+        return ResponseEntity
+                .ok()
+                .body("DELETADO!");
     }
 }
