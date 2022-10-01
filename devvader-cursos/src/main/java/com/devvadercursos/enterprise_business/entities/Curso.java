@@ -1,10 +1,5 @@
 package com.devvadercursos.enterprise_business.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -37,17 +32,10 @@ public final class Curso implements GenericsEntity<Long>, Serializable {
     @Column(name = "descricao")
     private String descricao;
 
-//    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    @JsonSerialize(using = LocalDateSerializer.class)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "data_inicio")
     private LocalDate dataInicio;
 
-//    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    @JsonSerialize(using = LocalDateSerializer.class)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
