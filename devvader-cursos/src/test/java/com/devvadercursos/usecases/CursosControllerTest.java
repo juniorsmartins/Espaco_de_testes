@@ -2,7 +2,6 @@ package com.devvadercursos.usecases;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.interface_adapters.controllers.CursosControllerImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ class CursosControllerTest {
 
     private static final String TITULO_1 = "Java Avançado III";
     private static final String TITULO_2 = "Java Avançado IV";
+    private static final String TITULO_3 = "Java Avançado V";
 
     @Autowired
     private CursosControllerImpl cursosControllerImpl;
@@ -25,6 +25,7 @@ class CursosControllerTest {
     private CursoDTO cursoDTO1;
     private ResponseEntity<CursoDTO> response1;
     private CursoDTO cursoDTO2;
+    private CursoDTO cursoDTO3;
 
     @BeforeEach
     void criadorDeCenariosDeTeste() {
@@ -46,6 +47,15 @@ class CursosControllerTest {
                 .dataFim(LocalDate.of(2022, 07, 22))
                 .cliente(1002L)
                 .build();
+
+        // Teste03
+        cursoDTO3 = CursoDTO.builder()
+                .titulo(TITULO_3)
+                .descricao("Microserviços, API RestFul e Spring Cloud")
+                .dataInicio(LocalDate.of(2022, 8, 15))
+                .dataFim(LocalDate.of(2022, 10, 25))
+                .cliente(1003L)
+                .build();
     }
 
     @Test
@@ -63,7 +73,22 @@ class CursosControllerTest {
     }
 
     @Test
-    void teste2_retornar200Quando_deletar() {
+    void teste2_retornar200Quando_atualizarTotalOuSalvar() {
+        var response = cursosControllerImpl.cadastrar(cursoDTO1);
+        var responseAtualizar = cursosControllerImpl.atualizarTotalOuSalvar(response.getBody().getId(), cursoDTO3);
+
+        Assertions.assertNotNull(responseAtualizar);
+        Assertions.assertEquals(ResponseEntity.class, responseAtualizar.getClass());
+        Assertions.assertNotNull(responseAtualizar.getBody());
+        Assertions.assertEquals(CursoDTO.class, responseAtualizar.getBody().getClass());
+        Assertions.assertEquals(TITULO_3, responseAtualizar.getBody().getTitulo());
+        Assertions.assertEquals(HttpStatus.OK, responseAtualizar.getStatusCode());
+
+        cursosControllerImpl.deletar(response.getBody().getId());
+    }
+
+    @Test
+    void teste4_retornar200Quando_deletar() {
         var response = cursosControllerImpl.cadastrar(cursoDTO2);
         var responseDelete = cursosControllerImpl.deletar(response.getBody().getId());
 

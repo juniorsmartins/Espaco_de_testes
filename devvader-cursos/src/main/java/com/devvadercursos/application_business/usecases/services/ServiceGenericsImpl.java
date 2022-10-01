@@ -2,7 +2,6 @@ package com.devvadercursos.application_business.usecases.services;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.enterprise_business.entities.Curso;
-import com.devvadercursos.frameworks_drivers.CursosRepository;
 import com.devvadercursos.frameworks_drivers.GenericsDatabase;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,9 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> genericsDatabase.salvar(curso))
                 .map(curso -> modelMapper.map(curso, CursoDTO.class))
-                .map(cursoDTO -> ResponseEntity.created(URI.create("/" + cursoDTO.getId())).body(cursoDTO))
+                .map(cursoDTO -> ResponseEntity
+                        .created(URI.create("/" + cursoDTO.getId()))
+                        .body(cursoDTO))
                 .orElseThrow();
     }
 
@@ -43,7 +44,23 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTO> atualizar(Long id, CursoDTO dtoIn) {
+    public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO dtoIn) {
+        return Optional.of(dtoIn)
+                .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
+                .map(curso -> {
+                    curso.setId(id);
+                    return genericsDatabase.atualizar(curso);
+                })
+                .map(curso -> modelMapper.map(curso, CursoDTO.class))
+                .map(cursoDTO -> ResponseEntity
+                        .ok()
+                        .body(cursoDTO))
+                .orElseThrow();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    @Override
+    public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO dtoIn) {
         return null;
     }
 

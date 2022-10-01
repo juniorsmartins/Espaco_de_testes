@@ -11,6 +11,7 @@ public interface ServiceGenerics<T extends GenericsDTO<ID>,E extends GenericsEnt
 
     ResponseEntity<T> cadastrar(T dto);
     ResponseEntity<?> buscarTodos(Pageable paginacao, T filtro);
-    ResponseEntity<T> atualizar(ID id, T dto);
+    ResponseEntity<T> atualizarTotalOuSalvar(ID id, T dto);
+    ResponseEntity<T> atualizarParcialOuLancarExcecao(ID id, T dto);
     ResponseEntity<?> deletar(ID id);
 }

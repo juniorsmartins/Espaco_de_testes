@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.awt.print.Pageable;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/v1/cursos")
@@ -37,7 +38,7 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Long>
 
     @Override
     public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO cursoDTO) {
-        return null;
+        return serviceGenerics.atualizarTotalOuSalvar(id, cursoDTO);
     }
 
     @Override
