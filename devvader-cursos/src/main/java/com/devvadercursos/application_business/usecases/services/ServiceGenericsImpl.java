@@ -4,7 +4,7 @@ import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
 import com.devvadercursos.enterprise_business.entities.Curso;
-import com.devvadercursos.frameworks_drivers.GenericsDatabase;
+import com.devvadercursos.frameworks_drivers.CursosRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,14 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
     private ModelMapper modelMapper;
 
     @Autowired
-    private GenericsDatabase genericsDatabase;
+    private CursosRepository cursosRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
-                .map(curso -> genericsDatabase.salvar(curso))
+                .map(curso -> cursosRepository.saveAndFlush(curso))
                 .map(curso -> modelMapper.map(curso, CursoDTO.class))
                 .map(cursoDTO -> ResponseEntity
                         .created(URI.create("/" + cursoDTO.getId()))
@@ -44,6 +44,16 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
         return null;
     }
 
+    @Override
+    public ResponseEntity<CursoDTO> consultarPorId(Long id) {
+        return cursosRepository.findById(id)
+                .map(curso -> modelMapper.map(curso, CursoDTO.class))
+                .map(cursoDTO -> ResponseEntity
+                        .ok()
+                        .body(cursoDTO))
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO dtoIn) {
@@ -51,12 +61,11 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> {
                     curso.setId(id);
-                    return genericsDatabase.atualizar(curso);
+                    return cursosRepository.saveAndFlush(curso);
                 })
-                .map(curso -> modelMapper.map(curso, CursoDTO.class))
-                .map(cursoDTO -> ResponseEntity
+                .map(curso -> ResponseEntity
                         .ok()
-                        .body(cursoDTO))
+                        .body(modelMapper.map(curso, CursoDTO.class)))
                 .orElseThrow();
     }
 
@@ -68,11 +77,13 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<?> deletar(Long id) {
-        return genericsDatabase.consultarPorId(id)
+    public ResponseEntity<?> deletarPorId(Long id) {
+        return cursosRepository.findById(id)
                         .map(curso -> {
-                            genericsDatabase.deletar(curso);
-                            return ResponseEntity.ok().body(MensagemPadrao.RECURSO_DELETADO);
+                            cursosRepository.delete(curso);
+                            return ResponseEntity
+                                    .ok()
+                                    .body(MensagemPadrao.RECURSO_DELETADO);
                         }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
     }
 }

@@ -6,10 +6,7 @@ import com.devvadercursos.enterprise_business.entities.Curso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.awt.print.Pageable;
@@ -27,8 +24,13 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Long>
     }
 
     @Override
-    public ResponseEntity<?> buscarTodos(Pageable paginacao, CursoDTO filtro) {
+    public ResponseEntity<?> buscarTodos(Pageable paginacao, @RequestParam(required = false) CursoDTO filtro) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<CursoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
+        return serviceGenerics.consultarPorId(id);
     }
 
     @Override
@@ -37,17 +39,17 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Long>
     }
 
     @Override
-    public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO cursoDTO) {
+    public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
         return serviceGenerics.atualizarTotalOuSalvar(id, cursoDTO);
     }
 
     @Override
-    ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO cursoDTO) {
+    ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
         return null;
     }
 
     @Override
-    public ResponseEntity<?> deletar(Long id) {
-        return serviceGenerics.deletar(id);
+    public ResponseEntity<?> deletarPorId(@PathVariable(value = "id") Long id) {
+        return serviceGenerics.deletarPorId(id);
     }
 }

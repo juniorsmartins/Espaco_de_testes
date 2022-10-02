@@ -69,7 +69,7 @@ class CursosControllerTest {
         Assertions.assertEquals(TITULO_1, response1.getBody().getTitulo());
         Assertions.assertEquals(HttpStatus.CREATED, response1.getStatusCode());
 
-        cursosControllerImpl.deletar(response1.getBody().getId());
+        cursosControllerImpl.deletarPorId(response1.getBody().getId());
     }
 
     @Test
@@ -86,13 +86,13 @@ class CursosControllerTest {
         Assertions.assertEquals(TITULO_3, responseAtualizar.getBody().getTitulo());
         Assertions.assertEquals(HttpStatus.OK, responseAtualizar.getStatusCode());
 
-        cursosControllerImpl.deletar(response.getBody().getId());
+        cursosControllerImpl.deletarPorId(response.getBody().getId());
     }
 
     @Test
     void teste4_retornar200Quando_deletar() {
         var response = cursosControllerImpl.cadastrar(cursoDTO2);
-        var responseDelete = cursosControllerImpl.deletar(response.getBody().getId());
+        var responseDelete = cursosControllerImpl.deletarPorId(response.getBody().getId());
 
         Assertions.assertNotNull(responseDelete);
         Assertions.assertEquals(ResponseEntity.class, responseDelete.getClass());
