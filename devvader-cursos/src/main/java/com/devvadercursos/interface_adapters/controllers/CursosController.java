@@ -19,12 +19,12 @@ public abstract sealed class CursosController<T extends GenericsDTO<ID>, ID> per
     @GetMapping(value = "/porta")
     abstract String consultarPorta(@Value("${local.server.port}") String porta);
 
-    @PutMapping
-    abstract ResponseEntity<T> atualizarTotalOuSalvar(@PathVariable ID id, @RequestBody @Valid T dto);
+    @PutMapping(value = "/{id}")
+    abstract ResponseEntity<T> atualizarTotalOuSalvar(@PathVariable(value = "id") ID id, @RequestBody @Valid T dto);
 
-    @PatchMapping
-    abstract ResponseEntity<T> atualizarParcialOuLancarExcecao(@PathVariable ID id, @RequestBody @Valid T dto);
+    @PatchMapping(value = "/{id}")
+    abstract ResponseEntity<T> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") ID id, @RequestBody @Valid T dto);
 
-    @DeleteMapping
-    abstract ResponseEntity<?> deletar(@PathVariable ID id);
+    @DeleteMapping(value = "/{id}")
+    abstract ResponseEntity<?> deletar(@PathVariable(value = "id") ID id);
 }

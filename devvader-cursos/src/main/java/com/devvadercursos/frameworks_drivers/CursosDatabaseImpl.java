@@ -4,6 +4,8 @@ import com.devvadercursos.enterprise_business.entities.Curso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class CursosDatabaseImpl implements GenericsDatabase<Curso, Long> {
 
@@ -18,6 +20,11 @@ public class CursosDatabaseImpl implements GenericsDatabase<Curso, Long> {
     @Override
     public Curso atualizar(Curso curso) {
         return cursosRepository.saveAndFlush(curso);
+    }
+
+    @Override
+    public Optional<Curso> consultarPorId(Long id) {
+        return cursosRepository.findById(id);
     }
 
     @Override

@@ -75,7 +75,9 @@ class CursosControllerTest {
     @Test
     void teste2_retornar200Quando_atualizarTotalOuSalvar() {
         var response = cursosControllerImpl.cadastrar(cursoDTO1);
-        var responseAtualizar = cursosControllerImpl.atualizarTotalOuSalvar(response.getBody().getId(), cursoDTO3);
+        var responseAtualizar = cursosControllerImpl.atualizarTotalOuSalvar(response
+                .getBody()
+                .getId(), cursoDTO3);
 
         Assertions.assertNotNull(responseAtualizar);
         Assertions.assertEquals(ResponseEntity.class, responseAtualizar.getClass());

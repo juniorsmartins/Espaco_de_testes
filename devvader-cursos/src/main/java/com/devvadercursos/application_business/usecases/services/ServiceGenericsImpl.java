@@ -1,6 +1,8 @@
 package com.devvadercursos.application_business.usecases.services;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
+import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
+import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.GenericsDatabase;
 import org.modelmapper.ModelMapper;
@@ -67,9 +69,10 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<?> deletar(Long id) {
-        genericsDatabase.deletar(id);
-        return ResponseEntity
-                .ok()
-                .body("DELETADO!");
+        return genericsDatabase.consultarPorId(id)
+                        .map(curso -> {
+                            genericsDatabase.deletar(curso);
+                            return ResponseEntity.ok().body(MensagemPadrao.RECURSO_DELETADO);
+                        }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
     }
 }
