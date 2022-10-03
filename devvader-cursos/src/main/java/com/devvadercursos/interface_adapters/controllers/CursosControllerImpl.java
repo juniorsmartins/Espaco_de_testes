@@ -20,22 +20,22 @@ import javax.validation.Valid;
 public final class CursosControllerImpl extends CursosController<CursoDTO, FiltroBuscarTodos, Long> {
 
     @Autowired
-    private ServiceGenerics<CursoDTO, FiltroBuscarTodos, Curso, Long> serviceGenerics;
+    private ServiceGenerics<CursoDTO, FiltroBuscarTodos, Curso, Long> cursoService;
 
     @Override
     public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CursoDTO dtoIn) {
-        return serviceGenerics.cadastrar(dtoIn);
+        return cursoService.cadastrar(dtoIn);
     }
 
     @Override
     public ResponseEntity<Page<CursoDTO>> buscarTodos(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0,
             size = 3) Pageable paginacao, FiltroBuscarTodos filtro) {
-        return serviceGenerics.buscarTodos(paginacao, filtro);
+        return cursoService.buscarTodos(paginacao, filtro);
     }
 
     @Override
     public ResponseEntity<CursoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
-        return serviceGenerics.consultarPorId(id);
+        return cursoService.consultarPorId(id);
     }
 
     @Override
@@ -45,16 +45,16 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Filtr
 
     @Override
     public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
-        return serviceGenerics.atualizarTotalOuSalvar(id, cursoDTO);
+        return cursoService.atualizarTotalOuSalvar(id, cursoDTO);
     }
 
     @Override
     ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
-        return serviceGenerics.atualizarParcialOuLancarExcecao(id, cursoDTO);
+        return cursoService.atualizarParcialOuLancarExcecao(id, cursoDTO);
     }
 
     @Override
     public ResponseEntity<?> deletarPorId(@PathVariable(value = "id") Long id) {
-        return serviceGenerics.deletarPorId(id);
+        return cursoService.deletarPorId(id);
     }
 }
