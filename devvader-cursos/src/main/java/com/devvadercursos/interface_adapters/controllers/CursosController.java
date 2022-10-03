@@ -1,18 +1,18 @@
 package com.devvadercursos.interface_adapters.controllers;
 
 import com.devvadercursos.application_business.usecases.dtos.GenericsDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
-
-public abstract sealed class CursosController<T extends GenericsDTO<ID>, ID> permits CursosControllerImpl {
+public abstract sealed class CursosController<T extends GenericsDTO<ID>, F extends GenericsDTO<ID>, ID> permits CursosControllerImpl {
 
     @PostMapping
     abstract ResponseEntity<T> cadastrar(T dto);
 
     @GetMapping
-    abstract ResponseEntity<?> buscarTodos(Pageable paginacao, T filtro);
+    abstract ResponseEntity<Page<T>> buscarTodos(Pageable paginacao, F filtro);
 
     @GetMapping(value = "/{id}")
     abstract ResponseEntity<T> consultarPorId(Long id);

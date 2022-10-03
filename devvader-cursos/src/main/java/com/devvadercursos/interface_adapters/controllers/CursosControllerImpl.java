@@ -1,22 +1,26 @@
 package com.devvadercursos.interface_adapters.controllers;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
+import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.services.ServiceGenerics;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.awt.print.Pageable;
 
 @RestController
 @RequestMapping(value = "/v1/cursos")
-public final class CursosControllerImpl extends CursosController<CursoDTO, Long> {
+public final class CursosControllerImpl extends CursosController<CursoDTO, FiltroBuscarTodos, Long> {
 
     @Autowired
-    private ServiceGenerics<CursoDTO, Curso, Long> serviceGenerics;
+    private ServiceGenerics<CursoDTO, FiltroBuscarTodos, Curso, Long> serviceGenerics;
 
     @Override
     public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CursoDTO dtoIn) {
@@ -24,8 +28,9 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Long>
     }
 
     @Override
-    public ResponseEntity<?> buscarTodos(Pageable paginacao, @RequestParam(required = false) CursoDTO filtro) {
-        return null;
+    public ResponseEntity<Page<CursoDTO>> buscarTodos(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0,
+            size = 3) Pageable paginacao, FiltroBuscarTodos filtro) {
+        return serviceGenerics.buscarTodos(paginacao, filtro);
     }
 
     @Override

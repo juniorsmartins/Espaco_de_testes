@@ -1,24 +1,28 @@
 package com.devvadercursos.application_business.usecases.services;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
+import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.CursosRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.net.URI;
 import java.util.Optional;
 
 @Service
-public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Long> {
+public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, FiltroBuscarTodos, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -40,9 +44,29 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
     }
 
     @Override
-    public ResponseEntity<?> buscarTodos(Pageable paginacao, CursoDTO filtro) {
-        return null;
+    public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
+        if(filtro == null)
+            return ResponseEntity
+                    .ok()
+                    .body(cursosRepository.findAll(paginacao).map(curso -> modelMapper.map(curso, CursoDTO.class)));
+
+        return ResponseEntity
+                .ok()
+                .body(cursosRepository.findAll(configurarFiltro(filtro), paginacao).map(curso -> modelMapper
+                        .map(curso, CursoDTO.class)));
     }
+
+        private Example<Curso> configurarFiltro(FiltroBuscarTodos filtro) {
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            ExampleMatcher exampleMatcher = ExampleMatcher
+                    .matching()
+                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                    .withIgnoreNullValues()
+                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras parecidas - tipo Like do SQL
+
+            // Example - pega campos populados para criar filtros
+            return Example.of(modelMapper.map(filtro, Curso.class), exampleMatcher);
+        }
 
     @Override
     public ResponseEntity<CursoDTO> consultarPorId(Long id) {
