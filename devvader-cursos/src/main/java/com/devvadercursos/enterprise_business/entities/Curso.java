@@ -32,7 +32,6 @@ public final class Curso implements GenericsEntity<Long>, Serializable {
     @Column(name = "descricao")
     private String descricao;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "data_inicio")
     private LocalDate dataInicio;
 

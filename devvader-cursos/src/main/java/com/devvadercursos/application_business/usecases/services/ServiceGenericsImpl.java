@@ -61,12 +61,11 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> {
                     curso.setId(id);
-                    return cursosRepository.saveAndFlush(curso);
-                })
-                .map(curso -> ResponseEntity
-                        .ok()
-                        .body(modelMapper.map(curso, CursoDTO.class)))
-                .orElseThrow();
+                    cursosRepository.saveAndFlush(curso);
+                    return ResponseEntity
+                            .ok()
+                            .body(modelMapper.map(curso, CursoDTO.class));
+                }).orElseThrow();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
@@ -74,11 +73,13 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
     public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO dtoIn) {
         return cursosRepository.findById(id)
                 .map(curso -> {
-                    var cursoEntity = modelMapper.map(dtoIn, Curso.class);
-                    cursoEntity.setId(curso.getId());
-                    cursosRepository.saveAndFlush(cursoEntity);
-                    var cursoSaida = modelMapper.map(cursoEntity, CursoDTO.class);
-                    return ResponseEntity.ok().body(cursoSaida);
+                    curso.setTitulo(dtoIn.getTitulo());
+                    curso.setDescricao(dtoIn.getDescricao());
+                    curso.setDataInicio(dtoIn.getDataInicio());
+                    curso.setDataFim(dtoIn.getDataFim());
+                    return ResponseEntity
+                            .ok()
+                            .body(modelMapper.map(curso, CursoDTO.class));
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
     }
 
