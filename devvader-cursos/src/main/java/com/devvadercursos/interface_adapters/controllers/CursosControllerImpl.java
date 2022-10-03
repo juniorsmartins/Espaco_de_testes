@@ -45,7 +45,7 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Long>
 
     @Override
     ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
-        return null;
+        return serviceGenerics.atualizarParcialOuLancarExcecao(id, cursoDTO);
     }
 
     @Override

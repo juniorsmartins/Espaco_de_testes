@@ -72,7 +72,14 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, Curso, Lon
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO dtoIn) {
-        return null;
+        return cursosRepository.findById(id)
+                .map(curso -> {
+                    var cursoEntity = modelMapper.map(dtoIn, Curso.class);
+                    cursoEntity.setId(curso.getId());
+                    cursosRepository.saveAndFlush(cursoEntity);
+                    var cursoSaida = modelMapper.map(cursoEntity, CursoDTO.class);
+                    return ResponseEntity.ok().body(cursoSaida);
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
