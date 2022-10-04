@@ -1,11 +1,13 @@
 package com.devvadercursos.application_business.usecases.services;
 
-import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
+import com.devvadercursos.application_business.usecases.dtos.CursoDTOI;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
+import com.devvadercursos.application_business.usecases.excecoes.RegraDeNegocioException;
 import com.devvadercursos.enterprise_business.entities.Curso;
-import com.devvadercursos.frameworks_drivers.CursosRepository;
+import com.devvadercursos.frameworks_drivers.ICursosRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -22,57 +24,58 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, FiltroBuscarTodos, Curso, Long> {
+@Slf4j
+public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroBuscarTodos, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
-    private CursosRepository cursosRepository;
+    private ICursosRepository ICursosRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
+    public ResponseEntity<CursoDTOI> cadastrar(CursoDTOI dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
-                .map(curso -> cursosRepository.saveAndFlush(curso))
-                .map(curso -> modelMapper.map(curso, CursoDTO.class))
+                .map(curso -> ICursosRepository.saveAndFlush(curso))
+                .map(curso -> modelMapper.map(curso, CursoDTOI.class))
                 .map(cursoDTO -> ResponseEntity
                         .created(URI.create("/" + cursoDTO.getId()))
                         .body(cursoDTO))
-                .orElseThrow();
+                .orElseThrow(() -> new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA));
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
+    public ResponseEntity<Page<CursoDTOI>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
         if(filtro == null)
             return ResponseEntity
                     .ok()
-                    .body(cursosRepository.findAll(paginacao).map(curso -> modelMapper.map(curso, CursoDTO.class)));
+                    .body(ICursosRepository.findAll(paginacao).map(curso -> modelMapper.map(curso, CursoDTOI.class)));
 
         return ResponseEntity
                 .ok()
-                .body(cursosRepository.findAll(configurarFiltro(filtro), paginacao).map(curso -> modelMapper
-                        .map(curso, CursoDTO.class)));
+                .body(ICursosRepository.findAll(configurarFiltro(filtro), paginacao)
+                        .map(curso -> modelMapper.map(curso, CursoDTOI.class)));
     }
 
         private Example<Curso> configurarFiltro(FiltroBuscarTodos filtro) {
             // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
             ExampleMatcher exampleMatcher = ExampleMatcher
                     .matchingAll()
-                    .withIgnorePaths("dataInicio") // Ignorar atributo ou atributos específicos
                     .withIgnoreCase() // Ignorar caixa alta ou baixa - quando String
                     .withIgnoreNullValues() // Ignorar valores nulos
-                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras parecidas - tipo Like do SQL
+                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING) // permite encontrar palavras parecidas - tipo Like do SQL
+                    .withIgnorePaths("dataInicio"); // Ignorar atributo ou atributos específicos
 
             // Example - pega campos populados para criar filtros
             return Example.of(modelMapper.map(filtro, Curso.class), exampleMatcher);
         }
 
     @Override
-    public ResponseEntity<CursoDTO> consultarPorId(Long id) {
-        return cursosRepository.findById(id)
-                .map(curso -> modelMapper.map(curso, CursoDTO.class))
+    public ResponseEntity<CursoDTOI> consultarPorId(Long id) {
+        return ICursosRepository.findById(id)
+                .map(curso -> modelMapper.map(curso, CursoDTOI.class))
                 .map(cursoDTO -> ResponseEntity
                         .ok()
                         .body(cursoDTO))
@@ -81,22 +84,22 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, FiltroBusc
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO dtoIn) {
+    public ResponseEntity<CursoDTOI> atualizarTotalOuSalvar(Long id, CursoDTOI dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> {
                     curso.setId(id);
-                    cursosRepository.saveAndFlush(curso);
+                    ICursosRepository.saveAndFlush(curso);
                     return ResponseEntity
                             .ok()
-                            .body(modelMapper.map(curso, CursoDTO.class));
+                            .body(modelMapper.map(curso, CursoDTOI.class));
                 }).orElseThrow();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO dtoIn) {
-        return cursosRepository.findById(id)
+    public ResponseEntity<CursoDTOI> atualizarParcialOuLancarExcecao(Long id, CursoDTOI dtoIn) {
+        return ICursosRepository.findById(id)
                 .map(curso -> {
                     curso.setTitulo(dtoIn.getTitulo());
                     curso.setDescricao(dtoIn.getDescricao());
@@ -104,16 +107,16 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, FiltroBusc
                     curso.setDataFim(dtoIn.getDataFim());
                     return ResponseEntity
                             .ok()
-                            .body(modelMapper.map(curso, CursoDTO.class));
+                            .body(modelMapper.map(curso, CursoDTOI.class));
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<?> deletarPorId(Long id) {
-        return cursosRepository.findById(id)
+        return ICursosRepository.findById(id)
                         .map(curso -> {
-                            cursosRepository.delete(curso);
+                            ICursosRepository.delete(curso);
                             return ResponseEntity
                                     .ok()
                                     .body(MensagemPadrao.RECURSO_DELETADO);

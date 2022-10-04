@@ -1,6 +1,6 @@
 package com.devvadercursos.usecases;
 
-import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
+import com.devvadercursos.application_business.usecases.dtos.CursoDTOI;
 import com.devvadercursos.interface_adapters.controllers.CursosControllerImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,16 +22,16 @@ class CursosControllerTest {
     @Autowired
     private CursosControllerImpl cursosControllerImpl;
 
-    private CursoDTO cursoDTO1;
-    private ResponseEntity<CursoDTO> response1;
-    private CursoDTO cursoDTO2;
-    private CursoDTO cursoDTO3;
+    private CursoDTOI cursoDTO1;
+    private ResponseEntity<CursoDTOI> response1;
+    private CursoDTOI cursoDTO2;
+    private CursoDTOI cursoDTO3;
 
     @BeforeEach
     void criadorDeCenariosDeTeste() {
 
         // Teste01
-        cursoDTO1 = CursoDTO.builder()
+        cursoDTO1 = CursoDTOI.builder()
                 .titulo(TITULO_1)
                 .descricao("Microserviços, API RestFul e RabbitMQ")
                 .dataInicio(LocalDate.of(2022, 05, 01))
@@ -40,7 +40,7 @@ class CursosControllerTest {
                 .build();
 
         // Teste02
-        cursoDTO2 = CursoDTO.builder()
+        cursoDTO2 = CursoDTOI.builder()
                 .titulo(TITULO_2)
                 .descricao("Microserviços, API RestFul e Spring Cloud")
                 .dataInicio(LocalDate.of(2022, 06, 10))
@@ -49,7 +49,7 @@ class CursosControllerTest {
                 .build();
 
         // Teste03
-        cursoDTO3 = CursoDTO.builder()
+        cursoDTO3 = CursoDTOI.builder()
                 .titulo(TITULO_3)
                 .descricao("Microserviços, API RestFul e Spring Cloud")
                 .dataInicio(LocalDate.of(2022, 8, 15))
@@ -65,7 +65,7 @@ class CursosControllerTest {
         Assertions.assertNotNull(response1);
         Assertions.assertEquals(ResponseEntity.class, response1.getClass());
         Assertions.assertNotNull(response1.getBody());
-        Assertions.assertEquals(CursoDTO.class, (response1.getBody()).getClass());
+        Assertions.assertEquals(CursoDTOI.class, (response1.getBody()).getClass());
         Assertions.assertEquals(TITULO_1, response1.getBody().getTitulo());
         Assertions.assertEquals(HttpStatus.CREATED, response1.getStatusCode());
 
@@ -82,7 +82,7 @@ class CursosControllerTest {
         Assertions.assertNotNull(responseAtualizar);
         Assertions.assertEquals(ResponseEntity.class, responseAtualizar.getClass());
         Assertions.assertNotNull(responseAtualizar.getBody());
-        Assertions.assertEquals(CursoDTO.class, responseAtualizar.getBody().getClass());
+        Assertions.assertEquals(CursoDTOI.class, responseAtualizar.getBody().getClass());
         Assertions.assertEquals(TITULO_3, responseAtualizar.getBody().getTitulo());
         Assertions.assertEquals(HttpStatus.OK, responseAtualizar.getStatusCode());
 

@@ -1,10 +1,10 @@
 package com.devvadercursos.enterprise_business.entities;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
-public final class Curso implements GenericsEntity<Long>, Serializable {
+public final class Curso implements IGenericsEntity<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public final class Curso implements GenericsEntity<Long>, Serializable {
     @Column(name = "titulo", length = 150)
     private String titulo;
 
-    @Column(name = "descricao")
+    @Column(name = "descricao", length = 250)
     private String descricao;
 
     @Column(name = "data_inicio")
@@ -36,6 +36,9 @@ public final class Curso implements GenericsEntity<Long>, Serializable {
 
     @Column(name = "data_fim")
     private LocalDate dataFim;
+
+    @Column(name = "data_hora_cadastro")
+    private Instant dataHoraCadastro;
 
     @Column(name = "cliente_fk")
     private Long cliente;

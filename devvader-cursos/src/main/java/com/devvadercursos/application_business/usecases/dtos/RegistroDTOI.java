@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class RegistroDTO implements GenericsDTO<Long>, Serializable {
+public final class RegistroDTOI implements IGenericsDTO<Long>, Serializable {
 
     private Long id;
     private String linkCertificado;

@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class FiltroBuscarTodos implements GenericsDTO<Long>, Serializable {
+public final class FiltroBuscarTodos implements IGenericsDTO<Long>, Serializable {
 
     private Long id;
     private String titulo;

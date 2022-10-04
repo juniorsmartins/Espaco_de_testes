@@ -10,25 +10,25 @@ import java.util.Optional;
 public class CursosDatabaseImpl implements GenericsDatabase<Curso, Long> {
 
     @Autowired
-    private CursosRepository cursosRepository;
+    private ICursosRepository ICursosRepository;
 
     @Override
     public Curso salvar(Curso curso) {
-        return cursosRepository.saveAndFlush(curso);
+        return ICursosRepository.saveAndFlush(curso);
     }
 
     @Override
     public Curso atualizar(Curso curso) {
-        return cursosRepository.saveAndFlush(curso);
+        return ICursosRepository.saveAndFlush(curso);
     }
 
     @Override
     public Optional<Curso> consultarPorId(Long id) {
-        return cursosRepository.findById(id);
+        return ICursosRepository.findById(id);
     }
 
     @Override
     public void deletar(Long id) {
-        cursosRepository.deleteById(id);
+        ICursosRepository.deleteById(id);
     }
 }

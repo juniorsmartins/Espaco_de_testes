@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
-public final class Registro implements GenericsEntity<Long>, Serializable {
+public final class Registro implements IGenericsEntity<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
