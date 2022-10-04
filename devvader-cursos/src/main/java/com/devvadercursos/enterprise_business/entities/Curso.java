@@ -28,7 +28,6 @@ public final class Curso implements GenericsEntity<Long>, Serializable {
     @Column(name = "titulo", length = 150)
     private String titulo;
 
-    @Lob
     @Column(name = "descricao")
     private String descricao;
 

@@ -59,9 +59,10 @@ public class ServiceGenericsImpl implements ServiceGenerics<CursoDTO, FiltroBusc
         private Example<Curso> configurarFiltro(FiltroBuscarTodos filtro) {
             // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
             ExampleMatcher exampleMatcher = ExampleMatcher
-                    .matching()
-                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
-                    .withIgnoreNullValues()
+                    .matchingAll()
+                    .withIgnorePaths("dataInicio") // Ignorar atributo ou atributos específicos
+                    .withIgnoreCase() // Ignorar caixa alta ou baixa - quando String
+                    .withIgnoreNullValues() // Ignorar valores nulos
                     .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras parecidas - tipo Like do SQL
 
             // Example - pega campos populados para criar filtros
