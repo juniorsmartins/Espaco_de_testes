@@ -1,6 +1,7 @@
 package com.devvadercursos.interface_adapters.controllers;
 
-import com.devvadercursos.application_business.usecases.dtos.CursoDTOI;
+import com.devvadercursos.application_business.usecases.dtos.CursoPatchDTO;
+import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.services.IGenericsService;
 import com.devvadercursos.enterprise_business.entities.Curso;
@@ -17,24 +18,24 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/v1/cursos")
-public final class CursosControllerImpl extends CursosController<CursoDTOI, FiltroBuscarTodos, Long> {
+public final class CursosControllerImpl extends CursosController<CursoDTO, CursoPatchDTO, FiltroBuscarTodos, Long> {
 
     @Autowired
-    private IGenericsService<CursoDTOI, FiltroBuscarTodos, Curso, Long> cursoService;
+    private IGenericsService<CursoDTO, CursoPatchDTO, FiltroBuscarTodos, Curso, Long> cursoService;
 
     @Override
-    public ResponseEntity<CursoDTOI> cadastrar(@RequestBody @Valid CursoDTOI dtoIn) {
+    public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CursoDTO dtoIn) {
         return cursoService.cadastrar(dtoIn);
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTOI>> buscarTodos(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0,
+    public ResponseEntity<Page<CursoDTO>> buscarTodos(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0,
             size = 3) Pageable paginacao, FiltroBuscarTodos filtro) {
         return cursoService.buscarTodos(paginacao, filtro);
     }
 
     @Override
-    public ResponseEntity<CursoDTOI> consultarPorId(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<CursoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
         return cursoService.consultarPorId(id);
     }
 
@@ -44,13 +45,14 @@ public final class CursosControllerImpl extends CursosController<CursoDTOI, Filt
     }
 
     @Override
-    public ResponseEntity<CursoDTOI> atualizarTotalOuSalvar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTOI cursoDTO) {
+    public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
         return cursoService.atualizarTotalOuSalvar(id, cursoDTO);
     }
 
     @Override
-    ResponseEntity<CursoDTOI> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTOI cursoDTO) {
-        return cursoService.atualizarParcialOuLancarExcecao(id, cursoDTO);
+    public ResponseEntity<CursoPatchDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody
+        @Valid CursoPatchDTO cursoPatchDTO) {
+        return cursoService.atualizarParcialOuLancarExcecao(id, cursoPatchDTO);
     }
 
     @Override

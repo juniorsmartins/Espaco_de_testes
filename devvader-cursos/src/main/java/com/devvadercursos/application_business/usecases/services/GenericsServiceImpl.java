@@ -1,6 +1,7 @@
 package com.devvadercursos.application_business.usecases.services;
 
-import com.devvadercursos.application_business.usecases.dtos.CursoDTOI;
+import com.devvadercursos.application_business.usecases.dtos.CursoPatchDTO;
+import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
@@ -25,7 +26,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroBuscarTodos, Curso, Long> {
+public class GenericsServiceImpl implements IGenericsService<CursoDTO, CursoPatchDTO, FiltroBuscarTodos, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -35,11 +36,11 @@ public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroB
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTOI> cadastrar(CursoDTOI dtoIn) {
+    public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> ICursosRepository.saveAndFlush(curso))
-                .map(curso -> modelMapper.map(curso, CursoDTOI.class))
+                .map(curso -> modelMapper.map(curso, CursoDTO.class))
                 .map(cursoDTO -> ResponseEntity
                         .created(URI.create("/" + cursoDTO.getId()))
                         .body(cursoDTO))
@@ -47,16 +48,16 @@ public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroB
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTOI>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
+    public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
         if(filtro == null)
             return ResponseEntity
                     .ok()
-                    .body(ICursosRepository.findAll(paginacao).map(curso -> modelMapper.map(curso, CursoDTOI.class)));
+                    .body(ICursosRepository.findAll(paginacao).map(curso -> modelMapper.map(curso, CursoDTO.class)));
 
         return ResponseEntity
                 .ok()
                 .body(ICursosRepository.findAll(configurarFiltro(filtro), paginacao)
-                        .map(curso -> modelMapper.map(curso, CursoDTOI.class)));
+                        .map(curso -> modelMapper.map(curso, CursoDTO.class)));
     }
 
         private Example<Curso> configurarFiltro(FiltroBuscarTodos filtro) {
@@ -73,9 +74,9 @@ public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroB
         }
 
     @Override
-    public ResponseEntity<CursoDTOI> consultarPorId(Long id) {
+    public ResponseEntity<CursoDTO> consultarPorId(Long id) {
         return ICursosRepository.findById(id)
-                .map(curso -> modelMapper.map(curso, CursoDTOI.class))
+                .map(curso -> modelMapper.map(curso, CursoDTO.class))
                 .map(cursoDTO -> ResponseEntity
                         .ok()
                         .body(cursoDTO))
@@ -84,7 +85,7 @@ public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroB
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTOI> atualizarTotalOuSalvar(Long id, CursoDTOI dtoIn) {
+    public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> {
@@ -92,13 +93,13 @@ public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroB
                     ICursosRepository.saveAndFlush(curso);
                     return ResponseEntity
                             .ok()
-                            .body(modelMapper.map(curso, CursoDTOI.class));
+                            .body(modelMapper.map(curso, CursoDTO.class));
                 }).orElseThrow();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTOI> atualizarParcialOuLancarExcecao(Long id, CursoDTOI dtoIn) {
+    public ResponseEntity<CursoPatchDTO> atualizarParcialOuLancarExcecao(Long id, CursoPatchDTO dtoIn) {
         return ICursosRepository.findById(id)
                 .map(curso -> {
                     curso.setTitulo(dtoIn.getTitulo());
@@ -107,7 +108,7 @@ public class IGenericsServiceImpl implements IGenericsService<CursoDTOI, FiltroB
                     curso.setDataFim(dtoIn.getDataFim());
                     return ResponseEntity
                             .ok()
-                            .body(modelMapper.map(curso, CursoDTOI.class));
+                            .body(modelMapper.map(curso, CursoPatchDTO.class));
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
     }
 

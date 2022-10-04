@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class CursoDTOI implements IGenericsDTO<Long>, Serializable {
+public final class CursoDTO implements IGenericsDTO<Long>, Serializable {
 
     private Long id;
 

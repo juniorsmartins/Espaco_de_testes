@@ -11,9 +11,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class InstituicaoDTOI implements IGenericsDTO<Long>, Serializable {
+public final class RegistroDTO implements IGenericsDTO<Long>, Serializable {
 
     private Long id;
-    private String nome;
+    private String linkCertificado;
+    private String numeroCertificado;
     private Long curso;
 }
