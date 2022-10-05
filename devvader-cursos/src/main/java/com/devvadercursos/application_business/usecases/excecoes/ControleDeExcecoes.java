@@ -52,11 +52,11 @@ public final class ControleDeExcecoes {
     }
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiDeErroQualquer> filtrarRecursoNaoEncontradoException(RecursoNaoEncontradoException recursoNaoEncontradoException) {
         return ResponseEntity
-                .badRequest()
-                .body(new ApiDeErroQualquer(HttpStatus.BAD_REQUEST.toString(), recursoNaoEncontradoException.getMessage()));
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiDeErroQualquer(HttpStatus.NOT_FOUND.toString(), recursoNaoEncontradoException.getMessage()));
     }
 
     @ExceptionHandler

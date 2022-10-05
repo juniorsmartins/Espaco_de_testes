@@ -108,7 +108,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                             .ok()
                             .body(modelMapper.map(curso, CursoDTO.class));
                 }).orElseThrow(() -> {
-                    log.warn(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
+                    log.error(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
                     return new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
                 });
     }
@@ -141,6 +141,9 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                             return ResponseEntity
                                     .ok()
                                     .body(MensagemPadrao.RECURSO_DELETADO);
-                        }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
+                        }).orElseThrow(() -> {
+                            log.warn(MensagemPadrao.ID_NAO_ENCONTRADO);
+                            return new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO);
+                        });
     }
 }
