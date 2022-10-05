@@ -1,5 +1,6 @@
 package com.devvadercursos.application_business.usecases.dtos;
 
+import com.devvadercursos.enterprise_business.entities.enuns.TematicaEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -27,8 +29,12 @@ public final class CursoDTO implements IGenericsDTO<Long>, Serializable {
 
     @NotNull @NotEmpty @Length(max = 150)
     private String titulo;
+
     @NotNull @NotEmpty @Length(max = 250)
     private String descricao;
+
+    @NotNull
+    private TematicaEnum tematica;
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)

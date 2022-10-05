@@ -15,5 +15,6 @@ public final class InstituicaoDTO implements IGenericsDTO<Long>, Serializable {
 
     private Long id;
     private String nome;
+    private String site;
     private Long curso;
 }

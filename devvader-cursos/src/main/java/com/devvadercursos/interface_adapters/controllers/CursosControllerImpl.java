@@ -1,6 +1,5 @@
 package com.devvadercursos.interface_adapters.controllers;
 
-import com.devvadercursos.application_business.usecases.dtos.CursoPatchDTO;
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.services.IGenericsService;
@@ -18,10 +17,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/v1/cursos")
-public final class CursosControllerImpl extends CursosController<CursoDTO, CursoPatchDTO, FiltroBuscarTodos, Long> {
+public final class CursosControllerImpl extends CursosController<CursoDTO, FiltroBuscarTodos, Long> {
 
     @Autowired
-    private IGenericsService<CursoDTO, CursoPatchDTO, FiltroBuscarTodos, Curso, Long> cursoService;
+    private IGenericsService<CursoDTO, FiltroBuscarTodos, Curso, Long> cursoService;
 
     @Override
     public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CursoDTO dtoIn) {
@@ -50,9 +49,9 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Curso
     }
 
     @Override
-    public ResponseEntity<CursoPatchDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody
-        @Valid CursoPatchDTO cursoPatchDTO) {
-        return cursoService.atualizarParcialOuLancarExcecao(id, cursoPatchDTO);
+    public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody
+        @Valid CursoDTO cursoDTO) {
+        return cursoService.atualizarParcialOuLancarExcecao(id, cursoDTO);
     }
 
     @Override

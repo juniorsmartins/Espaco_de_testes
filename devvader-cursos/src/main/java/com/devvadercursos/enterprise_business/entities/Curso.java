@@ -1,5 +1,6 @@
 package com.devvadercursos.enterprise_business.entities;
 
+import com.devvadercursos.enterprise_business.entities.enuns.TematicaEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,6 +31,10 @@ public final class Curso implements IGenericsEntity<Long>, Serializable {
 
     @Column(name = "descricao", length = 250)
     private String descricao;
+
+    @Column(name = "tematica")
+    @Enumerated(value = EnumType.STRING)
+    private TematicaEnum tematica;
 
     @Column(name = "data_inicio")
     private LocalDate dataInicio;

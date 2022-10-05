@@ -1,5 +1,6 @@
 package com.devvadercursos.application_business.usecases.dtos;
 
+import com.devvadercursos.enterprise_business.entities.enuns.TematicaEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -22,6 +23,7 @@ public final class FiltroBuscarTodos implements IGenericsDTO<Long>, Serializable
     private Long id;
     private String titulo;
     private String descricao;
+    private TematicaEnum tematica;
 
     @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
     @JsonDeserialize(using = LocalDateDeserializer.class)

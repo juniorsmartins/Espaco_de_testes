@@ -1,6 +1,5 @@
 package com.devvadercursos.application_business.usecases.services;
 
-import com.devvadercursos.application_business.usecases.dtos.CursoPatchDTO;
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
@@ -26,7 +25,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class GenericsServiceImpl implements IGenericsService<CursoDTO, CursoPatchDTO, FiltroBuscarTodos, Curso, Long> {
+public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBuscarTodos, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -94,21 +93,22 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, CursoPatc
                     return ResponseEntity
                             .ok()
                             .body(modelMapper.map(curso, CursoDTO.class));
-                }).orElseThrow();
+                }).orElseThrow(() -> new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoPatchDTO> atualizarParcialOuLancarExcecao(Long id, CursoPatchDTO dtoIn) {
+    public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO dtoIn) {
         return ICursosRepository.findById(id)
                 .map(curso -> {
                     curso.setTitulo(dtoIn.getTitulo());
                     curso.setDescricao(dtoIn.getDescricao());
+                    curso.setTematica(dtoIn.getTematica());
                     curso.setDataInicio(dtoIn.getDataInicio());
                     curso.setDataFim(dtoIn.getDataFim());
                     return ResponseEntity
                             .ok()
-                            .body(modelMapper.map(curso, CursoPatchDTO.class));
+                            .body(modelMapper.map(curso, CursoDTO.class));
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
     }
 

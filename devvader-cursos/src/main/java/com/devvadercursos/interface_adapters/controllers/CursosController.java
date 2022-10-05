@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-public abstract sealed class CursosController<T extends IGenericsDTO<ID>, A extends IGenericsDTO<ID>, F extends IGenericsDTO<ID>, ID> permits CursosControllerImpl {
+public abstract sealed class CursosController<T extends IGenericsDTO<ID>, F extends IGenericsDTO<ID>, ID> permits CursosControllerImpl {
 
     @PostMapping
     abstract ResponseEntity<T> cadastrar(T dto);
@@ -24,7 +24,7 @@ public abstract sealed class CursosController<T extends IGenericsDTO<ID>, A exte
     abstract ResponseEntity<T> atualizarTotalOuSalvar(ID id, T dto);
 
     @PatchMapping(value = "/{id}")
-    abstract ResponseEntity<A> atualizarParcialOuLancarExcecao(ID id, A dto);
+    abstract ResponseEntity<T> atualizarParcialOuLancarExcecao(ID id, T dto);
 
     @DeleteMapping(value = "/{id}")
     abstract ResponseEntity<?> deletarPorId(ID id);
