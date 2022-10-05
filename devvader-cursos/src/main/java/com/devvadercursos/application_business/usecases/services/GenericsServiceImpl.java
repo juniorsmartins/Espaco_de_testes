@@ -2,6 +2,7 @@ package com.devvadercursos.application_business.usecases.services;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
+import com.devvadercursos.application_business.usecases.excecoes.InternalErrorsException;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
 import com.devvadercursos.application_business.usecases.excecoes.RegraDeNegocioException;
@@ -43,7 +44,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                 .map(cursoDTO -> ResponseEntity
                         .created(URI.create("/" + cursoDTO.getId()))
                         .body(cursoDTO))
-                .orElseThrow(() -> new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA));
+                .orElseThrow(() -> new InternalErrorsException(MensagemPadrao.ERRO_INTERNO));
     }
 
     @Override
