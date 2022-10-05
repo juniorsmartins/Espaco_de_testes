@@ -1,0 +1,57 @@
+09:06:50.106 [main] INFO  c.d.DevvaderCursosApplication - Aplicação iniciada!
+09:06:50.502 [restartedMain] INFO  c.d.DevvaderCursosApplication - Aplicação iniciada!
+09:06:51.191 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.4.Final
+09:06:51.207 [restartedMain] INFO  c.d.DevvaderCursosApplication - Starting DevvaderCursosApplication using Java 17 on DESKTOP-283A254 with PID 12144 (D:\Workspace\IntelliJ\DevVader\devvader-cursos\target\classes started by JuniorMartins in D:\Workspace\IntelliJ\DevVader\devvader-cursos)
+09:06:51.207 [restartedMain] INFO  c.d.DevvaderCursosApplication - No active profile set, falling back to 1 default profile: "default"
+09:06:51.275 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+09:06:51.275 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+09:06:52.349 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:06:52.569 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 201 ms. Found 1 JPA repository interfaces.
+09:06:52.953 [restartedMain] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=f6be4358-49fc-3a4d-92e3-0ffd252ca71b
+09:06:54.198 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 0 (http)
+09:06:54.214 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-auto-1"]
+09:06:54.214 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+09:06:54.214 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.65]
+09:06:54.355 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:06:54.355 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3080 ms
+09:06:54.580 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:06:54.658 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.10.Final
+09:06:54.876 [restartedMain] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+09:06:55.033 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+09:06:55.251 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+09:06:55.267 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL95Dialect
+09:06:55.839 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+09:06:55.839 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "cursos" does not exist, skipping
+09:06:55.839 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+09:06:55.839 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "instituicoes" does not exist, skipping
+09:06:55.839 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+09:06:55.839 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "registros" does not exist, skipping
+09:06:56.273 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+09:06:56.288 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:06:56.847 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:06:57.321 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:06:57.531 [restartedMain] INFO  o.s.c.n.e.c.DiscoveryClientOptionalArgsConfiguration - Eureka HTTP Client uses RestTemplate.
+09:06:57.756 [restartedMain] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+09:06:57.787 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-auto-1"]
+09:06:57.819 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 56682 (http) with context path ''
+09:06:57.819 [restartedMain] INFO  o.s.c.n.e.s.EurekaAutoServiceRegistration - Updating port to 56682
+09:06:57.819 [restartedMain] INFO  o.s.c.n.eureka.InstanceInfoFactory - Setting initial instance status as: STARTING
+09:06:57.959 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Initializing Eureka in region us-east-1
+09:06:57.959 [restartedMain] INFO  c.n.d.s.r.aws.ConfigClusterResolver - Resolving eureka endpoints via configuration
+09:06:57.991 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Disable delta property : false
+09:06:57.991 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Single vip registry refresh property : null
+09:06:57.991 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Force full registry fetch : false
+09:06:57.991 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Application is null : false
+09:06:57.991 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Registered Applications size is zero : true
+09:06:57.991 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Application version is -1: true
+09:06:57.991 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Getting all instance registry info from the eureka server
+09:06:58.428 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - The response status is 200
+09:06:58.428 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Starting heartbeat executor: renew interval is: 30
+09:06:58.428 [restartedMain] INFO  c.n.discovery.InstanceInfoReplicator - InstanceInfoReplicator onDemand update allowed rate per min is 4
+09:06:58.444 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Discovery Client initialized at timestamp 1664975218444 with initial instances count: 2
+09:06:58.444 [restartedMain] INFO  o.s.c.n.e.s.EurekaServiceRegistry - Registering application DEVVADER-CURSOS with eureka with status UP
+09:06:58.444 [restartedMain] INFO  c.netflix.discovery.DiscoveryClient - Saw local status change event StatusChangeEvent [timestamp=1664975218444, current=UP, previous=STARTING]
+09:06:58.444 [DiscoveryClient-InstanceInfoReplicator-0] INFO  c.netflix.discovery.DiscoveryClient - DiscoveryClient_DEVVADER-CURSOS/devvader-cursos:-1274396692: registering service...
+09:06:58.509 [DiscoveryClient-InstanceInfoReplicator-0] INFO  c.netflix.discovery.DiscoveryClient - DiscoveryClient_DEVVADER-CURSOS/devvader-cursos:-1274396692 - registration status: 204
+09:06:58.591 [restartedMain] INFO  c.d.DevvaderCursosApplication - Started DevvaderCursosApplication in 8.069 seconds (JVM running for 9.028)
+09:06:58.606 [restartedMain] INFO  c.d.DevvaderCursosApplication - Microserviço para cadastrar cursos em Portfólio.
