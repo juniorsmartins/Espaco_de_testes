@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -38,26 +39,31 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     @Override
     public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
         return Optional.of(dtoIn)
-                .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
-                .map(curso -> ICursosRepository.saveAndFlush(curso))
-                .map(curso -> modelMapper.map(curso, CursoDTO.class))
+                .map(cursoDTO -> {
+                    var curso = modelMapper.map(cursoDTO, Curso.class);
+                    curso.setDataHoraCadastro(Instant.now());
+                    ICursosRepository.saveAndFlush(curso);
+                    log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
+                    return modelMapper.map(curso, CursoDTO.class);
+                })
                 .map(cursoDTO -> ResponseEntity
                         .created(URI.create("/" + cursoDTO.getId()))
                         .body(cursoDTO))
-                .orElseThrow(() -> new InternalErrorsException(MensagemPadrao.ERRO_INTERNO));
+                .orElseThrow(() -> {
+                    log.error(MensagemPadrao.ERRO_INTERNO);
+                    return new InternalErrorsException(MensagemPadrao.ERRO_INTERNO);
+                });
     }
 
     @Override
     public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
-        if(filtro == null)
-            return ResponseEntity
-                    .ok()
-                    .body(ICursosRepository.findAll(paginacao).map(curso -> modelMapper.map(curso, CursoDTO.class)));
-
         return ResponseEntity
                 .ok()
                 .body(ICursosRepository.findAll(configurarFiltro(filtro), paginacao)
-                        .map(curso -> modelMapper.map(curso, CursoDTO.class)));
+                            .map(curso -> {
+                                log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
+                                return modelMapper.map(curso, CursoDTO.class);
+                            }));
     }
 
         private Example<Curso> configurarFiltro(FiltroBuscarTodos filtro) {
@@ -76,11 +82,17 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     @Override
     public ResponseEntity<CursoDTO> consultarPorId(Long id) {
         return ICursosRepository.findById(id)
-                .map(curso -> modelMapper.map(curso, CursoDTO.class))
+                .map(curso -> {
+                    log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
+                    return modelMapper.map(curso, CursoDTO.class);
+                })
                 .map(cursoDTO -> ResponseEntity
                         .ok()
                         .body(cursoDTO))
-                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
+                .orElseThrow(() -> {
+                    log.warn(MensagemPadrao.ID_NAO_ENCONTRADO);
+                    return new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO);
+                });
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
@@ -91,10 +103,14 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                 .map(curso -> {
                     curso.setId(id);
                     ICursosRepository.saveAndFlush(curso);
+                    log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity
                             .ok()
                             .body(modelMapper.map(curso, CursoDTO.class));
-                }).orElseThrow(() -> new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA));
+                }).orElseThrow(() -> {
+                    log.warn(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
+                    return new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
+                });
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
@@ -110,7 +126,10 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                     return ResponseEntity
                             .ok()
                             .body(modelMapper.map(curso, CursoDTO.class));
-                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO));
+                }).orElseThrow(() -> {
+                    log.warn(MensagemPadrao.ID_NAO_ENCONTRADO);
+                    return new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO);
+                });
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)

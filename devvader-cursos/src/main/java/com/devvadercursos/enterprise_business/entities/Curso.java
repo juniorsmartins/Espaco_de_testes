@@ -42,9 +42,12 @@ public final class Curso implements IGenericsEntity<Long>, Serializable {
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
-    @Column(name = "data_hora_cadastro")
-    private Instant dataHoraCadastro;
-
     @Column(name = "cliente_fk")
     private Long cliente;
+
+    // ----- Auditoria -----
+    @Column(name = "data_hora_cadastro")
+    private Instant dataHoraCadastro;
+    @Column(name = "data_hora_ultima_atualizacao")
+    private Instant dataHoraUltimaAtualizacao;
 }

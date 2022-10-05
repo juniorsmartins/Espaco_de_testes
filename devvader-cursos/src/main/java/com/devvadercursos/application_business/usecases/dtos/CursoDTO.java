@@ -10,7 +10,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -48,8 +47,10 @@ public final class CursoDTO implements IGenericsDTO<Long>, Serializable {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dataFim;
 
-    private Instant dataHoraCadastro = Instant.now();
-
     @NotNull
     private Long cliente;
+
+    // ----- Auditoria -----
+    private Instant dataHoraCadastro;
+    private Instant dataHoraUltimaAtualizacao;
 }

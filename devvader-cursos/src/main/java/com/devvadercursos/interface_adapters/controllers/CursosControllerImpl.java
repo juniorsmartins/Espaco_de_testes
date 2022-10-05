@@ -2,6 +2,7 @@ package com.devvadercursos.interface_adapters.controllers;
 
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
+import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.services.IGenericsService;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import org.slf4j.Logger;
@@ -31,20 +32,20 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Filtr
 
     @Override
     public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CursoDTO dtoIn) {
-        logger.info("----- iniciado procedimento de cadastrar curso -----");
+        logger.info(MensagemPadrao.PROCEDIMENTO_CADASTRAR);
         return cursoService.cadastrar(dtoIn);
     }
 
     @Override
     public ResponseEntity<Page<CursoDTO>> buscarTodos(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0,
             size = 3) Pageable paginacao, FiltroBuscarTodos filtro) {
-        logger.info("----- iniciado procedimento de buscar todos os cursos -----");
+        logger.info(MensagemPadrao.PROCEDIMENTO_BUSCAR_TODOS);
         return cursoService.buscarTodos(paginacao, filtro);
     }
 
     @Override
     public ResponseEntity<CursoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
-        logger.info("----- iniciado procedimento de consultar curso por ID -----");
+        logger.info(MensagemPadrao.PROCEDIMENTO_CONSULTAR_POR_ID);
         return cursoService.consultarPorId(id);
     }
 
@@ -55,20 +56,20 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Filtr
 
     @Override
     public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
-        logger.info("----- iniciado procedimento de atualizar curso com Put -----");
+        logger.info(MensagemPadrao.PROCEDIMENTO_ATUALIZAR_TOTAL_OU_SALVAR);
         return cursoService.atualizarTotalOuSalvar(id, cursoDTO);
     }
 
     @Override
     public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody
         @Valid CursoDTO cursoDTO) {
-        logger.info("----- iniciado procedimento de atualizar curso com Patch -----");
+        logger.info(MensagemPadrao.PROCEDIMENTO_ATUALIZAR_PARCIAL_OU_EXCEPTION);
         return cursoService.atualizarParcialOuLancarExcecao(id, cursoDTO);
     }
 
     @Override
     public ResponseEntity<?> deletarPorId(@PathVariable(value = "id") Long id) {
-        logger.info("----- iniciado procedimento de deletar curso por ID -----");
+        logger.info(MensagemPadrao.PROCEDIMENTO_DELETAR_POR_ID);
         return cursoService.deletarPorId(id);
     }
 }
