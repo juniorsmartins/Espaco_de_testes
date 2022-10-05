@@ -4,6 +4,8 @@ import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.services.IGenericsService;
 import com.devvadercursos.enterprise_business.entities.Curso;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -11,7 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -19,22 +24,27 @@ import javax.validation.Valid;
 @RequestMapping(value = "/v1/cursos")
 public final class CursosControllerImpl extends CursosController<CursoDTO, FiltroBuscarTodos, Long> {
 
+    private static Logger logger = LoggerFactory.getLogger(CursosControllerImpl.class);
+
     @Autowired
     private IGenericsService<CursoDTO, FiltroBuscarTodos, Curso, Long> cursoService;
 
     @Override
     public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CursoDTO dtoIn) {
+        logger.info("----- iniciado procedimento de cadastrar curso -----");
         return cursoService.cadastrar(dtoIn);
     }
 
     @Override
     public ResponseEntity<Page<CursoDTO>> buscarTodos(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0,
             size = 3) Pageable paginacao, FiltroBuscarTodos filtro) {
+        logger.info("----- iniciado procedimento de buscar todos os cursos -----");
         return cursoService.buscarTodos(paginacao, filtro);
     }
 
     @Override
     public ResponseEntity<CursoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
+        logger.info("----- iniciado procedimento de consultar curso por ID -----");
         return cursoService.consultarPorId(id);
     }
 
@@ -45,17 +55,20 @@ public final class CursosControllerImpl extends CursosController<CursoDTO, Filtr
 
     @Override
     public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO cursoDTO) {
+        logger.info("----- iniciado procedimento de atualizar curso com Put -----");
         return cursoService.atualizarTotalOuSalvar(id, cursoDTO);
     }
 
     @Override
     public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(@PathVariable(value = "id") Long id, @RequestBody
         @Valid CursoDTO cursoDTO) {
+        logger.info("----- iniciado procedimento de atualizar curso com Patch -----");
         return cursoService.atualizarParcialOuLancarExcecao(id, cursoDTO);
     }
 
     @Override
     public ResponseEntity<?> deletarPorId(@PathVariable(value = "id") Long id) {
+        logger.info("----- iniciado procedimento de deletar curso por ID -----");
         return cursoService.deletarPorId(id);
     }
 }

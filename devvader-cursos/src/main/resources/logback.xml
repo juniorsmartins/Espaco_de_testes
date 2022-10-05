@@ -9,14 +9,17 @@
         </encoder>
     </appender>
 
+    <logger name="com.devvadercursos.interface_adapters.controllers.CursosControllerImpl" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="FILE" />
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>
 
