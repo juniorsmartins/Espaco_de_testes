@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -43,8 +45,10 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                     var curso = modelMapper.map(cursoDTO, Curso.class);
                     curso.setDataHoraCadastro(Instant.now());
                     ICursosRepository.saveAndFlush(curso);
+                    cursoDTO.setDataHoraCadastro(LocalDateTime.ofInstant(curso.getDataHoraCadastro(),
+                            ZoneId.systemDefault()));
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
-                    return modelMapper.map(curso, CursoDTO.class);
+                    return cursoDTO;
                 })
                 .map(cursoDTO -> ResponseEntity
                         .created(URI.create("/" + cursoDTO.getId()))
@@ -61,8 +65,14 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                 .ok()
                 .body(ICursosRepository.findAll(configurarFiltro(filtro), paginacao)
                             .map(curso -> {
+                                var cursoDTO = modelMapper.map(curso, CursoDTO.class);
+                                cursoDTO.setDataHoraCadastro(LocalDateTime.ofInstant(curso.getDataHoraCadastro(),
+                                        ZoneId.systemDefault()));
+                                if(curso.getDataHoraUltimaAtualizacao() != null)
+                                    cursoDTO.setDataHoraUltimaAtualizacao(LocalDateTime.ofInstant(curso.getDataHoraUltimaAtualizacao(),
+                                            ZoneId.systemDefault()));
                                 log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
-                                return modelMapper.map(curso, CursoDTO.class);
+                                return cursoDTO;
                             }));
     }
 
@@ -83,8 +93,13 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     public ResponseEntity<CursoDTO> consultarPorId(Long id) {
         return ICursosRepository.findById(id)
                 .map(curso -> {
+                    var cursoDTO = modelMapper.map(curso, CursoDTO.class);
+                    cursoDTO.setDataHoraCadastro(LocalDateTime.ofInstant(curso.getDataHoraCadastro(), ZoneId.systemDefault()));
+                    if(curso.getDataHoraUltimaAtualizacao() != null)
+                        cursoDTO.setDataHoraUltimaAtualizacao(LocalDateTime.ofInstant(curso.getDataHoraUltimaAtualizacao(),
+                                ZoneId.systemDefault()));
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
-                    return modelMapper.map(curso, CursoDTO.class);
+                    return cursoDTO;
                 })
                 .map(cursoDTO -> ResponseEntity
                         .ok()
@@ -102,6 +117,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                 .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
                 .map(curso -> {
                     curso.setId(id);
+                    curso.setDataHoraUltimaAtualizacao(Instant.now());
                     ICursosRepository.saveAndFlush(curso);
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity
@@ -123,6 +139,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                     curso.setTematica(dtoIn.getTematica());
                     curso.setDataInicio(dtoIn.getDataInicio());
                     curso.setDataFim(dtoIn.getDataFim());
+                    curso.setDataHoraUltimaAtualizacao(Instant.now());
                     return ResponseEntity
                             .ok()
                             .body(modelMapper.map(curso, CursoDTO.class));

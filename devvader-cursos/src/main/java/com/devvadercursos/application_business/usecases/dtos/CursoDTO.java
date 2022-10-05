@@ -13,8 +13,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -51,6 +51,6 @@ public final class CursoDTO implements IGenericsDTO<Long>, Serializable {
     private Long cliente;
 
     // ----- Auditoria -----
-    private Instant dataHoraCadastro;
-    private Instant dataHoraUltimaAtualizacao;
+    private LocalDateTime dataHoraCadastro;
+    private LocalDateTime dataHoraUltimaAtualizacao;
 }
