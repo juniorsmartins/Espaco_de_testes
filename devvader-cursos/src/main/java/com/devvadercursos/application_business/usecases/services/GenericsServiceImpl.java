@@ -1,5 +1,6 @@
 package com.devvadercursos.application_business.usecases.services;
 
+import com.devvadercursos.application_business.usecases.dtos.CursoAtualizarDTO;
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.InternalErrorsException;
@@ -29,7 +30,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBuscarTodos, Curso, Long> {
+public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBuscarTodos, CursoAtualizarDTO, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -143,14 +144,14 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                             .ok()
                             .body(cursoDTO);
                 }).orElseThrow(() -> {
-                    log.error(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
-                    return new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
+                    log.error(MensagemPadrao.ERRO_INTERNO);
+                    return new InternalErrorsException(MensagemPadrao.ERRO_INTERNO);
                 });
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO dtoIn) {
+    public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoAtualizarDTO dtoIn) {
         return iCursosRepository.findById(id)
                 .map(curso -> {
                     curso.setTitulo(dtoIn.getTitulo());
