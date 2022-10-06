@@ -45,19 +45,27 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                     var curso = modelMapper.map(cursoDTO, Curso.class);
                     curso.setDataHoraCadastro(Instant.now());
                     ICursosRepository.saveAndFlush(curso);
-                    cursoDTO.setDataHoraCadastro(LocalDateTime.ofInstant(curso.getDataHoraCadastro(),
-                            ZoneId.systemDefault()));
+
+                    cursoDTO = modelMapper.map(curso, CursoDTO.class);
+                    converterInstantEmDataHoraLocal(curso, cursoDTO);
+
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
-                    return cursoDTO;
+                    return ResponseEntity
+                            .created(URI.create("/" + curso.getId()))
+                            .body(cursoDTO);
                 })
-                .map(cursoDTO -> ResponseEntity
-                        .created(URI.create("/" + cursoDTO.getId()))
-                        .body(cursoDTO))
                 .orElseThrow(() -> {
                     log.error(MensagemPadrao.ERRO_INTERNO);
                     return new InternalErrorsException(MensagemPadrao.ERRO_INTERNO);
                 });
     }
+
+        private void converterInstantEmDataHoraLocal(Curso curso, CursoDTO cursoDTO) {
+            cursoDTO.setDataHoraCadastro(LocalDateTime.ofInstant(curso.getDataHoraCadastro(), ZoneId.systemDefault()));
+            if(curso.getDataHoraUltimaAtualizacao() != null)
+                cursoDTO.setDataHoraUltimaAtualizacao(LocalDateTime.ofInstant(curso.getDataHoraUltimaAtualizacao(),
+                        ZoneId.systemDefault()));
+        }
 
     @Override
     public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
@@ -66,11 +74,8 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                 .body(ICursosRepository.findAll(configurarFiltro(filtro), paginacao)
                             .map(curso -> {
                                 var cursoDTO = modelMapper.map(curso, CursoDTO.class);
-                                cursoDTO.setDataHoraCadastro(LocalDateTime.ofInstant(curso.getDataHoraCadastro(),
-                                        ZoneId.systemDefault()));
-                                if(curso.getDataHoraUltimaAtualizacao() != null)
-                                    cursoDTO.setDataHoraUltimaAtualizacao(LocalDateTime.ofInstant(curso.getDataHoraUltimaAtualizacao(),
-                                            ZoneId.systemDefault()));
+                                converterInstantEmDataHoraLocal(curso, cursoDTO);
+
                                 log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                                 return cursoDTO;
                             }));
@@ -94,16 +99,13 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
         return ICursosRepository.findById(id)
                 .map(curso -> {
                     var cursoDTO = modelMapper.map(curso, CursoDTO.class);
-                    cursoDTO.setDataHoraCadastro(LocalDateTime.ofInstant(curso.getDataHoraCadastro(), ZoneId.systemDefault()));
-                    if(curso.getDataHoraUltimaAtualizacao() != null)
-                        cursoDTO.setDataHoraUltimaAtualizacao(LocalDateTime.ofInstant(curso.getDataHoraUltimaAtualizacao(),
-                                ZoneId.systemDefault()));
+                    converterInstantEmDataHoraLocal(curso, cursoDTO);
+
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
-                    return cursoDTO;
+                    return ResponseEntity
+                            .ok()
+                            .body(cursoDTO);
                 })
-                .map(cursoDTO -> ResponseEntity
-                        .ok()
-                        .body(cursoDTO))
                 .orElseThrow(() -> {
                     log.warn(MensagemPadrao.ID_NAO_ENCONTRADO);
                     return new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO);
@@ -114,15 +116,19 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     @Override
     public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO dtoIn) {
         return Optional.of(dtoIn)
-                .map(cursoDTO -> modelMapper.map(cursoDTO, Curso.class))
-                .map(curso -> {
+                .map(cursoDTO -> {
+                    var curso = modelMapper.map(cursoDTO, Curso.class);
                     curso.setId(id);
                     curso.setDataHoraUltimaAtualizacao(Instant.now());
                     ICursosRepository.saveAndFlush(curso);
+
+                    cursoDTO = modelMapper.map(curso, CursoDTO.class);
+                    converterInstantEmDataHoraLocal(curso, cursoDTO);
+
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity
                             .ok()
-                            .body(modelMapper.map(curso, CursoDTO.class));
+                            .body(cursoDTO);
                 }).orElseThrow(() -> {
                     log.error(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
                     return new RegraDeNegocioException(MensagemPadrao.REGRA_DE_NEGOCIO_QUEBRADA);
@@ -140,9 +146,14 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                     curso.setDataInicio(dtoIn.getDataInicio());
                     curso.setDataFim(dtoIn.getDataFim());
                     curso.setDataHoraUltimaAtualizacao(Instant.now());
+
+                    var cursoDTO = modelMapper.map(curso, CursoDTO.class);
+                    converterInstantEmDataHoraLocal(curso, cursoDTO);
+
+                    log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity
                             .ok()
-                            .body(modelMapper.map(curso, CursoDTO.class));
+                            .body(cursoDTO);
                 }).orElseThrow(() -> {
                     log.warn(MensagemPadrao.ID_NAO_ENCONTRADO);
                     return new RecursoNaoEncontradoException(MensagemPadrao.ID_NAO_ENCONTRADO);
