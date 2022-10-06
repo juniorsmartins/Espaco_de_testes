@@ -35,7 +35,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     private ModelMapper modelMapper;
 
     @Autowired
-    private ICursosRepository ICursosRepository;
+    private ICursosRepository iCursosRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
@@ -44,7 +44,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
                 .map(cursoDTO -> {
                     var curso = modelMapper.map(cursoDTO, Curso.class);
                     curso.setDataHoraCadastro(Instant.now());
-                    ICursosRepository.saveAndFlush(curso);
+                    iCursosRepository.saveAndFlush(curso);
 
                     cursoDTO = modelMapper.map(curso, CursoDTO.class);
                     converterInstantEmDataHoraLocal(curso, cursoDTO);
@@ -71,7 +71,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable paginacao, FiltroBuscarTodos filtro) {
         return ResponseEntity
                 .ok()
-                .body(ICursosRepository.findAll(configurarFiltro(filtro), paginacao)
+                .body(iCursosRepository.findAll(configurarFiltro(filtro), paginacao)
                             .map(curso -> {
                                 var cursoDTO = modelMapper.map(curso, CursoDTO.class);
                                 converterInstantEmDataHoraLocal(curso, cursoDTO);
@@ -96,7 +96,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
 
     @Override
     public ResponseEntity<CursoDTO> consultarPorId(Long id) {
-        return ICursosRepository.findById(id)
+        return iCursosRepository.findById(id)
                 .map(curso -> {
                     var cursoDTO = modelMapper.map(curso, CursoDTO.class);
                     converterInstantEmDataHoraLocal(curso, cursoDTO);
@@ -117,13 +117,26 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long id, CursoDTO dtoIn) {
         return Optional.of(dtoIn)
                 .map(cursoDTO -> {
-                    var curso = modelMapper.map(cursoDTO, Curso.class);
-                    curso.setId(id);
-                    curso.setDataHoraUltimaAtualizacao(Instant.now());
-                    ICursosRepository.saveAndFlush(curso);
+                    var cursoEntity = iCursosRepository.findById(id);
+                    if(!cursoEntity.isPresent()) {
+                        var curso = modelMapper.map(cursoDTO, Curso.class);
+                        curso.setDataHoraCadastro(Instant.now());
+                        iCursosRepository.saveAndFlush(curso);
 
-                    cursoDTO = modelMapper.map(curso, CursoDTO.class);
-                    converterInstantEmDataHoraLocal(curso, cursoDTO);
+                        cursoDTO = modelMapper.map(curso, CursoDTO.class);
+                        converterInstantEmDataHoraLocal(curso, cursoDTO);
+                    } else {
+                        cursoEntity.get().setTitulo(cursoDTO.getTitulo());
+                        cursoEntity.get().setDescricao(cursoDTO.getDescricao());
+                        cursoEntity.get().setTematica(cursoDTO.getTematica());
+                        cursoEntity.get().setDataInicio(cursoDTO.getDataInicio());
+                        cursoEntity.get().setDataFim(cursoDTO.getDataFim());
+                        cursoEntity.get().setCliente(cursoDTO.getCliente());
+                        cursoEntity.get().setDataHoraUltimaAtualizacao(Instant.now());
+
+                        cursoDTO = modelMapper.map(cursoEntity.get(), CursoDTO.class);
+                        converterInstantEmDataHoraLocal(cursoEntity.get(), cursoDTO);
+                    }
 
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity
@@ -138,7 +151,7 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTO> atualizarParcialOuLancarExcecao(Long id, CursoDTO dtoIn) {
-        return ICursosRepository.findById(id)
+        return iCursosRepository.findById(id)
                 .map(curso -> {
                     curso.setTitulo(dtoIn.getTitulo());
                     curso.setDescricao(dtoIn.getDescricao());
@@ -163,9 +176,9 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<?> deletarPorId(Long id) {
-        return ICursosRepository.findById(id)
+        return iCursosRepository.findById(id)
                         .map(curso -> {
-                            ICursosRepository.delete(curso);
+                            iCursosRepository.delete(curso);
                             return ResponseEntity
                                     .ok()
                                     .body(MensagemPadrao.RECURSO_DELETADO);
