@@ -2,6 +2,8 @@ package com.devvadercursos.enterprise_business.entities;
 
 import com.devvadercursos.enterprise_business.entities.enuns.TematicaEnum;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -46,8 +48,10 @@ public final class Curso implements IGenericsEntity<Long>, Serializable {
     private Long cliente;
 
     // ----- Auditoria -----
+//    @CreatedDate
     @Column(name = "data_hora_cadastro")
     private Instant dataHoraCadastro;
+//    @LastModifiedDate
     @Column(name = "data_hora_ultima_atualizacao")
     private Instant dataHoraUltimaAtualizacao;
 }

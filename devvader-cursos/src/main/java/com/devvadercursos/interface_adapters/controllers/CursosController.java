@@ -15,7 +15,7 @@ public abstract sealed class CursosController<T extends IGenericsDTO<ID>, F exte
     @GetMapping
     abstract ResponseEntity<Page<T>> buscarTodos(Pageable paginacao, F filtro);
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(path = "/{id}", produces = {"application/json"})
     abstract ResponseEntity<T> consultarPorId(Long id);
 
     @GetMapping(value = "/porta")
