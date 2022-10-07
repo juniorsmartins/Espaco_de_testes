@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/v1/cursos")
+@RequestMapping(value = "${app.api.base}/cursos")
 public final class CursosControllerImpl extends CursosController<CursoDTO, FiltroBuscarTodos, CursoAtualizarDTO, Long> {
 
     private static Logger logger = LoggerFactory.getLogger(CursosControllerImpl.class);
