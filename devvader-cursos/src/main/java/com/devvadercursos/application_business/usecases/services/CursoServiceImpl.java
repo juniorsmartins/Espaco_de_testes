@@ -6,7 +6,6 @@ import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.InternalErrorsException;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
-import com.devvadercursos.application_business.usecases.excecoes.RegraDeNegocioException;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.ICursosRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBuscarTodos, CursoAtualizarDTO, Curso, Long> {
+public class CursoServiceImpl implements IGenericsService<CursoDTO, FiltroBuscarTodos, CursoAtualizarDTO, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
