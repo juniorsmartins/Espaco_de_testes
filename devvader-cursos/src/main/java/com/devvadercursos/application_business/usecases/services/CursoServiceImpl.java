@@ -1,16 +1,18 @@
 package com.devvadercursos.application_business.usecases.services;
 
+import com.devvadercursos.application_business.usecases.configs.RabbitMQConfig;
 import com.devvadercursos.application_business.usecases.dtos.CursoAtualizarDTO;
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.InternalErrorsException;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
-import com.devvadercursos.application_business.usecases.excecoes.RegraDeNegocioException;
+import com.devvadercursos.application_business.usecases.mensageria.MensagemCurso;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.ICursosRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -30,13 +32,16 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBuscarTodos, CursoAtualizarDTO, Curso, Long> {
+public class CursoServiceImpl implements IGenericsService<CursoDTO, FiltroBuscarTodos, CursoAtualizarDTO, Curso, Long> {
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private ICursosRepository iCursosRepository;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
@@ -49,6 +54,9 @@ public class GenericsServiceImpl implements IGenericsService<CursoDTO, FiltroBus
 
                     cursoDTO = modelMapper.map(curso, CursoDTO.class);
                     converterInstantEmDataHoraLocal(curso, cursoDTO);
+
+                    var mensagem = modelMapper.map(cursoDTO, MensagemCurso.class);
+                    rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NOVO_CADASTRO_CURSO, "", mensagem);
 
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity
