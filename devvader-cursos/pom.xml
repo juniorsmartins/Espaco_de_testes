@@ -76,6 +76,7 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 
+
 		<!-- Comunicação Assíncrona (mensageria) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
