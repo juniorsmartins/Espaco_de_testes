@@ -1,5 +1,6 @@
 package com.devvadercursos.application_business.usecases.services;
 
+import com.devvadercursos.application_business.usecases.configs.RabbitMQFilas;
 import com.devvadercursos.application_business.usecases.dtos.CursoAtualizarDTO;
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
@@ -10,6 +11,8 @@ import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.ICursosRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -37,6 +40,9 @@ public class CursoServiceImpl implements IGenericsService<CursoDTO, FiltroBuscar
     @Autowired
     private ICursosRepository iCursosRepository;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<CursoDTO> cadastrar(CursoDTO dtoIn) {
@@ -48,6 +54,9 @@ public class CursoServiceImpl implements IGenericsService<CursoDTO, FiltroBuscar
 
                     cursoDTO = modelMapper.map(curso, CursoDTO.class);
                     converterInstantEmDataHoraLocal(curso, cursoDTO);
+
+                    Message message = new Message(("Concluído novo cadastro de curso.").getBytes());
+                    rabbitTemplate.send(RabbitMQFilas.FILA_NOVO_CADASTRO_CURSO, message);
 
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity
