@@ -17,6 +17,16 @@ public class RabbitMQConfig {
     public static final String EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS = "EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS";
 
     @Bean
+    public FanoutExchange criarFanoutExchangeSimples() {
+        return new FanoutExchange(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_SIMPLES);
+    }
+
+    @Bean
+    public FanoutExchange criarFanoutExchangeComlexa() {
+        return new FanoutExchange(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS);
+    }
+
+    @Bean
     public RabbitAdmin criarRabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
@@ -36,15 +46,5 @@ public class RabbitMQConfig {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(conversorJackson2JsonMessageConverter);
         return rabbitTemplate;
-    }
-
-    @Bean
-    public FanoutExchange criarFanoutExchangeSimples() {
-        return new FanoutExchange(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_SIMPLES);
-    }
-
-    @Bean
-    public FanoutExchange criarFanoutExchangeComlexa() {
-        return new FanoutExchange(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS);
     }
 }

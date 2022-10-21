@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String FILA_MENSAGENS_COMPLEXAS = "FILA_MENSAGENS_COMPLEXAS";
+    public static final String FILA_MENSAGENS_DEAD_LETTER = "FILA_MENSAGENS_DEAD_LETTER";
     public static final String EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS = "EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS";
+    public static final String EXCHANGE_FANOUT_MENSAGENS_DEAD_LETTER = "EXCHANGE_FANOUT_MENSAGENS_DEAD_LETTER";
 
     @Bean // Substitui o conversor padrão, o SimpleMessageConverter, por um personalizado
     public Jackson2JsonMessageConverter conversorJackson2JsonMessageConverter() {
@@ -29,9 +31,31 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue deadLetterFila() {
+        return QueueBuilder
+                .nonDurable(FILA_MENSAGENS_DEAD_LETTER)
+                .build();
+    }
+
+    @Bean
+    public FanoutExchange deadLetterFanoutExchange() {
+        return ExchangeBuilder
+                .fanoutExchange(EXCHANGE_FANOUT_MENSAGENS_DEAD_LETTER)
+                .build();
+    }
+
+    @Bean
+    public Binding bindingDeadLetter() {
+        return BindingBuilder
+                .bind(deadLetterFila())
+                .to(deadLetterFanoutExchange());
+    }
+
+    @Bean
     public Queue fila() {
         return QueueBuilder
                 .nonDurable(FILA_MENSAGENS_COMPLEXAS)
+                .deadLetterExchange(EXCHANGE_FANOUT_MENSAGENS_DEAD_LETTER) // Define exchange para mensagens mortas
                 .build();
     }
 
@@ -43,10 +67,10 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding bindingFilaFanoutExchange(Queue fila, FanoutExchange fanoutExchange) {
+    public Binding bindingFilaFanoutExchange() {
         return BindingBuilder
-                .bind(fila)
-                .to(fanoutExchange);
+                .bind(fila())
+                .to(fanoutExchange());
     }
 
     @Bean

@@ -12,6 +12,7 @@ public class ConsumidorListener {
     @RabbitListener(queues = RabbitMQConfig.FILA_MENSAGENS_COMPLEXAS)
     public void receberMensagemComplexa(@Payload Mensagem mensagem) {
         String resposta = """
+                Objeto Complexo
                 Título: %s
                 Descrição: %s
                 """.formatted(mensagem.getAssunto(), mensagem.getDescricao());
