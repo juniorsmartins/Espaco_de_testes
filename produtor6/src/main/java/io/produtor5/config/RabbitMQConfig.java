@@ -1,6 +1,5 @@
 package io.produtor5.config;
 
-import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -15,40 +14,48 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String FILA_NOVO_CADASTRO_CURSO = "FILA_NOVO_CADASTRO_CURSO";
+    public static final String FILA_MENSAGENS_SIMPLES = "FILA_MENSAGENS_SIMPLES";
+    public static final String FILA_MENSAGENS_COMPLEXAS = "FILA_MENSAGENS_COMPLEXAS";
     public static final String EXCHANGE_MENSAGEM_FANOUT = "mensagem.fanout";
 
-//    @Bean
-//    public Queue criarFilaParaConduzirMensagens() {
-//        return QueueBuilder
-//                .nonDurable(RabbitMQConfig.FILA_NOVO_CADASTRO_CURSO)
-//                .build();
-//    }
-
     @Bean
-    public FanoutExchange criarFanoutExchange() {
-        return new FanoutExchange(RabbitMQConfig.EXCHANGE_MENSAGEM_FANOUT);
+    public Queue criarFilaParaMensagensSimples() {
+        return QueueBuilder
+                .nonDurable(RabbitMQConfig.FILA_MENSAGENS_SIMPLES)
+                .build();
     }
 
     @Bean
-    public RabbitAdmin criarRabbitAdminParaTarefasAdministrativas(ConnectionFactory connectionFactory) {
+    public Queue criarFilaParaMensagensComplexas() {
+        return QueueBuilder
+                .nonDurable(RabbitMQConfig.FILA_MENSAGENS_COMPLEXAS)
+                .build();
+    }
+
+//    @Bean
+//    public FanoutExchange criarFanoutExchange() {
+//        return new FanoutExchange(RabbitMQConfig.EXCHANGE_MENSAGEM_FANOUT);
+//    }
+
+    @Bean
+    public RabbitAdmin criarRabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
 
     @Bean
-    public ApplicationListener<ApplicationReadyEvent> inicializarAdminDoRabbitMQ(RabbitAdmin rabbitAdmin) {
+    public ApplicationListener<ApplicationReadyEvent> inicializarAdminParaTarefas(RabbitAdmin rabbitAdmin) {
         return event -> rabbitAdmin.initialize();
     }
 
     @Bean // Substitui o conversor padrão, o SimpleMessageConverter, por um personalizado
-    public Jackson2JsonMessageConverter conversorPersonalizado() {
+    public Jackson2JsonMessageConverter conversorJackson2JsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean // Agora usaremos o RabbitTemplate sem o SimpleMessageConverter, mas com o conversor personalizado (acima)
-    public RabbitTemplate construirRabbitTemplateComConversorPersonalizado(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter conversorPersonalizado) {
+    public RabbitTemplate construirRabbitTemplateComConversorJackson2Json(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter conversorJackson2JsonMessageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(conversorPersonalizado);
+        rabbitTemplate.setMessageConverter(conversorJackson2JsonMessageConverter);
         return rabbitTemplate;
     }
 }
