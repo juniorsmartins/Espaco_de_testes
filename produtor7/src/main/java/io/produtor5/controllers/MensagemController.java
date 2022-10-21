@@ -19,7 +19,7 @@ public class MensagemController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @PostMapping(value = "/v1")
+    @PostMapping(value = "/v3")
     public Mensagem createMensagemSimples(@RequestBody Mensagem mensagem) {
         Message message = new Message(mensagem.getAssunto().getBytes());
         rabbitTemplate.send(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_SIMPLES, "", message);
@@ -27,7 +27,7 @@ public class MensagemController {
         return mensagem;
     }
 
-    @PostMapping(value = "/v2")
+    @PostMapping(value = "/v4")
     public Mensagem createMensagemComplexa(@RequestBody Mensagem mensagem) {
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS, "", mensagem);
         log.info("\n\nObjeto Complexo: \n" + mensagem);
