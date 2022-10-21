@@ -77,13 +77,6 @@
 		</dependency>
 
 
-		<!-- Comunicação Assíncrona (mensageria) -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>
-
-
 		<!-- Registro de Logs em formato de Json -->
 		<dependency>
 			<groupId>ch.qos.logback.contrib</groupId>

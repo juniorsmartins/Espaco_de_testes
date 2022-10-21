@@ -1,13 +1,11 @@
 package com.devvadercursos.application_business.usecases.services;
 
-import com.devvadercursos.application_business.usecases.configs.RabbitMQConfig;
 import com.devvadercursos.application_business.usecases.dtos.CursoAtualizarDTO;
 import com.devvadercursos.application_business.usecases.dtos.CursoDTO;
 import com.devvadercursos.application_business.usecases.dtos.FiltroBuscarTodos;
 import com.devvadercursos.application_business.usecases.excecoes.InternalErrorsException;
 import com.devvadercursos.application_business.usecases.excecoes.MensagemPadrao;
 import com.devvadercursos.application_business.usecases.excecoes.RecursoNaoEncontradoException;
-import com.devvadercursos.application_business.usecases.mensageria.MensagemCurso;
 import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.ICursosRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -54,9 +52,6 @@ public class CursoServiceImpl implements IGenericsService<CursoDTO, FiltroBuscar
 
                     cursoDTO = modelMapper.map(curso, CursoDTO.class);
                     converterInstantEmDataHoraLocal(curso, cursoDTO);
-
-                    var mensagem = modelMapper.map(cursoDTO, MensagemCurso.class);
-                    rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NOVO_CADASTRO_CURSO, "", mensagem);
 
                     log.info(MensagemPadrao.CONCLUIDO_SUCESSO);
                     return ResponseEntity

@@ -1,4 +1,4 @@
-package com.devvadercursos.application_business.usecases.configs;
+package io.produtor5.config;
 
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String FILA_NOVO_CADASTRO_CURSO = "FILA_NOVO_CADASTRO_CURSO";
-    public static final String EXCHANGE_NOVO_CADASTRO_CURSO = "amq.fanout";
+    public static final String EXCHANGE_MENSAGEM_FANOUT = "mensagem.fanout";
 
 //    @Bean
 //    public Queue criarFilaParaConduzirMensagens() {
@@ -27,7 +27,7 @@ public class RabbitMQConfig {
 
     @Bean
     public FanoutExchange criarFanoutExchange() {
-        return new FanoutExchange(RabbitMQConfig.EXCHANGE_NOVO_CADASTRO_CURSO);
+        return new FanoutExchange(RabbitMQConfig.EXCHANGE_MENSAGEM_FANOUT);
     }
 
     @Bean
@@ -52,4 +52,3 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 }
-

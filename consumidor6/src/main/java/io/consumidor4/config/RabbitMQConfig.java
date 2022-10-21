@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String FILA_NOVO_CADASTRO_CURSO = "FILA_NOVO_CADASTRO_CURSO";
+    public static final String FILA_MENSAGEM = "FILA_MENSAGEM";
+    public static final String EXCHANGE_MENSAGEM_FANOUT = "mensagem.fanout";
 
     @Bean // Substitui o conversor padrão, o SimpleMessageConverter, por um personalizado
     public Jackson2JsonMessageConverter converterObjetoParaEnviarPelaMensageria() {
@@ -29,23 +30,23 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue criarFila() {
+    public Queue fila() {
         return QueueBuilder
-                .durable(RabbitMQConfig.FILA_NOVO_CADASTRO_CURSO)
+                .durable(RabbitMQConfig.FILA_MENSAGEM)
                 .build();
     }
 
     @Bean
     public FanoutExchange fanoutExchange() {
         return ExchangeBuilder
-                .fanoutExchange("amq.fanout")
+                .fanoutExchange(EXCHANGE_MENSAGEM_FANOUT)
                 .build();
     }
 
     @Bean
-    public Binding ligacaoEntreFilaAndExchange(FanoutExchange fanoutExchange) {
+    public Binding ligacaoEntreFilaAndExchange(FanoutExchange fanoutExchange, Queue fila) {
         return BindingBuilder
-                .bind(criarFila())
+                .bind(fila)
                 .to(fanoutExchange);
     }
 
@@ -54,9 +55,9 @@ public class RabbitMQConfig {
         return new RabbitAdmin(connectionFactory);
     }
 
-//    @Bean
-//    public ApplicationListener<ApplicationReadyEvent> inicializarAdminDoRabbitMQ(RabbitAdmin rabbitAdmin) {
-//        return event -> rabbitAdmin.initialize();
-//    }
+    @Bean
+    public ApplicationListener<ApplicationReadyEvent> inicializarAdminDoRabbitMQ(RabbitAdmin rabbitAdmin) {
+        return event -> rabbitAdmin.initialize();
+    }
 }
 

@@ -11,9 +11,9 @@
 	</parent>
 
 	<groupId>io</groupId>
-	<artifactId>consumidor4</artifactId>
+	<artifactId>produtor6</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>consumidor4</name>
+	<name>produtor6</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -30,18 +30,18 @@
 		</dependency>
 
 
+		<!-- *************** RabbitMQ *************** -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+
 		<!-- *************** Acessórios *************** -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-
-		<!-- *************** RabbitMQ *************** -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 
 
