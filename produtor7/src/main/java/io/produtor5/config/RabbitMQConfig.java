@@ -16,6 +16,7 @@ public class RabbitMQConfig {
 
     public static final String FILA_MENSAGENS_SIMPLES = "FILA_MENSAGENS_SIMPLES";
     public static final String FILA_MENSAGENS_COMPLEXAS = "FILA_MENSAGENS_COMPLEXAS";
+    public static final String EXCHANGE_MENSAGEM_FANOUT = "mensagem.fanout";
 
     @Bean
     public Queue criarFilaParaMensagensSimples() {
@@ -30,6 +31,11 @@ public class RabbitMQConfig {
                 .nonDurable(RabbitMQConfig.FILA_MENSAGENS_COMPLEXAS)
                 .build();
     }
+
+//    @Bean
+//    public FanoutExchange criarFanoutExchange() {
+//        return new FanoutExchange(RabbitMQConfig.EXCHANGE_MENSAGEM_FANOUT);
+//    }
 
     @Bean
     public RabbitAdmin criarRabbitAdmin(ConnectionFactory connectionFactory) {
