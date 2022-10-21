@@ -22,14 +22,14 @@ public class MensagemController {
     @PostMapping(value = "/v1")
     public Mensagem createMensagemSimples(@RequestBody Mensagem mensagem) {
         Message message = new Message(mensagem.getAssunto().getBytes());
-        rabbitTemplate.send(RabbitMQConfig.FILA_MENSAGENS_SIMPLES, message);
+        rabbitTemplate.send(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_SIMPLES, "", message);
         log.info("\n\nObjeto Simples: \n" + mensagem);
         return mensagem;
     }
 
     @PostMapping(value = "/v2")
     public Mensagem createMensagemComplexa(@RequestBody Mensagem mensagem) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.FILA_MENSAGENS_COMPLEXAS, mensagem);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS, "", mensagem);
         log.info("\n\nObjeto Complexo: \n" + mensagem);
         return mensagem;
     }

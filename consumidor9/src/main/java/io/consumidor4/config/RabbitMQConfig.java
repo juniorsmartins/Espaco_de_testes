@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String FILA_MENSAGENS_COMPLEXAS = "FILA_MENSAGENS_COMPLEXAS";
+    public static final String EXCHANGE_MENSAGEM_FANOUT = "mensagem.fanout";
 
     @Bean // Substitui o conversor padrão, o SimpleMessageConverter, por um personalizado
     public Jackson2JsonMessageConverter converterObjetoParaEnviarPelaMensageria() {
@@ -23,5 +24,36 @@ public class RabbitMQConfig {
         rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter);
         return rabbitTemplate;
     }
+
+//    @Bean
+//    public Queue fila() {
+//        return QueueBuilder
+//                .durable(RabbitMQConfig.FILA_MENSAGEM)
+//                .build();
+//    }
+//
+//    @Bean
+//    public FanoutExchange fanoutExchange() {
+//        return ExchangeBuilder
+//                .fanoutExchange(EXCHANGE_MENSAGEM_FANOUT)
+//                .build();
+//    }
+//
+//    @Bean
+//    public Binding ligacaoEntreFilaAndExchange(FanoutExchange fanoutExchange, Queue fila) {
+//        return BindingBuilder
+//                .bind(fila)
+//                .to(fanoutExchange);
+//    }
+//
+//    @Bean
+//    public RabbitAdmin criarRabbitAdminParaTarefasAdministrativas(ConnectionFactory connectionFactory) {
+//        return new RabbitAdmin(connectionFactory);
+//    }
+//
+//    @Bean
+//    public ApplicationListener<ApplicationReadyEvent> inicializarAdminDoRabbitMQ(RabbitAdmin rabbitAdmin) {
+//        return event -> rabbitAdmin.initialize();
+//    }
 }
 

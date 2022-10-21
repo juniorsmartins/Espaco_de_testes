@@ -1,5 +1,6 @@
 package io.produtor5.config;
 
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -14,28 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String FILA_MENSAGENS_SIMPLES = "FILA_MENSAGENS_SIMPLES";
-    public static final String FILA_MENSAGENS_COMPLEXAS = "FILA_MENSAGENS_COMPLEXAS";
-    public static final String EXCHANGE_MENSAGEM_FANOUT = "mensagem.fanout";
-
-    @Bean
-    public Queue criarFilaParaMensagensSimples() {
-        return QueueBuilder
-                .nonDurable(RabbitMQConfig.FILA_MENSAGENS_SIMPLES)
-                .build();
-    }
-
-    @Bean
-    public Queue criarFilaParaMensagensComplexas() {
-        return QueueBuilder
-                .nonDurable(RabbitMQConfig.FILA_MENSAGENS_COMPLEXAS)
-                .build();
-    }
-
-//    @Bean
-//    public FanoutExchange criarFanoutExchange() {
-//        return new FanoutExchange(RabbitMQConfig.EXCHANGE_MENSAGEM_FANOUT);
-//    }
+    public static final String EXCHANGE_FANOUT_MENSAGENS_SIMPLES = "EXCHANGE_FANOUT_MENSAGENS_SIMPLES";
+    public static final String EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS = "EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS";
 
     @Bean
     public RabbitAdmin criarRabbitAdmin(ConnectionFactory connectionFactory) {
@@ -57,5 +38,15 @@ public class RabbitMQConfig {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(conversorJackson2JsonMessageConverter);
         return rabbitTemplate;
+    }
+
+    @Bean
+    public FanoutExchange criarFanoutExchangeSimples() {
+        return new FanoutExchange(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_SIMPLES);
+    }
+
+    @Bean
+    public FanoutExchange criarFanoutExchangeComlexa() {
+        return new FanoutExchange(RabbitMQConfig.EXCHANGE_FANOUT_MENSAGENS_COMPLEXAS);
     }
 }
