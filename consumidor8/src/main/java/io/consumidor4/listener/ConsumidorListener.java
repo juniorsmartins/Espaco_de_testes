@@ -11,6 +11,6 @@ public class ConsumidorListener {
 
     @RabbitListener(queues = RabbitMQConfig.FILA_MENSAGENS_SIMPLES)
     public void receberMensagemSimples(@Payload Message message) {
-        System.out.println("\n" + message);
+        System.out.println("\nObjeto Simples: \n" + message);
     }
 }
