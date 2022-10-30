@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS cursos
 (
-    id INTEGER NOT NULL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     titulo VARCHAR(175) NOT NULL CHECK(titulo <> ''),
     instituicao VARCHAR(175) NOT NULl CHECK(titulo <> ''),
     data_conclusao DATE NOT NULL,
@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS cursos
     preco NUMERIC CHECK(preco >= 0) DEFAULT 0,
     link VARCHAR(255),
     assunto_id INTEGER NOT NULL,
-    CONSTRAINT fk_assunto FOREIGN KEY (assunto_id) REFERENCES assuntos(id)
+    CONSTRAINT fk_assunto_curso FOREIGN KEY (assunto_id) REFERENCES assuntos(id) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
