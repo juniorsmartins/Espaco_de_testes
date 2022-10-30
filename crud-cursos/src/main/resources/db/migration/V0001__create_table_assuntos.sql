@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS assuntos
+(
+    id BIGSERIAL PRIMARY KEY,
+    assunto VARCHAR(75) NOT NULL UNIQUE CHECK(assunto <> '')
+);
+

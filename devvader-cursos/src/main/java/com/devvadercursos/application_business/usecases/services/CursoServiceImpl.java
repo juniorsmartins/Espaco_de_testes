@@ -10,7 +10,7 @@ import com.devvadercursos.enterprise_business.entities.Curso;
 import com.devvadercursos.frameworks_drivers.ICursosRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -37,9 +37,6 @@ public class CursoServiceImpl implements IGenericsService<CursoDTO, FiltroBuscar
 
     @Autowired
     private ICursosRepository iCursosRepository;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
