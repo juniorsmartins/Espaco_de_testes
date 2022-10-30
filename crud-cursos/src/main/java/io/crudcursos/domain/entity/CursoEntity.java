@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode(of = "id")
 @ToString
-public final class CursoEntity implements Serializable {
+public final class CursoEntity implements Serializable, IEntity<Long> {
 
     public static final long serialVersionUID = 1L;
 

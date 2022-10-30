@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(of = "id")
 @ToString
-public final class AssuntoEntity implements Serializable {
+public final class AssuntoEntity implements Serializable, IEntity<Long> {
 
     public static final long serialVersionUID = 1L;
 
