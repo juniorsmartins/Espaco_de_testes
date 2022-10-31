@@ -26,7 +26,7 @@ class AssuntoControllerTest {
     }
 
     @Test
-    void teste1_retornar201QuandoCadastrar() {
+    void teste1_retornarDtoSalvoAndHTTP201QuandoCadastrar() {
         var response = controller.criar(assuntoDTO1);
 
         Assertions.assertNotNull(response);

@@ -2,7 +2,6 @@ package io.crudcursos.domain.controller;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
-import io.crudcursos.domain.entity.filtros.IFiltro;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
