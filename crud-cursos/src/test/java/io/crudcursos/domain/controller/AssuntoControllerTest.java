@@ -2,6 +2,8 @@ package io.crudcursos.domain.controller;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
+import io.crudcursos.domain.repository.AssuntoRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,10 @@ class AssuntoControllerTest {
     private AssuntoDTO assuntoDTO1;
 
     @Autowired
-    private IController<AssuntoDTO, AssuntoFiltro, Long> controller;
+    private AController<AssuntoDTO, AssuntoFiltro, Long> controller;
+
+    @Autowired
+    private AssuntoRepository assuntoRepository;
 
     @BeforeEach
     void criadorDeCenariosParaTeste() {
@@ -30,11 +35,13 @@ class AssuntoControllerTest {
         var response = controller.criar(assuntoDTO1);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(ResponseEntity.class, response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(AssuntoDTO.class, (response.getBody()).getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNotNull(response.getBody().getId());
         Assertions.assertEquals(assuntoDTO1.getAssunto(), response.getBody().getAssunto());
+
+        this.assuntoRepository.deleteById(response.getBody().getId());
     }
 }

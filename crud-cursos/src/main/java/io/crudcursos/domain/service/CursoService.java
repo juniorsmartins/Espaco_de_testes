@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class CursoService implements IService<CursoDTO, CursoEntity, CursoFiltro, Long> {
+public final class CursoService extends AService<CursoDTO, CursoEntity, CursoFiltro, Long> {
 
     @Override
-    public ResponseEntity<CursoDTO> cadastrar(CursoDTO dto) {
+    public ResponseEntity<CursoDTO> criar(CursoDTO dto) {
         return null;
     }
 

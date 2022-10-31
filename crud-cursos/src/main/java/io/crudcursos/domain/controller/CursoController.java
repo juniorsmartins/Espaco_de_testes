@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-public final class CursoController implements IController<CursoDTO, CursoFiltro, Long> {
+public final class CursoController extends AController<CursoDTO, CursoFiltro, Long> {
 
     @Override
     public ResponseEntity<CursoDTO> criar(CursoDTO dto) {

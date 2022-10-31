@@ -1,11 +1,8 @@
 package io.crudcursos.domain.entity.filtros;
 
-import io.crudcursos.domain.entity.CursoEntity;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Builder
 @NoArgsConstructor
