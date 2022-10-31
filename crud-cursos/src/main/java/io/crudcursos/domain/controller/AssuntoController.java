@@ -34,11 +34,11 @@ public final class AssuntoController extends AController<AssuntoDTO, AssuntoFilt
 
     @Override
     public ResponseEntity<AssuntoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
-        return null;
+        return this.service.consultarPorId(id);
     }
 
     @Override
-    public ResponseEntity<AssuntoDTO> atualizar(Long aLong, AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTO> atualizar(Long id, AssuntoDTO dto) {
         return null;
     }
 

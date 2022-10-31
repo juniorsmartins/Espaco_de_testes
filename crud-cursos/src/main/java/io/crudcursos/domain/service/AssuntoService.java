@@ -48,7 +48,15 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
 
     @Override
     public ResponseEntity<AssuntoDTO> consultarPorId(Long id) {
-        return null;
+        return this.assuntoRepository.findById(id)
+                .map(assuntoSalvo -> ResponseEntity
+                        .ok()
+                        .body(AssuntoDTO.builder()
+                                .id(assuntoSalvo.getId())
+                                .assunto(assuntoSalvo.getAssunto())
+                                .build())
+                )
+                .orElseThrow();
     }
 
     @Override
