@@ -27,7 +27,7 @@ public final class AssuntoService implements IService<AssuntoDTO, AssuntoEntity,
     }
 
     @Override
-    public ResponseEntity<AssuntoDTO> atualizarTotalOuSalvar(Long aLong, AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTO> atualizar(Long aLong, AssuntoDTO dto) {
         return null;
     }
 

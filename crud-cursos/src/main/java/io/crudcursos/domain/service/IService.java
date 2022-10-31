@@ -12,6 +12,6 @@ public sealed interface IService<D extends IDTO<ID>, E extends IEntity<ID>, F ex
     ResponseEntity<D> cadastrar(D dto);
     ResponseEntity<Page<D>> buscarTodos(Pageable paginacao, F filtro);
     ResponseEntity<D> consultarPorId(ID id);
-    ResponseEntity<D> atualizarTotalOuSalvar(ID id, D dto);
+    ResponseEntity<D> atualizar(ID id, D dto);
     ResponseEntity<?> deletarPorId(ID id);
 }

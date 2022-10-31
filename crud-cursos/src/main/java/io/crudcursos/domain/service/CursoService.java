@@ -27,7 +27,7 @@ public final class CursoService implements IService<CursoDTO, CursoEntity, Curso
     }
 
     @Override
-    public ResponseEntity<CursoDTO> atualizarTotalOuSalvar(Long aLong, CursoDTO dto) {
+    public ResponseEntity<CursoDTO> atualizar(Long aLong, CursoDTO dto) {
         return null;
     }
 
