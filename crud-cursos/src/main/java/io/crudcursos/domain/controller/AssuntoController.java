@@ -7,6 +7,8 @@ import io.crudcursos.domain.service.AService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +30,9 @@ public final class AssuntoController extends AController<AssuntoDTO, AssuntoFilt
     }
 
     @Override
-    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(Pageable pageable, AssuntoFiltro filtro) {
-        return null;
+    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(AssuntoFiltro filtro,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0, size = 10) Pageable paginacao) {
+        return this.service.buscarTodos(filtro, paginacao);
     }
 
     @Override

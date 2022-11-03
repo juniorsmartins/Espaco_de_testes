@@ -11,8 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 
 @SpringBootTest
 class AssuntoControllerTest {
@@ -100,5 +104,27 @@ class AssuntoControllerTest {
         Assertions.assertNotEquals(assunto1Salvo.getAssunto(), response.getBody().getAssunto());
 
         this.assuntoRepository.deleteById(assunto1Salvo.getId());
+    }
+
+    @Test
+    void teste5_retornarResponseEntityComPageDeAssuntoDTOAndHttp200QuandoBuscarTodosComPaginacaoAndFiltro() {
+        var assunto1 = this.assuntoRepository.save(AssuntoEntity.builder().assunto("Scala").build());
+        var assunto2 = this.assuntoRepository.save(AssuntoEntity.builder().assunto("TypeScript").build());
+        var assunto3 = this.assuntoRepository.save(AssuntoEntity.builder().assunto("Kotlin").build());
+
+        var response = this.controller.buscarTodos(AssuntoFiltro.builder()
+                .assunto("TypeScript").build(), Pageable.ofSize(5));
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(PageImpl.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(AssuntoDTO.class, response.getBody().stream().findFirst().get().getClass());
+        Assertions.assertEquals(assunto2.getAssunto(), response.getBody().stream().findFirst().get().getAssunto());
+
+        this.assuntoRepository.deleteById(assunto1.getId());
+        this.assuntoRepository.deleteById(assunto2.getId());
+        this.assuntoRepository.deleteById(assunto3.getId());
     }
 }

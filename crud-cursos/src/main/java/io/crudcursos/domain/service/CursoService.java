@@ -17,7 +17,7 @@ public final class CursoService extends AService<CursoDTO, CursoEntity, CursoFil
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable paginacao, CursoFiltro filtro) {
+    public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro, Pageable paginacao) {
         return null;
     }
 

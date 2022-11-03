@@ -5,6 +5,8 @@ import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +43,29 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
     }
 
     @Override
-    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(Pageable paginacao, AssuntoFiltro filtro) {
-        return null;
+    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(AssuntoFiltro filtro, Pageable paginacao) {
+        return ResponseEntity
+                .ok()
+                .body(this.assuntoRepository.findAll(configurarFiltro(filtro), paginacao)
+                        .map(assunto -> AssuntoDTO.builder()
+                                .id(assunto.getId())
+                                .assunto(assunto.getAssunto())
+                                .build()));
     }
+
+        private Example<AssuntoEntity> configurarFiltro(AssuntoFiltro filtro) {
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            ExampleMatcher exampleMatcher = ExampleMatcher
+                    .matchingAll()
+                    .withIgnoreCase() // Ignorar caixa alta ou baixa - quando String
+                    .withIgnoreNullValues() // Ignorar valores nulos
+                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras parecidas - tipo Like do SQL
+            // Example - pega campos populados para criar filtros
+            return Example.of(AssuntoEntity.builder()
+                    .id(filtro.getId())
+                    .assunto(filtro.getAssunto())
+                    .build(), exampleMatcher);
+        }
 
     @Override
     public ResponseEntity<AssuntoDTO> consultarPorId(Long id) {

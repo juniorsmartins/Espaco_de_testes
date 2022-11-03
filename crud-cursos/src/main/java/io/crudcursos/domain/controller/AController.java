@@ -16,7 +16,7 @@ public sealed abstract class AController<D extends IDTO<ID>, F extends IFiltro, 
     abstract ResponseEntity<D> criar(D dto);
 
     @GetMapping
-    abstract ResponseEntity<Page<D>> buscarTodos(Pageable pageable, F filtro);
+    abstract ResponseEntity<Page<D>> buscarTodos(F filtro, Pageable pageable);
 
     @GetMapping(path = "/{id}", produces = {"application/json"})
     abstract ResponseEntity<D> consultarPorId(ID id);
