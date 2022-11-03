@@ -30,7 +30,6 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                     var assuntoSalvo = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
                             .assunto(assuntoDTO.getAssunto())
                             .build());
-
                     return ResponseEntity
                             .created(URI.create("/" + assuntoSalvo.getId()))
                             .body(AssuntoDTO.builder()
@@ -59,13 +58,32 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                 .orElseThrow();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<AssuntoDTO> atualizar(Long id, AssuntoDTO dto) {
-        return null;
+        return this.assuntoRepository.findById(id)
+                .map(assunto -> {
+                    assunto.setAssunto(dto.getAssunto());
+                    return ResponseEntity
+                            .ok()
+                            .body(AssuntoDTO.builder()
+                                    .id(assunto.getId())
+                                    .assunto(assunto.getAssunto())
+                                    .build());
+                })
+                .orElseThrow();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<?> deletarPorId(Long id) {
-        return null;
+        return this.assuntoRepository.findById(id)
+                .map(assunto -> {
+                   this.assuntoRepository.deleteById(id);
+                   return ResponseEntity
+                           .ok()
+                           .body("Recurso Deletado!");
+                })
+                .orElseThrow();
     }
 }

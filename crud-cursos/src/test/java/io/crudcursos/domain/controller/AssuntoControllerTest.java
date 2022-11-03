@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ class AssuntoControllerTest {
 
     private AssuntoDTO assuntoDTO1;
     private AssuntoEntity assuntoEntity1;
+    private AssuntoEntity assuntoEntity2;
 
     @Autowired
     private AController<AssuntoDTO, AssuntoFiltro, Long> controller;
@@ -32,6 +34,9 @@ class AssuntoControllerTest {
                 .build();
         assuntoEntity1 = AssuntoEntity.builder()
                 .assunto("Python")
+                .build();
+        assuntoEntity2 = AssuntoEntity.builder()
+                .assunto("JavaScript")
                 .build();
     }
 
@@ -64,5 +69,36 @@ class AssuntoControllerTest {
         Assertions.assertEquals(assuntoSalvo.getAssunto(), response.getBody().getAssunto());
 
         this.assuntoRepository.deleteById(assuntoSalvo.getId());
+    }
+
+    @Test
+    void teste3_retornarResponseEntityComHttp200QuandoDeletarPorId() {
+        var assuntoSalvo = this.assuntoRepository.save(assuntoEntity2);
+        var response = this.controller.deletarPorId(assuntoSalvo.getId());
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var resultado = this.assuntoRepository.findById(assuntoSalvo.getId());
+        Assertions.assertEquals(Boolean.TRUE, resultado.isEmpty());
+    }
+
+    @Test
+    void teste4_retornarResponseEntityComDtoAndHttp200QuandoAtualizar() {
+        var assunto1Salvo = this.assuntoRepository.save(assuntoEntity1);
+
+        var response = this.controller.atualizar(
+                assunto1Salvo.getId(), AssuntoDTO.builder().assunto("C#").build());
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(AssuntoDTO.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(assunto1Salvo.getId(), response.getBody().getId());
+        Assertions.assertNotEquals(assunto1Salvo.getAssunto(), response.getBody().getAssunto());
+
+        this.assuntoRepository.deleteById(assunto1Salvo.getId());
     }
 }

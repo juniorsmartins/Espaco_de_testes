@@ -38,12 +38,12 @@ public final class AssuntoController extends AController<AssuntoDTO, AssuntoFilt
     }
 
     @Override
-    public ResponseEntity<AssuntoDTO> atualizar(Long id, AssuntoDTO dto) {
-        return null;
+    public ResponseEntity<AssuntoDTO> atualizar(@PathVariable(value = "id") Long id, @RequestBody @Valid AssuntoDTO dto) {
+        return this.service.atualizar(id, dto);
     }
 
     @Override
-    public ResponseEntity<?> deletarPorId(Long aLong) {
-        return null;
+    public ResponseEntity<?> deletarPorId(@PathVariable(value = "id") Long id) {
+        return this.service.deletarPorId(id);
     }
 }
