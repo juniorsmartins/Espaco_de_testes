@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-public final class CursoController implements IController<CursoDTO, CursoFiltro, Long> {
+public final class CursoController extends AController<CursoDTO, CursoFiltro, Long> {
 
     @Override
     public ResponseEntity<CursoDTO> criar(CursoDTO dto) {
@@ -14,7 +14,7 @@ public final class CursoController implements IController<CursoDTO, CursoFiltro,
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTO>> buscarTodos(Pageable pageable, CursoFiltro filtro) {
+    public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro, Pageable pageable) {
         return null;
     }
 

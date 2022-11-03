@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-public sealed interface IController<D extends IDTO<ID>, F extends IFiltro, ID> permits AssuntoController, CursoController{
+public sealed abstract class AController<D extends IDTO<ID>, F extends IFiltro, ID> permits AssuntoController, CursoController{
 
     @PostMapping
-    ResponseEntity<D> criar(D dto);
+    abstract ResponseEntity<D> criar(D dto);
 
     @GetMapping
-    ResponseEntity<Page<D>> buscarTodos(Pageable pageable, F filtro);
+    abstract ResponseEntity<Page<D>> buscarTodos(F filtro, Pageable pageable);
 
     @GetMapping(path = "/{id}", produces = {"application/json"})
-    ResponseEntity<D> consultarPorId(ID id);
+    abstract ResponseEntity<D> consultarPorId(ID id);
 
     @PutMapping(path = "/{id}")
-    ResponseEntity<D> atualizar(ID id, D dto);
+    abstract ResponseEntity<D> atualizar(ID id, D dto);
 
     @DeleteMapping(path = "/{id}")
-    ResponseEntity<?> deletarPorId(ID id);
+    abstract ResponseEntity<?> deletarPorId(ID id);
 }

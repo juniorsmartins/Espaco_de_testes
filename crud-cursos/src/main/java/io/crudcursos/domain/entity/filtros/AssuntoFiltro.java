@@ -1,11 +1,11 @@
 package io.crudcursos.domain.entity.filtros;
 
-import io.crudcursos.domain.entity.CursoEntity;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 @Builder
 @NoArgsConstructor
