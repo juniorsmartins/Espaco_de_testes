@@ -4,19 +4,15 @@ import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.repository.AssuntoRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 
 @SpringBootTest
 class AssuntoControllerTest {
@@ -45,7 +41,7 @@ class AssuntoControllerTest {
     }
 
     @Test
-    void teste1_retornarResponseEntityComDtoSalvoAndHTTP201QuandoCadastrar() {
+    void teste1_retornarResponseEntityComDtoAndHTTP201QuandoCadastrar() {
         var response = controller.criar(assuntoDTO1);
 
         Assertions.assertNotNull(response);
