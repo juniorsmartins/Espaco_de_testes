@@ -69,7 +69,7 @@
 		</dependency>
 
 
-		<!-- Testes -->
+		<!-- Testes (JUnit e Mockito) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
