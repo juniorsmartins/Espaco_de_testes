@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "${app.api.base}/assuntos")
+@RequestMapping(value = "${app.api.base}/assuntos", produces = {"application/json"})
 public final class AssuntoController extends AController<AssuntoDTO, AssuntoFiltro, Long> {
 
     @Autowired

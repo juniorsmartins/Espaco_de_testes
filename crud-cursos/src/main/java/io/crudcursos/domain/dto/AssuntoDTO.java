@@ -23,5 +23,5 @@ public final class AssuntoDTO implements Serializable, IDTO<Long> {
     @NotNull
     @NotEmpty
     @Length(max = 75)
-    private String assunto;
+    private String tema;
 }

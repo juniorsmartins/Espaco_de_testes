@@ -41,14 +41,14 @@ public final class CursoDTO implements Serializable, IDTO<Long> {
     private String instituicao;
 
     @NotNull
+    @Positive
+    private float cargaHoraria;
+
+    @NotNull
     @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dataConclusao;
-
-    @NotNull
-    @Positive
-    private float cargaHoraria;
 
     @NotNull
     @PositiveOrZero

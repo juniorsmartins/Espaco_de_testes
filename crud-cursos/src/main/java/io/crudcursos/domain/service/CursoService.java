@@ -32,7 +32,7 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
     public ResponseEntity<CursoDTO> criar(CursoDTO dto) {
         return Optional.of(dto)
                 .map(cursoDTO -> {
-                    var assuntoEntity = this.assuntoRepository.findById(cursoDTO.getAssunto().getId()).orElseThrow();
+                    var assuntoDoDatabase = this.assuntoRepository.findById(cursoDTO.getAssunto().getId());
                     var cursoSalvo = this.cursoRepository.saveAndFlush(CursoEntity.builder()
                             .titulo(cursoDTO.getTitulo())
                             .instituicao(cursoDTO.getInstituicao())
@@ -40,7 +40,7 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
                             .dataConclusao(cursoDTO.getDataConclusao())
                             .preco(cursoDTO.getPreco())
                             .link(cursoDTO.getLink())
-                            .assunto(assuntoEntity)
+                            .assunto(assuntoDoDatabase.get())
                             .build());
 
                     return ResponseEntity
@@ -55,7 +55,7 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
                                     .link(cursoSalvo.getLink())
                                     .assunto(AssuntoDTO.builder()
                                             .id(cursoSalvo.getAssunto().getId())
-                                            .assunto(cursoSalvo.getAssunto().getAssunto())
+                                            .tema(cursoSalvo.getAssunto().getTema())
                                             .build())
                                     .build());
                 })
@@ -68,17 +68,35 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
     }
 
     @Override
-    public ResponseEntity<CursoDTO> consultarPorId(Long aLong) {
+    public ResponseEntity<CursoDTO> consultarPorId(Long id) {
+        return this.cursoRepository.findById(id)
+                .map(cursoEntity ->
+                    ResponseEntity
+                            .ok()
+                            .body(CursoDTO.builder()
+                                    .id(cursoEntity.getId())
+                                    .titulo(cursoEntity.getTitulo())
+                                    .instituicao(cursoEntity.getInstituicao())
+                                    .cargaHoraria(cursoEntity.getCargaHoraria())
+                                    .dataConclusao(cursoEntity.getDataConclusao())
+                                    .preco(cursoEntity.getPreco())
+                                    .link(cursoEntity.getLink())
+                                    .assunto(AssuntoDTO.builder()
+                                            .id(cursoEntity.getAssunto().getId())
+                                            .tema(cursoEntity.getAssunto().getTema())
+                                            .build())
+                                    .build())
+                )
+                .orElseThrow();
+    }
+
+    @Override
+    public ResponseEntity<CursoDTO> atualizar(Long id, CursoDTO dto) {
         return null;
     }
 
     @Override
-    public ResponseEntity<CursoDTO> atualizar(Long aLong, CursoDTO dto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<?> deletarPorId(Long aLong) {
+    public ResponseEntity<?> deletarPorId(Long id) {
         return null;
     }
 }
