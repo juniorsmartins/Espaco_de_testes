@@ -30,13 +30,13 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
         return Optional.of(dto)
                 .map(assuntoDTO -> {
                     var assuntoSalvo = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
-                            .assunto(assuntoDTO.getAssunto())
+                            .tema(assuntoDTO.getTema())
                             .build());
                     return ResponseEntity
                             .created(URI.create("/" + assuntoSalvo.getId()))
                             .body(AssuntoDTO.builder()
                                     .id(assuntoSalvo.getId())
-                                    .assunto(assuntoSalvo.getAssunto())
+                                    .tema(assuntoSalvo.getTema())
                                     .build());
                 })
                 .orElseThrow();
@@ -49,7 +49,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                 .body(this.assuntoRepository.findAll(configurarFiltro(filtro), paginacao)
                         .map(assunto -> AssuntoDTO.builder()
                                 .id(assunto.getId())
-                                .assunto(assunto.getAssunto())
+                                .tema(assunto.getTema())
                                 .build()));
     }
 
@@ -63,19 +63,20 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
             // Example - pega campos populados para criar filtros
             return Example.of(AssuntoEntity.builder()
                     .id(filtro.getId())
-                    .assunto(filtro.getAssunto())
+                    .tema(filtro.getTema())
                     .build(), exampleMatcher);
         }
 
     @Override
     public ResponseEntity<AssuntoDTO> consultarPorId(Long id) {
         return this.assuntoRepository.findById(id)
-                .map(assuntoSalvo -> ResponseEntity
-                        .ok()
-                        .body(AssuntoDTO.builder()
-                                .id(assuntoSalvo.getId())
-                                .assunto(assuntoSalvo.getAssunto())
-                                .build())
+                .map(assuntoSalvo ->
+                        ResponseEntity
+                                .ok()
+                                .body(AssuntoDTO.builder()
+                                        .id(assuntoSalvo.getId())
+                                        .tema(assuntoSalvo.getTema())
+                                        .build())
                 )
                 .orElseThrow();
     }
@@ -85,12 +86,16 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
     public ResponseEntity<AssuntoDTO> atualizar(Long id, AssuntoDTO dto) {
         return this.assuntoRepository.findById(id)
                 .map(assunto -> {
-                    assunto.setAssunto(dto.getAssunto());
+                    var assuntoAtualizado = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
+                            .id(assunto.getId())
+                            .tema(dto.getTema())
+                            .build());
+
                     return ResponseEntity
                             .ok()
                             .body(AssuntoDTO.builder()
-                                    .id(assunto.getId())
-                                    .assunto(assunto.getAssunto())
+                                    .id(assuntoAtualizado.getId())
+                                    .tema(assuntoAtualizado.getTema())
                                     .build());
                 })
                 .orElseThrow();

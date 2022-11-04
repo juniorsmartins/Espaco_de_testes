@@ -1,11 +1,8 @@
 package io.crudcursos.domain.controller;
 
 import io.crudcursos.domain.dto.CursoDTO;
-import io.crudcursos.domain.dto.IDTO;
 import io.crudcursos.domain.entity.CursoEntity;
-import io.crudcursos.domain.entity.IEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
-import io.crudcursos.domain.entity.filtros.IFiltro;
 import io.crudcursos.domain.service.AService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "${app.api.base}/cursos")
+@RequestMapping(value = "${app.api.base}/cursos", produces = {"application/json"})
 public final class CursoController extends AController<CursoDTO, CursoFiltro, Long> {
 
     @Autowired
@@ -32,17 +29,17 @@ public final class CursoController extends AController<CursoDTO, CursoFiltro, Lo
     }
 
     @Override
-    public ResponseEntity<CursoDTO> consultarPorId(Long aLong) {
+    public ResponseEntity<CursoDTO> consultarPorId(Long id) {
+        return this.service.consultarPorId(id);
+    }
+
+    @Override
+    public ResponseEntity<CursoDTO> atualizar(Long id, CursoDTO dto) {
         return null;
     }
 
     @Override
-    public ResponseEntity<CursoDTO> atualizar(Long aLong, CursoDTO dto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<?> deletarPorId(Long aLong) {
+    public ResponseEntity<?> deletarPorId(Long id) {
         return null;
     }
 }
