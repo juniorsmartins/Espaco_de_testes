@@ -1,5 +1,9 @@
 package io.crudcursos.domain.controller;
 
+import com.github.javafaker.Faker;
+import com.github.javafaker.File;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.CursoDTO;
 import io.crudcursos.domain.entity.AssuntoEntity;
@@ -7,7 +11,6 @@ import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import io.crudcursos.domain.repository.CursoRepository;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,17 +18,19 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 class CursoControllerTest {
@@ -39,7 +44,6 @@ class CursoControllerTest {
     private CursoEntity cursoSalvo3;
     private CursoEntity cursoSalvo4;
     private CursoEntity cursoSalvo5;
-    private Page<CursoEntity> paginaDeCursosSalvos2;
 
     @Autowired
     private AController<CursoDTO, CursoFiltro, Long> controller;
@@ -81,37 +85,6 @@ class CursoControllerTest {
                         .tema("Pascal")
                         .build())
                 .build();
-
-        var assuntoSalvo2 = AssuntoEntity.builder()
-                .id(2L)
-                .tema("Web")
-                .build();
-
-        var cursoSalvo2 = CursoEntity.builder()
-                .id(2L)
-                .titulo("HTML: estrutura de web page.")
-                .instituicao("H5")
-                .cargaHoraria(8)
-                .dataConclusao(LocalDate.of(2019, 2, 5))
-                .preco(BigDecimal.valueOf(15))
-                .link("htp2")
-                .assunto(assuntoSalvo2)
-                .build();
-
-        var cursoSalvo21 = CursoEntity.builder()
-                .id(21L)
-                .titulo("CSS: estilização de web pages.")
-                .instituicao("H5")
-                .cargaHoraria(21)
-                .dataConclusao(LocalDate.of(2020, 1, 21))
-                .preco(BigDecimal.valueOf(8))
-                .link("htp2")
-                .assunto(assuntoSalvo2)
-                .build();
-
-        paginaDeCursosSalvos2 = new PageImpl<>(null);
-        paginaDeCursosSalvos2.getContent().add(cursoSalvo2);
-        paginaDeCursosSalvos2.getContent().add(cursoSalvo21);
 
         assuntoSalvo3 = AssuntoEntity.builder()
                 .id(2L)
@@ -196,15 +169,43 @@ class CursoControllerTest {
 
     @Test
     void teste2_retornarResponseEntityComPageDeDtosAndHttp200QuandoBuscarTodosSemPaginacaoAndSemFiltro() {
-        Mockito.when(this.cursoRepository.findAll(Mockito.any(), Pageable.unpaged())).thenReturn(paginaDeCursosSalvos2);
+        Faker faker = new Faker(new Locale("pt-BR"));
+
+        List<CursoEntity> listaDeCursosEntity = IntStream.rangeClosed(1, 5)
+                .mapToObj(curso ->
+                    CursoEntity.builder()
+                            .id(faker.number().randomNumber())
+                            .titulo(faker.name().title())
+                            .instituicao(faker.educator().university())
+                            .cargaHoraria(Float.parseFloat(faker.numerify("##")))
+                            .dataConclusao(LocalDate.of(2022, 5, 8))
+                            .preco(BigDecimal.valueOf(Long.parseLong(faker.numerify("##"))))
+                            .link(faker.internet().domainName())
+                            .assunto(AssuntoEntity.builder()
+                                    .id(faker.number().randomNumber())
+                                    .tema(faker.programmingLanguage().name())
+                                    .build())
+                            .build()
+                )
+                .collect(Collectors.toList());
+
+        Page<CursoEntity> paginaDeCursosEntity = new PageImpl<>(listaDeCursosEntity);
+
+        ExampleMatcher exampleMatcher = ExampleMatcher
+                .matchingAll()
+                .withIgnoreCase()
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Mockito.when(this.cursoRepository.findAll(Example.of(CursoEntity.builder().build(), exampleMatcher), Pageable.ofSize(10))).thenReturn(paginaDeCursosEntity);
         var response = this.controller.buscarTodos(CursoFiltro.builder().build(), Pageable.unpaged());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(Pageable.class, response.getBody().getClass());
+        Assertions.assertEquals(Page.class, response.getBody().getContent().getClass());
         Assertions.assertNotNull(response.getBody().getContent().getClass());
-        Assertions.assertEquals(CursoDTO.class, response.getBody().getContent().getClass());
+        Assertions.assertEquals(CursoDTO.class, response.getBody().getContent().get(0).getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Mockito.verify(this.cursoRepository, Mockito.times(1)).findAll(Mockito.any(), Pageable.unpaged());
     }

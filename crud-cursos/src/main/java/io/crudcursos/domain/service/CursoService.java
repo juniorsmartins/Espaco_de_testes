@@ -4,10 +4,13 @@ import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.CursoDTO;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
+import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import io.crudcursos.domain.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -32,15 +35,15 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
     @Override
     public ResponseEntity<CursoDTO> criar(CursoDTO dto) {
         return Optional.of(dto)
-                .map(cursoDTO -> {
-                    var assuntoDoDatabase = this.assuntoRepository.findById(cursoDTO.getAssunto().getId());
+                .map(cursoNovo -> {
+                    var assuntoDoDatabase = this.assuntoRepository.findById(cursoNovo.getAssunto().getId());
                     var cursoSalvo = this.cursoRepository.saveAndFlush(CursoEntity.builder()
-                            .titulo(cursoDTO.getTitulo())
-                            .instituicao(cursoDTO.getInstituicao())
-                            .cargaHoraria(cursoDTO.getCargaHoraria())
-                            .dataConclusao(cursoDTO.getDataConclusao())
-                            .preco(cursoDTO.getPreco())
-                            .link(cursoDTO.getLink())
+                            .titulo(cursoNovo.getTitulo())
+                            .instituicao(cursoNovo.getInstituicao())
+                            .cargaHoraria(cursoNovo.getCargaHoraria())
+                            .dataConclusao(cursoNovo.getDataConclusao())
+                            .preco(cursoNovo.getPreco())
+                            .link(cursoNovo.getLink())
                             .assunto(assuntoDoDatabase.get())
                             .build());
 
@@ -65,8 +68,44 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
 
     @Override
     public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro, Pageable paginacao) {
-        return null;
+        return ResponseEntity
+                .ok()
+                .body(this.cursoRepository.findAll(configurarFiltro(filtro), paginacao)
+                        .map(curso -> CursoDTO.builder()
+                                .id(curso.getId())
+                                .titulo(curso.getTitulo())
+                                .instituicao(curso.getInstituicao())
+                                .cargaHoraria(curso.getCargaHoraria())
+                                .dataConclusao(curso.getDataConclusao())
+                                .preco(curso.getPreco())
+                                .link(curso.getLink())
+                                .assunto(AssuntoDTO.builder()
+                                        .id(curso.getAssunto().getId())
+                                        .tema(curso.getAssunto().getTema())
+                                        .build())
+                                .build())
+                );
     }
+
+        private Example<CursoEntity> configurarFiltro(CursoFiltro filtro) {
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            ExampleMatcher exampleMatcher = ExampleMatcher
+                    .matchingAll()
+                    .withIgnoreCase() // Ignorar caixa alta ou baixa - quando String
+                    .withIgnoreNullValues() // Ignorar valores nulos
+                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras parecidas - tipo Like do SQL
+            // Example - pega campos populados para criar filtros
+            return Example.of(CursoEntity.builder()
+                    .id(filtro.getId())
+                    .titulo(filtro.getTitulo())
+                    .instituicao(filtro.getInstituicao())
+                    .cargaHoraria(filtro.getCargaHoraria())
+                    .dataConclusao(filtro.getDataConclusao())
+                    .preco(filtro.getPreco())
+                    .link(filtro.getLink())
+                    .assunto(filtro.getAssunto())
+                    .build(), exampleMatcher);
+        }
 
     @Override
     public ResponseEntity<CursoDTO> consultarPorId(Long id) {
