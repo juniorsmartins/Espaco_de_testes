@@ -10,7 +10,6 @@ import io.crudcursos.domain.repository.CursoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,11 +24,12 @@ import java.util.Optional;
 @SpringBootTest
 class CursoControllerTest {
 
+    private AssuntoEntity assuntoSalvo1;
+    private AssuntoEntity assuntoSalvo2;
     private CursoDTO cursoDTO1;
     private CursoEntity cursoSalvo1;
     private CursoEntity cursoSalvo2;
-    private AssuntoEntity assuntoSalvo1;
-    private AssuntoEntity assuntoSalvo2;
+    private CursoEntity cursoSalvo5;
 
     @Autowired
     private AController<CursoDTO, CursoFiltro, Long> controller;
@@ -87,6 +87,22 @@ class CursoControllerTest {
                 .link("htp1")
                 .assunto(assuntoSalvo2)
                 .build();
+
+        var assuntoSalvo5 = AssuntoEntity.builder()
+                .id(5L)
+                .tema("Java")
+                .build();
+
+        cursoSalvo5 = CursoEntity.builder()
+                .id(5L)
+                .titulo("APIRest com Java, Spring e PostgreSQL")
+                .instituicao("Alura")
+                .cargaHoraria(22L)
+                .dataConclusao(LocalDate.of(2022, 11, 7))
+                .preco(BigDecimal.valueOf(125.15))
+                .link("http7")
+                .assunto(assuntoSalvo5)
+                .build();
     }
 
     @Test
@@ -114,5 +130,19 @@ class CursoControllerTest {
         Assertions.assertEquals(CursoDTO.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals(cursoSalvo2.getId(), response.getBody().getId());
+    }
+
+    @Test
+    void teste5_retornarResponseEntityComHttp200QuandoDeletarPorId() {
+        Mockito.when(this.cursoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(cursoSalvo5));
+        Mockito.doNothing().when(this.cursoRepository).deleteById(Mockito.anyLong());
+        var response = this.controller.deletarPorId(cursoSalvo5.getId());
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Mockito.verify(this.cursoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(this.cursoRepository, Mockito.times(1)).deleteById(Mockito.anyLong());
     }
 }

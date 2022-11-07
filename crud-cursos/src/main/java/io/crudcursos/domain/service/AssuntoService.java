@@ -105,11 +105,11 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
     @Override
     public ResponseEntity<?> deletarPorId(Long id) {
         return this.assuntoRepository.findById(id)
-                .map(assunto -> {
-                   this.assuntoRepository.deleteById(id);
+                .map(assuntoEntity -> {
+                   this.assuntoRepository.deleteById(assuntoEntity.getId());
                    return ResponseEntity
                            .ok()
-                           .body("Recurso Deletado!");
+                           .body("Assunto Deletado!");
                 })
                 .orElseThrow();
     }

@@ -40,6 +40,6 @@ public final class CursoController extends AController<CursoDTO, CursoFiltro, Lo
 
     @Override
     public ResponseEntity<?> deletarPorId(Long id) {
-        return null;
+        return this.service.deletarPorId(id);
     }
 }
