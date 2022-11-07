@@ -7,6 +7,7 @@ import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import io.crudcursos.domain.repository.CursoRepository;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,10 +26,13 @@ import java.util.Optional;
 class CursoControllerTest {
 
     private AssuntoEntity assuntoSalvo1;
-    private AssuntoEntity assuntoSalvo2;
+    private AssuntoEntity assuntoSalvo3;
+    private AssuntoEntity assuntoSalvo4;
     private CursoDTO cursoDTO1;
+    private CursoDTO cursoDTO4;
     private CursoEntity cursoSalvo1;
-    private CursoEntity cursoSalvo2;
+    private CursoEntity cursoSalvo3;
+    private CursoEntity cursoSalvo4;
     private CursoEntity cursoSalvo5;
 
     @Autowired
@@ -72,12 +76,12 @@ class CursoControllerTest {
                         .build())
                 .build();
 
-        assuntoSalvo2 = AssuntoEntity.builder()
+        assuntoSalvo3 = AssuntoEntity.builder()
                 .id(2L)
                 .tema("Clipper")
                 .build();
 
-        cursoSalvo2 = CursoEntity.builder()
+        cursoSalvo3 = CursoEntity.builder()
                 .id(2L)
                 .titulo("Clipper: programação estruturada.")
                 .instituicao("DevClipper")
@@ -85,11 +89,43 @@ class CursoControllerTest {
                 .dataConclusao(LocalDate.of(2020, 12, 12))
                 .preco(BigDecimal.valueOf(125.68))
                 .link("htp1")
-                .assunto(assuntoSalvo2)
+                .assunto(assuntoSalvo3)
+                .build();
+
+        assuntoSalvo4 = AssuntoEntity.builder()
+                .id(4L)
+                .tema("Kotlin")
+                .build();
+
+        cursoSalvo4 = CursoEntity.builder()
+                .id(4L)
+                .titulo("Kotlin: Crud operacional com Java")
+                .instituicao("Alura")
+                .cargaHoraria(17L)
+                .dataConclusao(LocalDate.of(2022, 10, 17))
+                .preco(BigDecimal.valueOf(105.15))
+                .link("http9")
+                .assunto(assuntoSalvo4)
+                .build();
+
+        var assuntoDTO4 = AssuntoDTO.builder()
+                .id(4L)
+                .tema("Kotlin")
+                .build();
+
+        cursoDTO4 = CursoDTO.builder()
+                .id(4L)
+                .titulo("Kotlin: Crud operacional com Java")
+                .instituicao("Alura")
+                .cargaHoraria(17L)
+                .dataConclusao(LocalDate.of(2022, 10, 17))
+                .preco(BigDecimal.valueOf(105.15))
+                .link("http9")
+                .assunto(assuntoDTO4)
                 .build();
 
         var assuntoSalvo5 = AssuntoEntity.builder()
-                .id(5L)
+                .id(4L)
                 .tema("Java")
                 .build();
 
@@ -120,16 +156,34 @@ class CursoControllerTest {
     }
 
     @Test
-    void teste2_retornarResponseEntityComDtoAndHttp200QuandoConsultarPorId() {
-        Mockito.when(this.cursoRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(cursoSalvo2));
-        var response = this.controller.consultarPorId(cursoSalvo2.getId());
+    void teste3_retornarResponseEntityComDtoAndHttp200QuandoConsultarPorId() {
+        Mockito.when(this.cursoRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(cursoSalvo3));
+        var response = this.controller.consultarPorId(cursoSalvo3.getId());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(CursoDTO.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals(cursoSalvo2.getId(), response.getBody().getId());
+        Assertions.assertEquals(cursoSalvo3.getId(), response.getBody().getId());
+    }
+
+    @Test
+    void teste4_retornarResponseEntityComDtoAndHttp200QuandoAtualizar() {
+        Mockito.when(this.cursoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(cursoSalvo4));
+        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoSalvo4));
+        Mockito.when(this.cursoRepository.saveAndFlush(Mockito.any())).thenReturn(cursoSalvo4);
+        var response = this.controller.atualizar(4L, cursoDTO4);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(CursoDTO.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(cursoDTO4.getId(), response.getBody().getId());
+        Mockito.verify(this.cursoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(this.cursoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
     }
 
     @Test
