@@ -35,7 +35,7 @@ public final class CursoController extends AController<CursoDTO, CursoFiltro, Lo
 
     @Override
     public ResponseEntity<CursoDTO> atualizar(Long id, CursoDTO dto) {
-        return null;
+        return this.service.atualizar(id, dto);
     }
 
     @Override

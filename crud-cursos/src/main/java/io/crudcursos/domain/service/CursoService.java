@@ -2,6 +2,7 @@ package io.crudcursos.domain.service;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.CursoDTO;
+import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.repository.AssuntoRepository;
@@ -92,7 +93,38 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
 
     @Override
     public ResponseEntity<CursoDTO> atualizar(Long id, CursoDTO dto) {
-        return null;
+        return this.cursoRepository.findById(id)
+                .map(cursoEntity -> {
+                    var assuntoAtualizado = this.assuntoRepository.findById(dto.getAssunto().getId()).orElseThrow();
+                    var cursoAtualizado = this.cursoRepository.saveAndFlush(CursoEntity.builder()
+                            .id(cursoEntity.getId())
+                            .titulo(dto.getTitulo())
+                            .instituicao(dto.getInstituicao())
+                            .cargaHoraria(dto.getCargaHoraria())
+                            .dataConclusao(dto.getDataConclusao())
+                            .preco(dto.getPreco())
+                            .link(dto.getLink())
+                            .assunto(AssuntoEntity.builder()
+                                    .id(assuntoAtualizado.getId())
+                                    .build())
+                            .build());
+
+                    return ResponseEntity
+                            .ok()
+                            .body(CursoDTO.builder()
+                                    .id(cursoAtualizado.getId())
+                                    .titulo(cursoAtualizado.getInstituicao())
+                                    .cargaHoraria(cursoAtualizado.getCargaHoraria())
+                                    .dataConclusao(cursoAtualizado.getDataConclusao())
+                                    .preco(cursoAtualizado.getPreco())
+                                    .link(cursoAtualizado.getLink())
+                                    .assunto(AssuntoDTO.builder()
+                                            .id(assuntoAtualizado.getId())
+                                            .tema(assuntoAtualizado.getTema())
+                                            .build())
+                                    .build());
+                })
+                .orElseThrow();
     }
 
     @Override
