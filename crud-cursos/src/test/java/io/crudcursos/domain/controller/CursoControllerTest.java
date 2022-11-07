@@ -15,11 +15,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -34,6 +39,7 @@ class CursoControllerTest {
     private CursoEntity cursoSalvo3;
     private CursoEntity cursoSalvo4;
     private CursoEntity cursoSalvo5;
+    private Page<CursoEntity> paginaDeCursosSalvos2;
 
     @Autowired
     private AController<CursoDTO, CursoFiltro, Long> controller;
@@ -75,6 +81,37 @@ class CursoControllerTest {
                         .tema("Pascal")
                         .build())
                 .build();
+
+        var assuntoSalvo2 = AssuntoEntity.builder()
+                .id(2L)
+                .tema("Web")
+                .build();
+
+        var cursoSalvo2 = CursoEntity.builder()
+                .id(2L)
+                .titulo("HTML: estrutura de web page.")
+                .instituicao("H5")
+                .cargaHoraria(8)
+                .dataConclusao(LocalDate.of(2019, 2, 5))
+                .preco(BigDecimal.valueOf(15))
+                .link("htp2")
+                .assunto(assuntoSalvo2)
+                .build();
+
+        var cursoSalvo21 = CursoEntity.builder()
+                .id(21L)
+                .titulo("CSS: estilização de web pages.")
+                .instituicao("H5")
+                .cargaHoraria(21)
+                .dataConclusao(LocalDate.of(2020, 1, 21))
+                .preco(BigDecimal.valueOf(8))
+                .link("htp2")
+                .assunto(assuntoSalvo2)
+                .build();
+
+        paginaDeCursosSalvos2 = new PageImpl<>(null);
+        paginaDeCursosSalvos2.getContent().add(cursoSalvo2);
+        paginaDeCursosSalvos2.getContent().add(cursoSalvo21);
 
         assuntoSalvo3 = AssuntoEntity.builder()
                 .id(2L)
@@ -153,6 +190,23 @@ class CursoControllerTest {
         Assertions.assertEquals(CursoDTO.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertEquals(cursoDTO1.getTitulo(), response.getBody().getTitulo());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(this.cursoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
+    }
+
+    @Test
+    void teste2_retornarResponseEntityComPageDeDtosAndHttp200QuandoBuscarTodosSemPaginacaoAndSemFiltro() {
+        Mockito.when(this.cursoRepository.findAll(Mockito.any(), Pageable.unpaged())).thenReturn(paginaDeCursosSalvos2);
+        var response = this.controller.buscarTodos(CursoFiltro.builder().build(), Pageable.unpaged());
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(Pageable.class, response.getBody().getClass());
+        Assertions.assertNotNull(response.getBody().getContent().getClass());
+        Assertions.assertEquals(CursoDTO.class, response.getBody().getContent().getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Mockito.verify(this.cursoRepository, Mockito.times(1)).findAll(Mockito.any(), Pageable.unpaged());
     }
 
     @Test
@@ -166,6 +220,7 @@ class CursoControllerTest {
         Assertions.assertEquals(CursoDTO.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals(cursoSalvo3.getId(), response.getBody().getId());
+        Mockito.verify(this.cursoRepository, Mockito.times(1)).findById(Mockito.anyLong());
     }
 
     @Test

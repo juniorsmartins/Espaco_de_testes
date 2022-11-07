@@ -24,8 +24,8 @@ public final class CursoController extends AController<CursoDTO, CursoFiltro, Lo
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro, Pageable pageable) {
-        return null;
+    public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro, Pageable paginacao) {
+        return this.service.buscarTodos(filtro, paginacao);
     }
 
     @Override
