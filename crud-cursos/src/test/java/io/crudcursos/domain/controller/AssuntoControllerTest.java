@@ -140,7 +140,9 @@ class AssuntoControllerTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).deleteById(Mockito.anyLong());
     }
 }

@@ -97,6 +97,13 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
 
     @Override
     public ResponseEntity<?> deletarPorId(Long id) {
-        return null;
+        return this.cursoRepository.findById(id)
+                .map(cursoEntity -> {
+                    this.cursoRepository.deleteById(cursoEntity.getId());
+                    return ResponseEntity
+                            .ok()
+                            .body("Curso Deletado!");
+                })
+                .orElseThrow();
     }
 }
