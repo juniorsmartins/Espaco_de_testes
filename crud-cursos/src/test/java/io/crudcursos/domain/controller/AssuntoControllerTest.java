@@ -67,7 +67,7 @@ class AssuntoControllerTest {
     }
 
     @Test
-    void teste1_retornarResponseEntityComDtoAndHTTP201QuandoCadastrar() {
+    void cadastrar_teste1_retornarResponseEntityComDtoAndHTTP201() {
         Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity1);
         var response = controller.criar(assuntoDTO1);
 
@@ -78,6 +78,12 @@ class AssuntoControllerTest {
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNotNull(response.getBody().getId());
         Assertions.assertEquals(assuntoDTO1.getTema(), response.getBody().getTema());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
+    }
+
+    @Test
+    void cadastrar_teste2_retornarExceptionNullPointerException() {
+
     }
 
     //    @Test
