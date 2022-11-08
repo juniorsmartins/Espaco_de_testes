@@ -4,7 +4,6 @@ import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.CursoDTO;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
-import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import io.crudcursos.domain.repository.CursoRepository;
@@ -68,22 +67,25 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
 
     @Override
     public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro, Pageable paginacao) {
+        System.out.println("----- buscarTodos Service -----");
         return ResponseEntity
                 .ok()
                 .body(this.cursoRepository.findAll(configurarFiltro(filtro), paginacao)
-                        .map(curso -> CursoDTO.builder()
-                                .id(curso.getId())
-                                .titulo(curso.getTitulo())
-                                .instituicao(curso.getInstituicao())
-                                .cargaHoraria(curso.getCargaHoraria())
-                                .dataConclusao(curso.getDataConclusao())
-                                .preco(curso.getPreco())
-                                .link(curso.getLink())
-                                .assunto(AssuntoDTO.builder()
-                                        .id(curso.getAssunto().getId())
-                                        .tema(curso.getAssunto().getTema())
-                                        .build())
-                                .build())
+                    .map(cursoEntity ->
+                        {
+                            System.out.println("----- buscarTodos Map -----");
+                            var cursoDTO = CursoDTO.builder()
+                                .id(cursoEntity.getId())
+                                .titulo(cursoEntity.getTitulo())
+                                .instituicao(cursoEntity.getInstituicao())
+                                .cargaHoraria(cursoEntity.getCargaHoraria())
+                                .dataConclusao(cursoEntity.getDataConclusao())
+                                .preco(cursoEntity.getPreco())
+                                .link(cursoEntity.getLink())
+                                .build();
+                            return cursoDTO;
+                        }
+                    )
                 );
     }
 
@@ -94,6 +96,7 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
                     .withIgnoreCase() // Ignorar caixa alta ou baixa - quando String
                     .withIgnoreNullValues() // Ignorar valores nulos
                     .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras parecidas - tipo Like do SQL
+
             // Example - pega campos populados para criar filtros
             return Example.of(CursoEntity.builder()
                     .id(filtro.getId())
@@ -103,7 +106,6 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
                     .dataConclusao(filtro.getDataConclusao())
                     .preco(filtro.getPreco())
                     .link(filtro.getLink())
-                    .assunto(filtro.getAssunto())
                     .build(), exampleMatcher);
         }
 
