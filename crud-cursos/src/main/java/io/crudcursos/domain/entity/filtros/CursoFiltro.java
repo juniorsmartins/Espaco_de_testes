@@ -1,6 +1,5 @@
 package io.crudcursos.domain.entity.filtros;
 
-import io.crudcursos.domain.entity.AssuntoEntity;
 import lombok.*;
 
 import java.io.Serializable;
@@ -12,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public final class CursoFiltro implements Serializable, IFiltro<Long> {
 
     public static final long serialVersionUID = 1L;
@@ -23,5 +23,5 @@ public final class CursoFiltro implements Serializable, IFiltro<Long> {
     private float cargaHoraria;
     private BigDecimal preco;
     private String link;
-    private AssuntoEntity assunto;
+    private AssuntoFiltro assunto;
 }
