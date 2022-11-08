@@ -5,19 +5,19 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class ErrorsBeanValidation {
+public final class ExcecoesDeBeanValidationTratadas {
 
     private String status;
     private String mensagem;
     private String anotacao;
     private String nomeDoCampo;
 
-    public ErrorsBeanValidation(String status, String mensagem) {
+    public ExcecoesDeBeanValidationTratadas(String status, String mensagem) {
         this.status = status;
         this.mensagem = mensagem;
     }
 
-    public ErrorsBeanValidation(String status, String mensagem, String anotacao, String nomeDoCampo) {
+    public ExcecoesDeBeanValidationTratadas(String status, String mensagem, String anotacao, String nomeDoCampo) {
         this(status, mensagem);
         this.anotacao = anotacao;
         this.nomeDoCampo = nomeDoCampo;
