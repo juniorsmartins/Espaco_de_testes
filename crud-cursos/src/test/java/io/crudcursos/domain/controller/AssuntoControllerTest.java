@@ -3,13 +3,15 @@ package io.crudcursos.domain.controller;
 import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
+import io.crudcursos.domain.excecoes.ExcecoesDeBeanValidationTratadas;
+import io.crudcursos.domain.excecoes.ExcecoesGeraisTratadas;
+import io.crudcursos.domain.excecoes.MensagensPadrao;
+import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,11 +20,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
+
 @SpringBootTest
 class AssuntoControllerTest {
 
-    private AssuntoDTO assuntoDTO1;
-    private AssuntoEntity assuntoEntity1;
     private AssuntoEntity assuntoEntity3;
     private AssuntoEntity assuntoEntity4;
     private AssuntoEntity assuntoEntity42;
@@ -36,15 +38,6 @@ class AssuntoControllerTest {
 
     @BeforeEach
     void criadorDeCenariosParaTeste() {
-        assuntoEntity1 = AssuntoEntity.builder()
-                .id(1L)
-                .tema("Python")
-                .build();
-
-        assuntoDTO1 = AssuntoDTO.builder()
-                .tema("Python")
-                .build();
-
         assuntoEntity3 = AssuntoEntity.builder()
                 .id(3L)
                 .tema("C++")
@@ -68,8 +61,16 @@ class AssuntoControllerTest {
 
     @Test
     void cadastrar_teste1_retornarResponseEntityComDtoAndHTTP201() {
-        Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity1);
-        var response = controller.criar(assuntoDTO1);
+        var assuntoEntity = AssuntoEntity.builder()
+                .id(1L)
+                .tema("Python")
+                .build();
+        Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity);
+
+        var assuntoDTO = AssuntoDTO.builder()
+                .tema("Python")
+                .build();
+        var response = controller.criar(assuntoDTO);
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
@@ -77,13 +78,25 @@ class AssuntoControllerTest {
         Assertions.assertEquals(AssuntoDTO.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNotNull(response.getBody().getId());
-        Assertions.assertEquals(assuntoDTO1.getTema(), response.getBody().getTema());
+        Assertions.assertEquals(assuntoDTO.getTema(), response.getBody().getTema());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
     }
 
     @Test
-    void cadastrar_teste2_retornarExceptionNullPointerException() {
+    void cadastrar_teste2_retornarResponseEntityComListaDeErrorsBeanValidationAndHttp400_quandoTemaForNull() {
+//        Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenThrow(MethodArgumentNotValidException.class);
 
+        var assuntoDTO = AssuntoDTO.builder()
+                .tema("")
+                .build();
+        var response = controller.criar(assuntoDTO);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(ExcecoesDeBeanValidationTratadas.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Mockito.verifyNoInteractions(this.assuntoRepository);
     }
 
     //    @Test
@@ -109,7 +122,7 @@ class AssuntoControllerTest {
 //    }
 
     @Test
-    void teste3_retornarResponseEntityComDTOAndHttp200QuandoConsultarPorId() {
+    void consultarPorId_teste1_retornarResponseEntityComDTOAndHttp200QuandoConsultarPorId() {
         Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity3));
         var response = this.controller.consultarPorId(assuntoEntity3.getId());
 
@@ -120,6 +133,26 @@ class AssuntoControllerTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody().getId());
         Assertions.assertEquals(assuntoEntity3.getTema(), response.getBody().getTema());
+    }
+
+    @Test
+    void consultarPorId_teste2_retornarResponseEntityComExcecoesGeraisTratadasAndHttp404_quandoIdNaoExistir() {
+        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        var response = this.controller.consultarPorId(10101010101L);
+
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(ExcecoesGeraisTratadas.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+    }
+
+    @Test
+    void consultarPorId_teste3_lancarExcecaoDeRecursoNaoEncontradoException_quandoIdNaoExistir() {
+        Throwable thrown = catchThrowable(() -> {
+            this.controller.consultarPorId(10101010101L);
+        });
+        assertThat(thrown).isInstanceOf(RecursoNaoEncontradoException.class)
+                .hasMessage(MensagensPadrao.RECURSO_NAO_ENCONTRADO);
     }
 
     @Test

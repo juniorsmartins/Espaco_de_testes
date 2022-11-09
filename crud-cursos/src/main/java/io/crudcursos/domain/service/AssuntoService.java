@@ -3,6 +3,8 @@ package io.crudcursos.domain.service;
 import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
+import io.crudcursos.domain.excecoes.MensagensPadrao;
+import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
@@ -39,7 +42,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                                     .tema(assuntoSalvo.getTema())
                                     .build());
                 })
-                .orElseThrow();
+                .orElseThrow(() -> new NullPointerException("AssuntoDTO nulo"));
     }
 
     @Override
@@ -78,7 +81,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                                         .tema(assuntoSalvo.getTema())
                                         .build())
                 )
-                .orElseThrow();
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.RECURSO_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
