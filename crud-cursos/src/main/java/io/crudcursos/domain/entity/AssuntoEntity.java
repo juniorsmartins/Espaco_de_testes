@@ -27,6 +27,6 @@ public final class AssuntoEntity implements Serializable, IEntity<Long> {
     @Column(name = "tema")
     private String tema;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "assunto")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "assunto", targetEntity = CursoEntity.class)
     private List<CursoEntity> cursos;
 }
