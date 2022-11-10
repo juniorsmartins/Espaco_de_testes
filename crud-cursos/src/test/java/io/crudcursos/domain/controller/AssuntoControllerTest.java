@@ -8,13 +8,12 @@ import io.crudcursos.domain.excecoes.ExcecoesGeraisTratadas;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
 import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
 import io.crudcursos.domain.repository.AssuntoRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -33,8 +32,17 @@ class AssuntoControllerTest {
     @MockBean
     private AssuntoRepository assuntoRepository;
 
+    @BeforeAll
+    void criadorDeCenariosParaTesteAcionadoUnicaVezAntesDeTodosOsTestes() {}
+
     @BeforeEach
-    void criadorDeCenariosParaTeste() {}
+    void criadorDeCenariosParaTesteAcionadoTodaVezAntesDeCadaTeste() {}
+
+    @AfterEach
+    void destruidorDeCenariosParaTesteAcionadoTodaVezAposCadaTeste() {}
+
+    @AfterAll
+    void destruidorDeCenariosParaTesteAcionadoUnicaVezDepoisDeTodosOsTestes() {}
 
     @Test
     void cadastrar_teste1_retornarResponseEntityComDtoAndHTTP201() {
@@ -68,27 +76,27 @@ class AssuntoControllerTest {
         Mockito.verifyNoInteractions(this.assuntoRepository);
     }
 
-    //    @Test
-//    void teste2_retornarResponseEntityComPageDeAssuntoDTOAndHttp200QuandoBuscarTodosComPaginacaoAndFiltro() {
-//        var assunto1 = this.assuntoRepository.save(AssuntoEntity.builder().tema("Scala").build());
-//        var assunto2 = this.assuntoRepository.save(AssuntoEntity.builder().tema("TypeScript").build());
-//        var assunto3 = this.assuntoRepository.save(AssuntoEntity.builder().tema("Kotlin").build());
-//
-//        var response = this.controller.buscarTodos(AssuntoFiltro.builder()
-//                .tema("TypeScript").build(), Pageable.ofSize(5));
-//
-//        Assertions.assertNotNull(response);
-//        Assertions.assertEquals(ResponseEntity.class, response.getClass());
-//        Assertions.assertNotNull(response.getBody());
-//        Assertions.assertEquals(PageImpl.class, response.getBody().getClass());
-//        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-//        Assertions.assertEquals(AssuntoDTO.class, response.getBody().stream().findFirst().get().getClass());
-//        Assertions.assertEquals(assunto2.getTema(), response.getBody().stream().findFirst().get().getTema());
-//
-//        this.assuntoRepository.deleteById(assunto1.getId());
-//        this.assuntoRepository.deleteById(assunto2.getId());
-//        this.assuntoRepository.deleteById(assunto3.getId());
-//    }
+      @Test
+    void buscarTodos_teste1_retornarResponseEntityComPageDeAssuntoDTOAndHttp200_quandoBuscarTodosSemPaginacaoAndSemFiltro() {
+        var assuntoEntity1 = AssuntoEntity.builder().id(1L).tema("Scala").build();
+        var assuntoEntity2 = AssuntoEntity.builder().id(2L).tema("TypeScript").build();
+        var assuntoEntity3 = AssuntoEntity.builder().id(3L).tema("Kotlin").build();
+        Mockito.when(this.assuntoRepository.findAll(AssuntoFiltro.builder().build(), )).thenReturn();
+        var response = this.controller.buscarTodos(AssuntoFiltro.builder()
+                .tema("TypeScript").build(), Pageable.ofSize(5));
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(PageImpl.class, response.getBody().getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(AssuntoDTO.class, response.getBody().stream().findFirst().get().getClass());
+        Assertions.assertEquals(assunto2.getTema(), response.getBody().stream().findFirst().get().getTema());
+
+        this.assuntoRepository.deleteById(assunto1.getId());
+        this.assuntoRepository.deleteById(assunto2.getId());
+        this.assuntoRepository.deleteById(assunto3.getId());
+    }
 
     @Test
     void consultarPorId_teste1_retornarResponseEntityComDTOAndHttp200() {
