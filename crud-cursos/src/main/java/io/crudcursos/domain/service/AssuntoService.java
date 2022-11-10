@@ -101,7 +101,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                                     .tema(assuntoAtualizado.getTema())
                                     .build());
                 })
-                .orElseThrow();
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
@@ -112,8 +112,8 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                    this.assuntoRepository.deleteById(assuntoEntity.getId());
                    return ResponseEntity
                            .ok()
-                           .body("Assunto Deletado!");
+                           .body(MensagensPadrao.ASSUNTO_DELETADO);
                 })
-                .orElseThrow();
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 }

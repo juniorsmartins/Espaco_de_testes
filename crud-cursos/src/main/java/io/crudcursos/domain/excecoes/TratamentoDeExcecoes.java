@@ -29,7 +29,7 @@ public final class TratamentoDeExcecoes {
         {
             String mensagem = mensagemInternacionalizada.getMessage(erro, LocaleContextHolder.getLocale());
             ExcecoesDeBeanValidationTratadas erroTratadoParaRetorno = new ExcecoesDeBeanValidationTratadas(HttpStatus.BAD_REQUEST.toString(),
-                    mensagem, erro.getField(), erro.getCode());
+                    mensagem, erro.getCode(), erro.getField());
             listaDeErrosTratadosDeBeanValidation.add(erroTratadoParaRetorno);
         });
         return ResponseEntity

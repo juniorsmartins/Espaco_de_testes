@@ -25,10 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class AssuntoControllerTest {
 
-    private AssuntoEntity assuntoEntity3;
-    private AssuntoEntity assuntoEntity4;
-    private AssuntoEntity assuntoEntity42;
-    private AssuntoEntity assuntoEntity5;
+    private static final Long ID_INEXISTENTE = 10101010101L;
 
     @Autowired
     private AController<AssuntoDTO, AssuntoFiltro, Long> controller;
@@ -37,27 +34,7 @@ class AssuntoControllerTest {
     private AssuntoRepository assuntoRepository;
 
     @BeforeEach
-    void criadorDeCenariosParaTeste() {
-        assuntoEntity3 = AssuntoEntity.builder()
-                .id(3L)
-                .tema("C++")
-                .build();
-
-        assuntoEntity4 = AssuntoEntity.builder()
-                .id(4L)
-                .tema("Golang")
-                .build();
-
-        assuntoEntity42 = AssuntoEntity.builder()
-                .id(4L)
-                .tema("Golang Atual")
-                .build();
-
-        assuntoEntity5 = AssuntoEntity.builder()
-                .id(5L)
-                .tema("Golang Atual")
-                .build();
-    }
+    void criadorDeCenariosParaTeste() {}
 
     @Test
     void cadastrar_teste1_retornarResponseEntityComDtoAndHTTP201() {
@@ -115,8 +92,13 @@ class AssuntoControllerTest {
 
     @Test
     void consultarPorId_teste1_retornarResponseEntityComDTOAndHttp200() {
-        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity3));
-        var response = this.controller.consultarPorId(assuntoEntity3.getId());
+        var assuntoEntity = AssuntoEntity.builder()
+                .id(3L)
+                .tema("C++")
+                .build();
+        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity));
+
+        var response = this.controller.consultarPorId(assuntoEntity.getId());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
@@ -124,14 +106,14 @@ class AssuntoControllerTest {
         Assertions.assertEquals(AssuntoDTO.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody().getId());
-        Assertions.assertEquals(assuntoEntity3.getTema(), response.getBody().getTema());
+        Assertions.assertEquals(assuntoEntity.getTema(), response.getBody().getTema());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
     }
 
     @Test
     void consultarPorId_teste2_lancarExcecaoRecursoNaoEncontradoException_quandoIdNaoExistir() {
         Throwable thrown = catchThrowable(() -> {
-            this.controller.consultarPorId(10101010101L);
+            this.controller.consultarPorId(ID_INEXISTENTE);
         });
         assertThat(thrown).isInstanceOf(RecursoNaoEncontradoException.class)
                 .hasMessage(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO);
@@ -139,52 +121,73 @@ class AssuntoControllerTest {
     }
 
     @Test
-    void consultarPorId_teste3_retornarResponseEntityComExcecoesGeraisTratadasAndHttp404_quandoIdNaoExistir() {
-        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-        var response = this.controller.consultarPorId(10101010101L);
+    void atualizar_teste1_retornarResponseEntityComDtoAndHttp200() {
+        var assuntoEntity = AssuntoEntity.builder()
+                .id(4L)
+                .tema("Golang")
+                .build();
+        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity));
 
-        Assertions.assertEquals(ResponseEntity.class, response.getClass());
-        Assertions.assertEquals(ExcecoesGeraisTratadas.class, response.getBody().getClass());
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
-    }
+        var assuntoEntity2 = AssuntoEntity.builder()
+                .id(4L)
+                .tema("Golang Atual")
+                .build();
+        Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity2);
 
-    @Test
-    void consultarPorId_teste3_lancarExcecaoDeRecursoNaoEncontradoException_quandoIdNaoExistir() {
-        Throwable thrown = catchThrowable(() -> {
-            this.controller.consultarPorId(10101010101L);
-        });
-        assertThat(thrown).isInstanceOf(RecursoNaoEncontradoException.class)
-                .hasMessage(MensagensPadrao.RECURSO_NAO_ENCONTRADO);
-    }
-
-    @Test
-    void teste4_retornarResponseEntityComDtoAndHttp200QuandoAtualizar() {
-        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity4));
-        Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity42);
         var response = this.controller.atualizar(
-                assuntoEntity4.getId(), AssuntoDTO.builder().tema("Golang Atual").build());
+                assuntoEntity2.getId(), AssuntoDTO.builder().tema("Golang Atual").build());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(AssuntoDTO.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals(assuntoEntity4.getId(), response.getBody().getId());
-        Assertions.assertNotEquals(assuntoEntity4.getTema(), response.getBody().getTema());
+        Assertions.assertEquals(assuntoEntity.getId(), response.getBody().getId());
+        Assertions.assertEquals(assuntoEntity2.getId(), response.getBody().getId());
+        Assertions.assertNotEquals(assuntoEntity.getTema(), response.getBody().getTema());
+        Assertions.assertEquals(assuntoEntity2.getTema(), response.getBody().getTema());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
     }
 
     @Test
-    void teste5_retornarResponseEntityComHttp200QuandoDeletarPorId() {
-        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity5));
+    void atualizar_teste2_lancarExcecaoRecursoNaoEncontradoException_quandoIdNaoExistir() {
+        Throwable thrown = catchThrowable(() -> {
+            this.controller.atualizar(ID_INEXISTENTE, AssuntoDTO.builder().tema("Teste2 de Atualizar").build());
+        });
+        assertThat(thrown).isInstanceOf(RecursoNaoEncontradoException.class).hasMessage(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO);
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(this.assuntoRepository, Mockito.times(0)).saveAndFlush(Mockito.any());
+    }
+
+    @Test
+    void deletarPorId_teste1_retornarResponseEntityComHttp200() {
+        var assuntoEntity = AssuntoEntity.builder()
+                .id(5L)
+                .tema("Golang Atual")
+                .build();
+        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity));
         Mockito.doNothing().when(this.assuntoRepository).deleteById(Mockito.anyLong());
-        var response = this.controller.deletarPorId(assuntoEntity5.getId());
+
+        var response = this.controller.deletarPorId(assuntoEntity.getId());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(String.class, response.getBody().getClass());
+        Assertions.assertEquals(MensagensPadrao.ASSUNTO_DELETADO, response.getBody());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).deleteById(Mockito.anyLong());
+    }
+
+    @Test
+    void deletarPorId_teste2_lancarExcecaoRecursoNaoEncontradoException() {
+        Throwable thrown = catchThrowable(() -> {
+           this.controller.deletarPorId(ID_INEXISTENTE);
+        });
+        assertThat(thrown).isInstanceOf(RecursoNaoEncontradoException.class).hasMessage(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO);
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(this.assuntoRepository, Mockito.times(0)).deleteById(Mockito.anyLong());
     }
 }
