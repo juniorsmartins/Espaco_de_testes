@@ -1,5 +1,6 @@
 package io.crudcursos.domain.controller;
 
+import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.CursoDTO;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;

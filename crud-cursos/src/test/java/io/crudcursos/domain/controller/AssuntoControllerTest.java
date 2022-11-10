@@ -83,19 +83,11 @@ class AssuntoControllerTest {
     }
 
     @Test
-    void cadastrar_teste2_retornarResponseEntityComListaDeErrorsBeanValidationAndHttp400_quandoTemaForNull() {
-//        Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenThrow(MethodArgumentNotValidException.class);
-
-        var assuntoDTO = AssuntoDTO.builder()
-                .tema("")
-                .build();
-        var response = controller.criar(assuntoDTO);
-
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(ResponseEntity.class, response.getClass());
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(ExcecoesDeBeanValidationTratadas.class, response.getBody().getClass());
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    void cadastrar_teste2_lancarExcecaoNullPointerException_quandoDTOForNull() {
+        Throwable thrown = catchThrowable(() -> {
+           this.controller.criar(null);
+        });
+        assertThat(thrown).isInstanceOf(NullPointerException.class);
         Mockito.verifyNoInteractions(this.assuntoRepository);
     }
 
@@ -122,7 +114,7 @@ class AssuntoControllerTest {
 //    }
 
     @Test
-    void consultarPorId_teste1_retornarResponseEntityComDTOAndHttp200QuandoConsultarPorId() {
+    void consultarPorId_teste1_retornarResponseEntityComDTOAndHttp200() {
         Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoEntity3));
         var response = this.controller.consultarPorId(assuntoEntity3.getId());
 
@@ -133,10 +125,21 @@ class AssuntoControllerTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody().getId());
         Assertions.assertEquals(assuntoEntity3.getTema(), response.getBody().getTema());
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
     }
 
     @Test
-    void consultarPorId_teste2_retornarResponseEntityComExcecoesGeraisTratadasAndHttp404_quandoIdNaoExistir() {
+    void consultarPorId_teste2_lancarExcecaoRecursoNaoEncontradoException_quandoIdNaoExistir() {
+        Throwable thrown = catchThrowable(() -> {
+            this.controller.consultarPorId(10101010101L);
+        });
+        assertThat(thrown).isInstanceOf(RecursoNaoEncontradoException.class)
+                .hasMessage(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO);
+        Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
+    }
+
+    @Test
+    void consultarPorId_teste3_retornarResponseEntityComExcecoesGeraisTratadasAndHttp404_quandoIdNaoExistir() {
         Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
         var response = this.controller.consultarPorId(10101010101L);
 

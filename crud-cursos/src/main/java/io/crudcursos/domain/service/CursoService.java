@@ -5,6 +5,8 @@ import io.crudcursos.domain.dto.CursoDTO;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
+import io.crudcursos.domain.excecoes.MensagensPadrao;
+import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import io.crudcursos.domain.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,9 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
     public ResponseEntity<CursoDTO> criar(CursoDTO dto) {
         return Optional.of(dto)
                 .map(cursoNovo -> {
-                    var assuntoDoDatabase = this.assuntoRepository.findById(cursoNovo.getAssunto().getId());
+                    var assuntoDoDatabase = this.assuntoRepository.findById(cursoNovo.getAssunto().getId())
+                            .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
+
                     var cursoSalvo = this.cursoRepository.saveAndFlush(CursoEntity.builder()
                             .titulo(cursoNovo.getTitulo())
                             .instituicao(cursoNovo.getInstituicao())
@@ -43,7 +47,7 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
                             .dataConclusao(cursoNovo.getDataConclusao())
                             .preco(cursoNovo.getPreco())
                             .link(cursoNovo.getLink())
-                            .assunto(assuntoDoDatabase.get())
+                            .assunto(assuntoDoDatabase)
                             .build());
 
                     return ResponseEntity

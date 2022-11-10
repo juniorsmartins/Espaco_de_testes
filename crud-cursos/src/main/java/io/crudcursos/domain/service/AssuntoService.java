@@ -42,7 +42,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                                     .tema(assuntoSalvo.getTema())
                                     .build());
                 })
-                .orElseThrow(() -> new NullPointerException("AssuntoDTO nulo"));
+                .orElseThrow(() -> new NullPointerException(MensagensPadrao.ASSUNTO_NULO));
     }
 
     @Override
@@ -81,7 +81,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                                         .tema(assuntoSalvo.getTema())
                                         .build())
                 )
-                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.RECURSO_NAO_ENCONTRADO));
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
