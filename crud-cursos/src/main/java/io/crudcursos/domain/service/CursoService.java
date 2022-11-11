@@ -1,7 +1,9 @@
 package io.crudcursos.domain.service;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
+import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.dto.CursoDTO;
+import io.crudcursos.domain.dto.CursoDTOResponse;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
@@ -24,7 +26,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, CursoFiltro, Long> {
+public non-sealed class CursoService extends AService<CursoDTO, CursoDTOResponse, CursoEntity, CursoFiltro, Long> {
 
     @Autowired
     private CursoRepository cursoRepository;
@@ -34,7 +36,7 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTO> criar(CursoDTO dto) {
+    public ResponseEntity<CursoDTOResponse> criar(CursoDTO dto) {
         return Optional.of(dto)
                 .map(cursoNovo -> {
                     var assuntoDoDatabase = this.assuntoRepository.findById(cursoNovo.getAssunto().getId())
@@ -52,19 +54,11 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoEntity, Cur
 
                     return ResponseEntity
                             .created(URI.create("/" + cursoSalvo.getId()))
-                            .body(CursoDTO.builder()
-                                    .id(cursoSalvo.getId())
-                                    .titulo(cursoSalvo.getTitulo())
-                                    .instituicao(cursoSalvo.getInstituicao())
-                                    .cargaHoraria(cursoSalvo.getCargaHoraria())
-                                    .dataConclusao(cursoSalvo.getDataConclusao())
-                                    .preco(cursoSalvo.getPreco())
-                                    .link(cursoSalvo.getLink())
-                                    .assunto(AssuntoDTO.builder()
-                                            .id(cursoSalvo.getAssunto().getId())
-                                            .tema(cursoSalvo.getAssunto().getTema())
-                                            .build())
-                                    .build());
+                            .body(new CursoDTOResponse(cursoSalvo.getId(), cursoSalvo.getTitulo(),
+                                            cursoSalvo.getInstituicao(), cursoSalvo.getCargaHoraria(),
+                                            cursoSalvo.getDataConclusao(), cursoSalvo.getPreco(),
+                                            cursoSalvo.getLink(), new AssuntoDTOResponse(
+                                                    cursoSalvo.getAssunto().getId(), cursoSalvo.getAssunto().getTema())));
                 })
                 .orElseThrow();
     }

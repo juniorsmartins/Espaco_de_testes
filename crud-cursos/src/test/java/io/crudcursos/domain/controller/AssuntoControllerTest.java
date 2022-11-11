@@ -1,6 +1,7 @@
 package io.crudcursos.domain.controller;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
+import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.excecoes.ExcecoesDeBeanValidationTratadas;
@@ -29,7 +30,7 @@ class AssuntoControllerTest {
     private static final Long ID_INEXISTENTE = 10101010101L;
 
     @Autowired
-    private AController<AssuntoDTO, AssuntoFiltro, Long> controller;
+    private AController<AssuntoDTO, AssuntoDTOResponse, AssuntoFiltro, Long> controller;
 
     @MockBean
     private AssuntoRepository assuntoRepository;
@@ -61,10 +62,10 @@ class AssuntoControllerTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(AssuntoDTO.class, response.getBody().getClass());
+        Assertions.assertEquals(AssuntoDTOResponse.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Assertions.assertNotNull(response.getBody().getId());
-        Assertions.assertEquals(assuntoDTO.getTema(), response.getBody().getTema());
+        Assertions.assertNotNull(response.getBody().id());
+        Assertions.assertEquals(assuntoDTO.getTema(), response.getBody().tema());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
     }
 

@@ -1,6 +1,7 @@
 package io.crudcursos.domain.service;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
+import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
@@ -22,14 +23,14 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntity, AssuntoFiltro, Long> {
+public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoDTOResponse, AssuntoEntity, AssuntoFiltro, Long> {
 
     @Autowired
     private AssuntoRepository assuntoRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<AssuntoDTO> criar(AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTOResponse> criar(AssuntoDTO dto) {
         return Optional.of(dto)
                 .map(assuntoDTO -> {
                     var assuntoSalvo = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
@@ -37,10 +38,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                             .build());
                     return ResponseEntity
                             .created(URI.create("/" + assuntoSalvo.getId()))
-                            .body(AssuntoDTO.builder()
-                                    .id(assuntoSalvo.getId())
-                                    .tema(assuntoSalvo.getTema())
-                                    .build());
+                            .body(new AssuntoDTOResponse(assuntoSalvo.getId(), assuntoDTO.getTema()));
                 })
                 .orElseThrow(() -> new NullPointerException(MensagensPadrao.ASSUNTO_NULO));
     }

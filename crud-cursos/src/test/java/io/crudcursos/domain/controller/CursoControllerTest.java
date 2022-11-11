@@ -6,6 +6,7 @@ import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
 import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.CursoDTO;
+import io.crudcursos.domain.dto.CursoDTOResponse;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
@@ -35,18 +36,15 @@ import java.util.stream.IntStream;
 @SpringBootTest
 class CursoControllerTest {
 
-    private AssuntoEntity assuntoSalvo1;
     private AssuntoEntity assuntoSalvo3;
     private AssuntoEntity assuntoSalvo4;
-    private CursoDTO cursoDTO1;
     private CursoDTO cursoDTO4;
-    private CursoEntity cursoSalvo1;
     private CursoEntity cursoSalvo3;
     private CursoEntity cursoSalvo4;
     private CursoEntity cursoSalvo5;
 
     @Autowired
-    private AController<CursoDTO, CursoFiltro, Long> controller;
+    private AController<CursoDTO, CursoDTOResponse, CursoFiltro, Long> controller;
 
     @MockBean
     private CursoRepository cursoRepository;
@@ -56,36 +54,6 @@ class CursoControllerTest {
 
     @BeforeEach
     void criadorDeCenariosParaTeste() {
-        assuntoSalvo1 = AssuntoEntity.builder()
-                .id(1L)
-                .tema("Pascal")
-                .build();
-
-        cursoSalvo1 = CursoEntity.builder()
-                .id(1L)
-                .titulo("Pascar: flexibilidade com código macarrônico.")
-                .instituicao("Pascoleti Academy")
-                .cargaHoraria(25)
-                .dataConclusao(LocalDate.of(2020, 12, 12))
-                .preco(BigDecimal.valueOf(125.68))
-                .link("htp1")
-                .assunto(assuntoSalvo1)
-                .build();
-
-        cursoDTO1 = CursoDTO.builder()
-                .id(1L)
-                .titulo("Pascar: flexibilidade com código macarrônico.")
-                .instituicao("Pascoleti Academy")
-                .cargaHoraria(25)
-                .dataConclusao(LocalDate.of(2020, 12, 12))
-                .preco(BigDecimal.valueOf(125.68))
-                .link("htp1")
-                .assunto(AssuntoDTO.builder()
-                        .id(1L)
-                        .tema("Pascal")
-                        .build())
-                .build();
-
         assuntoSalvo3 = AssuntoEntity.builder()
                 .id(2L)
                 .tema("Clipper")
@@ -152,17 +120,47 @@ class CursoControllerTest {
     }
 
     @Test
-    void teste1_retornarResponseEntityComDtoAndHttp201QuandoCadastrar() {
-        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoSalvo1));
-        Mockito.when(this.cursoRepository.saveAndFlush(Mockito.any())).thenReturn(cursoSalvo1);
-        var response = this.controller.criar(cursoDTO1);
+    void cadastrar_teste1_retornarResponseEntityComDtoAndHttp201() {
+        var assuntoSalvo = AssuntoEntity.builder()
+                .id(1L)
+                .tema("Pascal")
+                .build();
+        Mockito.when(this.assuntoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(assuntoSalvo));
+
+        var cursoSalvo = CursoEntity.builder()
+                .id(1L)
+                .titulo("Pascar: flexibilidade com código macarrônico.")
+                .instituicao("Pascoleti Academy")
+                .cargaHoraria(25)
+                .dataConclusao(LocalDate.of(2020, 12, 12))
+                .preco(BigDecimal.valueOf(125.68))
+                .link("htp1")
+                .assunto(assuntoSalvo)
+                .build();
+        Mockito.when(this.cursoRepository.saveAndFlush(Mockito.any())).thenReturn(cursoSalvo);
+
+        var cursoDTO = CursoDTO.builder()
+                .id(1L)
+                .titulo("Pascar: flexibilidade com código macarrônico.")
+                .instituicao("Pascoleti Academy")
+                .cargaHoraria(25)
+                .dataConclusao(LocalDate.of(2020, 12, 12))
+                .preco(BigDecimal.valueOf(125.68))
+                .link("htp1")
+                .assunto(AssuntoDTO.builder()
+                        .id(1L)
+                        .tema("Pascal")
+                        .build())
+                .build();
+
+        var response = this.controller.criar(cursoDTO);
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(CursoDTO.class, response.getBody().getClass());
+        Assertions.assertEquals(CursoDTOResponse.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Assertions.assertEquals(cursoDTO1.getTitulo(), response.getBody().getTitulo());
+        Assertions.assertEquals(cursoDTO.getTitulo(), response.getBody().titulo());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());
         Mockito.verify(this.cursoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
     }
