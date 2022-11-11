@@ -39,18 +39,10 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoDTOResponse
     public ResponseEntity<CursoDTOResponse> criar(CursoDTO dto) {
         return Optional.of(dto)
                 .map(cursoNovo -> {
-                    var assuntoDoDatabase = this.assuntoRepository.findById(cursoNovo.getAssunto().getId())
+                    this.assuntoRepository.findById(cursoNovo.getAssunto().getId())
                             .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
 
-                    var cursoSalvo = this.cursoRepository.saveAndFlush(CursoEntity.builder()
-                            .titulo(cursoNovo.getTitulo())
-                            .instituicao(cursoNovo.getInstituicao())
-                            .cargaHoraria(cursoNovo.getCargaHoraria())
-                            .dataConclusao(cursoNovo.getDataConclusao())
-                            .preco(cursoNovo.getPreco())
-                            .link(cursoNovo.getLink())
-                            .assunto(assuntoDoDatabase)
-                            .build());
+                    var cursoSalvo = this.cursoRepository.saveAndFlush(new CursoEntity(cursoNovo));
 
                     return ResponseEntity
                             .created(URI.create("/" + cursoSalvo.getId()))

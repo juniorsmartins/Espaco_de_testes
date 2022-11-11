@@ -1,5 +1,6 @@
 package io.crudcursos.domain.entity;
 
+import io.crudcursos.domain.dto.AssuntoDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString
 public final class AssuntoEntity implements Serializable, IEntity<Long> {
 
     public static final long serialVersionUID = 1L;
@@ -29,4 +29,8 @@ public final class AssuntoEntity implements Serializable, IEntity<Long> {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "assunto", targetEntity = CursoEntity.class)
     private List<CursoEntity> cursos;
+
+    public AssuntoEntity(AssuntoDTO assuntoDTO) {
+        this.tema = assuntoDTO.getTema();
+    }
 }

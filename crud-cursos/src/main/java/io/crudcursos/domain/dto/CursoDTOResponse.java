@@ -1,5 +1,7 @@
 package io.crudcursos.domain.dto;
 
+import io.crudcursos.domain.entity.CursoEntity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
