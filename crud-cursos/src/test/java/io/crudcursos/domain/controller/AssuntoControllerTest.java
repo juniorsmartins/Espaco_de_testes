@@ -16,12 +16,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+// @TestPropertySource(properties = {"spring.profiles.active=test"})
 class AssuntoControllerTest {
 
     private static final Long ID_INEXISTENTE = 10101010101L;
@@ -51,7 +53,6 @@ class AssuntoControllerTest {
                 .tema("Python")
                 .build();
         Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity);
-
         var assuntoDTO = AssuntoDTO.builder()
                 .tema("Python")
                 .build();
@@ -138,12 +139,12 @@ class AssuntoControllerTest {
 
         var assuntoEntity2 = AssuntoEntity.builder()
                 .id(4L)
-                .tema("Golang Atual")
+                .tema("Golang + Atual")
                 .build();
         Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity2);
 
         var response = this.controller.atualizar(
-                assuntoEntity2.getId(), AssuntoDTO.builder().tema("Golang Atual").build());
+                assuntoEntity2.getId(), AssuntoDTO.builder().tema("Golang + Atual").build());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
