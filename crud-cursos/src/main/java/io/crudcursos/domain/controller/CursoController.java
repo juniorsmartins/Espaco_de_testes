@@ -1,7 +1,9 @@
 package io.crudcursos.domain.controller;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
+import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.dto.CursoDTO;
+import io.crudcursos.domain.dto.CursoDTOResponse;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.service.AService;
@@ -20,13 +22,13 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "${app.api.base}/cursos", produces = {"application/json"})
-public final class CursoController extends AController<CursoDTO, CursoFiltro, Long> {
+public final class CursoController extends AController<CursoDTO, CursoDTOResponse, CursoFiltro, Long> {
 
     @Autowired
-    private AService<CursoDTO, CursoEntity, CursoFiltro, Long> service;
+    private AService<CursoDTO, CursoDTOResponse, CursoEntity, CursoFiltro, Long> service;
 
     @Override
-    public ResponseEntity<CursoDTO> criar(@RequestBody @Valid CursoDTO dto) {
+    public ResponseEntity<CursoDTOResponse> criar(@RequestBody @Valid CursoDTO dto) {
         return this.service.criar(dto);
     }
 

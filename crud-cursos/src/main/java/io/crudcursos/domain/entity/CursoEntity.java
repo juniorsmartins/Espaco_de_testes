@@ -1,5 +1,7 @@
 package io.crudcursos.domain.entity;
 
+import io.crudcursos.domain.dto.AssuntoDTO;
+import io.crudcursos.domain.dto.CursoDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +17,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString
 public final class CursoEntity implements Serializable, IEntity<Long> {
 
     public static final long serialVersionUID = 1L;
@@ -46,4 +47,14 @@ public final class CursoEntity implements Serializable, IEntity<Long> {
     @ManyToOne(targetEntity = AssuntoEntity.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "assunto_id", updatable = true, nullable = false, unique = false)
     private AssuntoEntity assunto;
+
+    public CursoEntity(CursoDTO cursoDTO) {
+        this.titulo = cursoDTO.getTitulo();
+        this.instituicao = cursoDTO.getInstituicao();
+        this.cargaHoraria = cursoDTO.getCargaHoraria();
+        this.dataConclusao = cursoDTO.getDataConclusao();
+        this.preco = cursoDTO.getPreco();
+        this.link = cursoDTO.getLink();
+        this.assunto = new AssuntoEntity(cursoDTO.getAssunto());
+    }
 }
