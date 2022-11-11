@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-public sealed abstract class AController<D extends IDTO<ID>, F extends IFiltro, ID> permits AssuntoController, CursoController{
+public sealed abstract class AController<D extends IDTO<ID>, R extends IDTO<ID>, F extends IFiltro, ID> permits AssuntoController, CursoController{
 
     @PostMapping
-    abstract ResponseEntity<D> criar(D dto);
+    abstract ResponseEntity<R> criar(D dto);
 
     @GetMapping
-    abstract ResponseEntity<Page<D>> buscarTodos(F filtro, Pageable pageable);
+    abstract ResponseEntity<Page<D>> buscarTodos(F filtro, Pageable paginacao);
 
     @GetMapping(path = "/{id}")
     abstract ResponseEntity<D> consultarPorId(ID id);

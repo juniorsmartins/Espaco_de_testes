@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Builder
@@ -20,8 +19,7 @@ public final class AssuntoDTO implements Serializable, IDTO<Long> {
 
     private Long id;
 
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Length(max = 75)
     private String tema;
 }

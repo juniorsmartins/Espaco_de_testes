@@ -1,8 +1,11 @@
 package io.crudcursos.domain.service;
 
 import io.crudcursos.domain.dto.AssuntoDTO;
+import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
+import io.crudcursos.domain.excecoes.MensagensPadrao;
+import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
 import io.crudcursos.domain.repository.AssuntoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -15,18 +18,19 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
 @Service
-public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntity, AssuntoFiltro, Long> {
+public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoDTOResponse, AssuntoEntity, AssuntoFiltro, Long> {
 
     @Autowired
     private AssuntoRepository assuntoRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<AssuntoDTO> criar(AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTOResponse> criar(AssuntoDTO dto) {
         return Optional.of(dto)
                 .map(assuntoDTO -> {
                     var assuntoSalvo = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
@@ -34,12 +38,9 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                             .build());
                     return ResponseEntity
                             .created(URI.create("/" + assuntoSalvo.getId()))
-                            .body(AssuntoDTO.builder()
-                                    .id(assuntoSalvo.getId())
-                                    .tema(assuntoSalvo.getTema())
-                                    .build());
+                            .body(new AssuntoDTOResponse(assuntoSalvo.getId(), assuntoDTO.getTema()));
                 })
-                .orElseThrow();
+                .orElseThrow(() -> new NullPointerException(MensagensPadrao.ASSUNTO_NULO));
     }
 
     @Override
@@ -78,7 +79,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                                         .tema(assuntoSalvo.getTema())
                                         .build())
                 )
-                .orElseThrow();
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
@@ -98,19 +99,19 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoEntit
                                     .tema(assuntoAtualizado.getTema())
                                     .build());
                 })
-                .orElseThrow();
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
     public ResponseEntity<?> deletarPorId(Long id) {
         return this.assuntoRepository.findById(id)
-                .map(assunto -> {
-                   this.assuntoRepository.deleteById(id);
+                .map(assuntoEntity -> {
+                   this.assuntoRepository.deleteById(assuntoEntity.getId());
                    return ResponseEntity
                            .ok()
-                           .body("Recurso Deletado!");
+                           .body(MensagensPadrao.ASSUNTO_DELETADO);
                 })
-                .orElseThrow();
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 }
