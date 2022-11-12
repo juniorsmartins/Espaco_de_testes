@@ -1,7 +1,7 @@
-package io.crudcursos.domain.dto;
+package io.crudcursos.domain.cursos_context.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.crudcursos.domain.entity.AssuntoEntity;
+import io.crudcursos.domain.cursos_context.entity.AssuntoEntity;
 import lombok.*;
 
 import java.io.Serializable;

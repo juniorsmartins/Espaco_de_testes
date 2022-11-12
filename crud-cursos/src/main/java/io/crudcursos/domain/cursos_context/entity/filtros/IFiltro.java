@@ -1,4 +1,4 @@
-package io.crudcursos.domain.entity.filtros;
+package io.crudcursos.domain.cursos_context.entity.filtros;
 
 public interface IFiltro<ID> {
 

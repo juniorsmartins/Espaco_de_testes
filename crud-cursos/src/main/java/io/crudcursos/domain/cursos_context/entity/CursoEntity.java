@@ -1,6 +1,6 @@
-package io.crudcursos.domain.entity;
+package io.crudcursos.domain.cursos_context.entity;
 
-import io.crudcursos.domain.dto.CursoDTORequest;
+import io.crudcursos.domain.cursos_context.dto.CursoDTORequest;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,14 +1,14 @@
-package io.crudcursos.domain.service;
+package io.crudcursos.domain.cursos_context.service;
 
-import io.crudcursos.domain.dto.AssuntoDTOResponse;
-import io.crudcursos.domain.dto.CursoDTORequest;
-import io.crudcursos.domain.dto.CursoDTOResponse;
-import io.crudcursos.domain.entity.CursoEntity;
-import io.crudcursos.domain.entity.filtros.CursoFiltro;
+import io.crudcursos.domain.cursos_context.dto.AssuntoDTOResponse;
+import io.crudcursos.domain.cursos_context.dto.CursoDTORequest;
+import io.crudcursos.domain.cursos_context.dto.CursoDTOResponse;
+import io.crudcursos.domain.cursos_context.entity.CursoEntity;
+import io.crudcursos.domain.cursos_context.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
 import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
-import io.crudcursos.infra.repository.AssuntoRepository;
-import io.crudcursos.infra.repository.CursoRepository;
+import io.crudcursos.infra.cursos_context.repository.AssuntoRepository;
+import io.crudcursos.infra.cursos_context.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;

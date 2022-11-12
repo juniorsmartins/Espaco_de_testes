@@ -1,4 +1,4 @@
-package io.crudcursos.domain.dto;
+package io.crudcursos.domain.cursos_context.dto;
 
 import org.hibernate.validator.constraints.Length;
 

@@ -1,4 +1,4 @@
-package io.crudcursos.domain.dto;
+package io.crudcursos.domain.cursos_context.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -1,14 +1,14 @@
-package io.crudcursos.aplicacao.controller;
+package io.crudcursos.aplicacao.cursos_context.controller;
 
-import io.crudcursos.aplicacao.controller.AController;
-import io.crudcursos.domain.dto.AssuntoDTORequest;
-import io.crudcursos.domain.dto.CursoDTOResponse;
-import io.crudcursos.domain.dto.CursoDTORequest;
-import io.crudcursos.domain.entity.AssuntoEntity;
-import io.crudcursos.domain.entity.CursoEntity;
-import io.crudcursos.domain.entity.filtros.CursoFiltro;
-import io.crudcursos.infra.repository.AssuntoRepository;
-import io.crudcursos.infra.repository.CursoRepository;
+import io.crudcursos.aplicacao.cursos_context.controller.AController;
+import io.crudcursos.domain.cursos_context.dto.AssuntoDTORequest;
+import io.crudcursos.domain.cursos_context.dto.CursoDTOResponse;
+import io.crudcursos.domain.cursos_context.dto.CursoDTORequest;
+import io.crudcursos.domain.cursos_context.entity.AssuntoEntity;
+import io.crudcursos.domain.cursos_context.entity.CursoEntity;
+import io.crudcursos.domain.cursos_context.entity.filtros.CursoFiltro;
+import io.crudcursos.infra.cursos_context.repository.AssuntoRepository;
+import io.crudcursos.infra.cursos_context.repository.CursoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

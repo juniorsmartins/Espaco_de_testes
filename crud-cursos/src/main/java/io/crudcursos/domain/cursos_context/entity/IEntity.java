@@ -1,4 +1,4 @@
-package io.crudcursos.domain.entity;
+package io.crudcursos.domain.cursos_context.entity;
 
 public sealed interface IEntity<ID> permits AssuntoEntity, CursoEntity{
 

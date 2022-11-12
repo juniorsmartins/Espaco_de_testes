@@ -1,10 +1,10 @@
-package io.crudcursos.aplicacao.controller;
+package io.crudcursos.aplicacao.cursos_context.controller;
 
-import io.crudcursos.domain.dto.CursoDTOResponse;
-import io.crudcursos.domain.dto.CursoDTORequest;
-import io.crudcursos.domain.entity.CursoEntity;
-import io.crudcursos.domain.entity.filtros.CursoFiltro;
-import io.crudcursos.domain.service.AService;
+import io.crudcursos.domain.cursos_context.dto.CursoDTOResponse;
+import io.crudcursos.domain.cursos_context.dto.CursoDTORequest;
+import io.crudcursos.domain.cursos_context.entity.CursoEntity;
+import io.crudcursos.domain.cursos_context.entity.filtros.CursoFiltro;
+import io.crudcursos.domain.cursos_context.service.AService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
