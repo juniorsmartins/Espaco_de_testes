@@ -6,7 +6,7 @@ import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
 import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
-import io.crudcursos.domain.repository.AssuntoRepository;
+import io.crudcursos.infra.repository.AssuntoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;

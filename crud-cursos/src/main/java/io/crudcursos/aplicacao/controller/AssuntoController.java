@@ -1,4 +1,4 @@
-package io.crudcursos.domain.controller;
+package io.crudcursos.aplicacao.controller;
 
 import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.dto.AssuntoDTORequest;

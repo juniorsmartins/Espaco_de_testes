@@ -1,12 +1,13 @@
-package io.crudcursos.domain.controller;
+package io.crudcursos.aplicacao.controller;
 
+import io.crudcursos.aplicacao.controller.AController;
 import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.dto.AssuntoDTORequest;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
 import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
-import io.crudcursos.domain.repository.AssuntoRepository;
+import io.crudcursos.infra.repository.AssuntoRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

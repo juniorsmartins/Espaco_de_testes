@@ -1,4 +1,4 @@
-package io.crudcursos.domain.repository;
+package io.crudcursos.infra.repository;
 
 import io.crudcursos.domain.entity.CursoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

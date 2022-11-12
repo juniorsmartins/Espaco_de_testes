@@ -1,15 +1,14 @@
-package io.crudcursos.domain.controller;
+package io.crudcursos.aplicacao.controller;
 
-import com.github.javafaker.Faker;
+import io.crudcursos.aplicacao.controller.AController;
 import io.crudcursos.domain.dto.AssuntoDTORequest;
-import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import io.crudcursos.domain.dto.CursoDTOResponse;
 import io.crudcursos.domain.dto.CursoDTORequest;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
-import io.crudcursos.domain.repository.AssuntoRepository;
-import io.crudcursos.domain.repository.CursoRepository;
+import io.crudcursos.infra.repository.AssuntoRepository;
+import io.crudcursos.infra.repository.CursoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,17 +16,12 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @SpringBootTest
 class CursoControllerTest {

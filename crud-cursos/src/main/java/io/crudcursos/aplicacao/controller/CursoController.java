@@ -1,4 +1,4 @@
-package io.crudcursos.domain.controller;
+package io.crudcursos.aplicacao.controller;
 
 import io.crudcursos.domain.dto.CursoDTOResponse;
 import io.crudcursos.domain.dto.CursoDTORequest;
@@ -41,8 +41,7 @@ public final class CursoController extends AController<CursoDTORequest, CursoDTO
     }
 
     @Override
-    public ResponseEntity<CursoDTOResponse> atualizar(@PathVariable(value = "id") Long id,
-                                                      @RequestBody @Valid CursoDTORequest dto) {
+    public ResponseEntity<CursoDTOResponse> atualizar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTORequest dto) {
         return this.service.atualizar(id, dto);
     }
 
