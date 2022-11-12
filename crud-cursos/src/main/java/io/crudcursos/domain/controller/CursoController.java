@@ -1,9 +1,7 @@
 package io.crudcursos.domain.controller;
 
-import io.crudcursos.domain.dto.AssuntoDTO;
-import io.crudcursos.domain.dto.AssuntoDTOResponse;
-import io.crudcursos.domain.dto.CursoDTO;
 import io.crudcursos.domain.dto.CursoDTOResponse;
+import io.crudcursos.domain.dto.CursoDTORequest;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.service.AService;
@@ -17,34 +15,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "${app.api.base}/cursos", produces = {"application/json"})
-public final class CursoController extends AController<CursoDTO, CursoDTOResponse, CursoFiltro, Long> {
+public final class CursoController extends AController<CursoDTORequest, CursoDTOResponse, CursoFiltro, Long> {
 
     @Autowired
-    private AService<CursoDTO, CursoDTOResponse, CursoEntity, CursoFiltro, Long> service;
+    private AService<CursoDTORequest, CursoDTOResponse, CursoFiltro, CursoEntity, Long> service;
 
     @Override
-    public ResponseEntity<CursoDTOResponse> criar(@RequestBody @Valid CursoDTO dto) {
+    public ResponseEntity<CursoDTOResponse> criar(@RequestBody @Valid CursoDTORequest dto) {
         return this.service.criar(dto);
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro,
-          @PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0, size = 10) Pageable paginacao) {
+    public ResponseEntity<Page<CursoDTOResponse>> buscarTodos(CursoFiltro filtro,
+             @PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0, size = 10) Pageable paginacao) {
         return this.service.buscarTodos(filtro, paginacao);
     }
 
     @Override
-    public ResponseEntity<CursoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<CursoDTOResponse> consultarPorId(@PathVariable(value = "id") Long id) {
         return this.service.consultarPorId(id);
     }
 
     @Override
-    public ResponseEntity<CursoDTO> atualizar(@PathVariable(value = "id") Long id, @RequestBody @Valid CursoDTO dto) {
+    public ResponseEntity<CursoDTOResponse> atualizar(@PathVariable(value = "id") Long id,
+                                                      @RequestBody @Valid CursoDTORequest dto) {
         return this.service.atualizar(id, dto);
     }
 

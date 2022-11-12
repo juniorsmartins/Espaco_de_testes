@@ -1,7 +1,7 @@
 package io.crudcursos.domain.service;
 
-import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.AssuntoDTOResponse;
+import io.crudcursos.domain.dto.AssuntoDTORequest;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
@@ -18,40 +18,34 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
 @Service
-public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoDTOResponse, AssuntoEntity, AssuntoFiltro, Long> {
+public non-sealed class AssuntoService extends AService<AssuntoDTORequest, AssuntoDTOResponse, AssuntoFiltro, AssuntoEntity, Long> {
 
     @Autowired
     private AssuntoRepository assuntoRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<AssuntoDTOResponse> criar(AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTOResponse> criar(AssuntoDTORequest dto) {
         return Optional.of(dto)
-                .map(assuntoDTO -> {
-                    var assuntoSalvo = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
-                            .tema(assuntoDTO.getTema())
-                            .build());
+                .map(assuntoDTORequest -> {
+                    var assuntoSalvo = this.assuntoRepository.saveAndFlush(new AssuntoEntity(assuntoDTORequest));
                     return ResponseEntity
                             .created(URI.create("/" + assuntoSalvo.getId()))
-                            .body(new AssuntoDTOResponse(assuntoSalvo.getId(), assuntoDTO.getTema()));
+                            .body(new AssuntoDTOResponse(assuntoSalvo));
                 })
                 .orElseThrow(() -> new NullPointerException(MensagensPadrao.ASSUNTO_NULO));
     }
 
     @Override
-    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(AssuntoFiltro filtro, Pageable paginacao) {
+    public ResponseEntity<Page<AssuntoDTOResponse>> buscarTodos(AssuntoFiltro filtro, Pageable paginacao) {
         return ResponseEntity
                 .ok()
                 .body(this.assuntoRepository.findAll(configurarFiltro(filtro), paginacao)
-                        .map(assunto -> AssuntoDTO.builder()
-                                .id(assunto.getId())
-                                .tema(assunto.getTema())
-                                .build()));
+                        .map(assuntoDoDatabase -> new AssuntoDTOResponse(assuntoDoDatabase)));
     }
 
         private Example<AssuntoEntity> configurarFiltro(AssuntoFiltro filtro) {
@@ -69,35 +63,28 @@ public non-sealed class AssuntoService extends AService<AssuntoDTO, AssuntoDTORe
         }
 
     @Override
-    public ResponseEntity<AssuntoDTO> consultarPorId(Long id) {
+    public ResponseEntity<AssuntoDTOResponse> consultarPorId(Long id) {
         return this.assuntoRepository.findById(id)
-                .map(assuntoSalvo ->
-                        ResponseEntity
-                                .ok()
-                                .body(AssuntoDTO.builder()
-                                        .id(assuntoSalvo.getId())
-                                        .tema(assuntoSalvo.getTema())
-                                        .build())
+                .map(assuntoDoDatabase ->
+                    ResponseEntity
+                            .ok()
+                            .body(new AssuntoDTOResponse(assuntoDoDatabase))
                 )
                 .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<AssuntoDTO> atualizar(Long id, AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTOResponse> atualizar(Long id, AssuntoDTORequest dto) {
         return this.assuntoRepository.findById(id)
-                .map(assunto -> {
+                .map(assuntoDoDatabase -> {
                     var assuntoAtualizado = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
-                            .id(assunto.getId())
-                            .tema(dto.getTema())
+                            .id(assuntoDoDatabase.getId())
+                            .tema(dto.tema())
                             .build());
-
                     return ResponseEntity
                             .ok()
-                            .body(AssuntoDTO.builder()
-                                    .id(assuntoAtualizado.getId())
-                                    .tema(assuntoAtualizado.getTema())
-                                    .build());
+                            .body(new AssuntoDTOResponse(assuntoAtualizado));
                 })
                 .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }

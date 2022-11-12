@@ -1,6 +1,7 @@
 package io.crudcursos.domain.entity;
 
-import io.crudcursos.domain.dto.AssuntoDTO;
+import io.crudcursos.domain.dto.AssuntoDTORequest;
+import io.crudcursos.domain.dto.AssuntoDTOResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,7 +31,7 @@ public final class AssuntoEntity implements Serializable, IEntity<Long> {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "assunto", targetEntity = CursoEntity.class)
     private List<CursoEntity> cursos;
 
-    public AssuntoEntity(AssuntoDTO assuntoDTO) {
-        this.tema = assuntoDTO.getTema();
+    public AssuntoEntity(AssuntoDTORequest assuntoDTORequest) {
+        this.tema = assuntoDTORequest.tema();
     }
 }

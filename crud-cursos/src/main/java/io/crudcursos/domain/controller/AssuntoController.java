@@ -1,7 +1,7 @@
 package io.crudcursos.domain.controller;
 
-import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.AssuntoDTOResponse;
+import io.crudcursos.domain.dto.AssuntoDTORequest;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
 import io.crudcursos.domain.service.AService;
@@ -20,29 +20,29 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "${app.api.base}/assuntos", produces = {"application/json"})
-public final class AssuntoController extends AController<AssuntoDTO, AssuntoDTOResponse, AssuntoFiltro, Long> {
+public final class AssuntoController extends AController<AssuntoDTORequest, AssuntoDTOResponse, AssuntoFiltro, Long> {
 
     @Autowired
-    private AService<AssuntoDTO, AssuntoDTOResponse, AssuntoEntity, AssuntoFiltro, Long> service;
+    private AService<AssuntoDTORequest, AssuntoDTOResponse, AssuntoFiltro, AssuntoEntity, Long> service;
 
     @Override
-    public ResponseEntity<AssuntoDTOResponse> criar(@RequestBody @Valid AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTOResponse> criar(@RequestBody @Valid AssuntoDTORequest dto) {
         return this.service.criar(dto);
     }
 
     @Override
-    public ResponseEntity<Page<AssuntoDTO>> buscarTodos(AssuntoFiltro filtro,
+    public ResponseEntity<Page<AssuntoDTOResponse>> buscarTodos(AssuntoFiltro filtro,
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0, size = 10) Pageable paginacao) {
         return this.service.buscarTodos(filtro, paginacao);
     }
 
     @Override
-    public ResponseEntity<AssuntoDTO> consultarPorId(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<AssuntoDTOResponse> consultarPorId(@PathVariable(value = "id") Long id) {
         return this.service.consultarPorId(id);
     }
 
     @Override
-    public ResponseEntity<AssuntoDTO> atualizar(@PathVariable(value = "id") Long id, @RequestBody @Valid AssuntoDTO dto) {
+    public ResponseEntity<AssuntoDTOResponse> atualizar(@PathVariable(value = "id") Long id, @RequestBody @Valid AssuntoDTORequest dto) {
         return this.service.atualizar(id, dto);
     }
 
