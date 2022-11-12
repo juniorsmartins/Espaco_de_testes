@@ -5,24 +5,25 @@ import io.crudcursos.domain.entity.filtros.IFiltro;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-public sealed abstract class AController<D extends IDTO<ID>, R extends IDTO<ID>, F extends IFiltro, ID> permits AssuntoController, CursoController{
+public sealed abstract class AController<R extends IDTO<ID>, S extends IDTO<ID>, F extends IFiltro, ID> permits AssuntoController, CursoController{
 
     @PostMapping
-    abstract ResponseEntity<R> criar(D dto);
+    abstract ResponseEntity<S> criar(R dto);
 
     @GetMapping
-    abstract ResponseEntity<Page<D>> buscarTodos(F filtro, Pageable paginacao);
+    abstract ResponseEntity<Page<S>> buscarTodos(F filtro, Pageable paginacao);
 
     @GetMapping(path = "/{id}")
-    abstract ResponseEntity<D> consultarPorId(ID id);
+    abstract ResponseEntity<S> consultarPorId(ID id);
 
     @PutMapping(path = "/{id}")
-    abstract ResponseEntity<D> atualizar(ID id, D dto);
+    abstract ResponseEntity<S> atualizar(ID id, R dto);
 
     @DeleteMapping(path = "/{id}")
     abstract ResponseEntity<?> deletarPorId(ID id);

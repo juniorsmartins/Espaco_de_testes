@@ -1,7 +1,26 @@
 package io.crudcursos.domain.dto;
-import lombok.Builder;
-import lombok.Getter;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.crudcursos.domain.entity.AssuntoEntity;
+import lombok.*;
 
 import java.io.Serializable;
 
-public record AssuntoDTOResponse(Long id, String tema) implements Serializable, IDTO<Long> {}
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public final class AssuntoDTOResponse implements Serializable, IDTO<Long> {
+
+    public static final long serialVersionUID = 1L;
+
+    private Long id;
+    private String tema;
+
+    public AssuntoDTOResponse(AssuntoEntity assuntoEntity) {
+        this.id = assuntoEntity.getId();
+        this.tema = assuntoEntity.getTema();
+    }
+}
