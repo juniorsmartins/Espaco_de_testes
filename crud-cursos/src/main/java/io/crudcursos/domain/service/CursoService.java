@@ -1,10 +1,8 @@
 package io.crudcursos.domain.service;
 
-import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.AssuntoDTOResponse;
-import io.crudcursos.domain.dto.CursoDTO;
+import io.crudcursos.domain.dto.CursoDTORequest;
 import io.crudcursos.domain.dto.CursoDTOResponse;
-import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
@@ -26,7 +24,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public non-sealed class CursoService extends AService<CursoDTO, CursoDTOResponse, CursoEntity, CursoFiltro, Long> {
+public non-sealed class CursoService extends AService<CursoDTORequest, CursoDTOResponse, CursoFiltro, CursoEntity, Long> {
 
     @Autowired
     private CursoRepository cursoRepository;
@@ -36,35 +34,29 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoDTOResponse
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     @Override
-    public ResponseEntity<CursoDTOResponse> criar(CursoDTO dto) {
+    public ResponseEntity<CursoDTOResponse> criar(CursoDTORequest dto) {
         return Optional.of(dto)
-                .map(cursoNovo -> {
-                    this.assuntoRepository.findById(cursoNovo.getAssunto().getId())
+                .map(CursoEntity::new)
+                .map(cursoEntityNovo -> {
+                    var assuntoEncontrado = this.assuntoRepository.findById(cursoEntityNovo.getAssunto().getId())
                             .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
-
-                    var cursoSalvo = this.cursoRepository.saveAndFlush(new CursoEntity(cursoNovo));
-
-                    return ResponseEntity
-                            .created(URI.create("/" + cursoSalvo.getId()))
-                            .body(new CursoDTOResponse(cursoSalvo.getId(), cursoSalvo.getTitulo(),
-                                            cursoSalvo.getInstituicao(), cursoSalvo.getCargaHoraria(),
-                                            cursoSalvo.getDataConclusao(), cursoSalvo.getPreco(),
-                                            cursoSalvo.getLink(), new AssuntoDTOResponse(
-                                                    cursoSalvo.getAssunto().getId(), cursoSalvo.getAssunto().getTema())));
+                    cursoEntityNovo.setAssunto(assuntoEncontrado);
+                    return this.cursoRepository.saveAndFlush(cursoEntityNovo);
                 })
-                .orElseThrow();
+                .map(CursoDTOResponse::new)
+                .map(cursoDTOResponse -> ResponseEntity
+                        .created(URI.create("/" + cursoDTOResponse.getId()))
+                        .body(cursoDTOResponse)
+                )
+                .orElseThrow(() -> new NullPointerException(MensagensPadrao.CURSO_NULO));
     }
 
     @Override
-    public ResponseEntity<Page<CursoDTO>> buscarTodos(CursoFiltro filtro, Pageable paginacao) {
-        System.out.println("----- buscarTodos Service -----");
+    public ResponseEntity<Page<CursoDTOResponse>> buscarTodos(CursoFiltro filtro, Pageable paginacao) {
         return ResponseEntity
                 .ok()
                 .body(this.cursoRepository.findAll(configurarFiltro(filtro), paginacao)
-                    .map(cursoEntity ->
-                        {
-                            System.out.println("----- buscarTodos Map -----");
-                            var cursoDTO = CursoDTO.builder()
+                        .map(cursoEntity -> CursoDTOResponse.builder()
                                 .id(cursoEntity.getId())
                                 .titulo(cursoEntity.getTitulo())
                                 .instituicao(cursoEntity.getInstituicao())
@@ -72,11 +64,11 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoDTOResponse
                                 .dataConclusao(cursoEntity.getDataConclusao())
                                 .preco(cursoEntity.getPreco())
                                 .link(cursoEntity.getLink())
-                                .build();
-                            return cursoDTO;
-                        }
-                    )
-                );
+                                .assunto(AssuntoDTOResponse.builder()
+                                        .id(cursoEntity.getAssunto().getId())
+                                        .tema(cursoEntity.getAssunto().getTema())
+                                        .build())
+                                .build()));
     }
 
         private Example<CursoEntity> configurarFiltro(CursoFiltro filtro) {
@@ -100,62 +92,42 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoDTOResponse
         }
 
     @Override
-    public ResponseEntity<CursoDTO> consultarPorId(Long id) {
+    public ResponseEntity<CursoDTOResponse> consultarPorId(Long id) {
         return this.cursoRepository.findById(id)
-                .map(cursoEntity ->
+                .map(CursoDTOResponse::new)
+                .map(cursoDTOResponse ->
                     ResponseEntity
                             .ok()
-                            .body(CursoDTO.builder()
-                                    .id(cursoEntity.getId())
-                                    .titulo(cursoEntity.getTitulo())
-                                    .instituicao(cursoEntity.getInstituicao())
-                                    .cargaHoraria(cursoEntity.getCargaHoraria())
-                                    .dataConclusao(cursoEntity.getDataConclusao())
-                                    .preco(cursoEntity.getPreco())
-                                    .link(cursoEntity.getLink())
-                                    .assunto(AssuntoDTO.builder()
-                                            .id(cursoEntity.getAssunto().getId())
-                                            .tema(cursoEntity.getAssunto().getTema())
-                                            .build())
-                                    .build())
+                            .body(cursoDTOResponse)
                 )
-                .orElseThrow();
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.CURSO_NAO_ENCONTRADO));
     }
 
     @Override
-    public ResponseEntity<CursoDTO> atualizar(Long id, CursoDTO dto) {
+    public ResponseEntity<CursoDTOResponse> atualizar(Long id, CursoDTORequest dto) {
         return this.cursoRepository.findById(id)
-                .map(cursoEntity -> {
-                    var assuntoAtualizado = this.assuntoRepository.findById(dto.getAssunto().getId()).orElseThrow();
-                    var cursoAtualizado = this.cursoRepository.saveAndFlush(CursoEntity.builder()
-                            .id(cursoEntity.getId())
-                            .titulo(dto.getTitulo())
-                            .instituicao(dto.getInstituicao())
-                            .cargaHoraria(dto.getCargaHoraria())
-                            .dataConclusao(dto.getDataConclusao())
-                            .preco(dto.getPreco())
-                            .link(dto.getLink())
-                            .assunto(AssuntoEntity.builder()
-                                    .id(assuntoAtualizado.getId())
-                                    .build())
+                .map(cursoDoDatabase -> {
+                    var assuntoDoDatabase = this.assuntoRepository.findById(dto.assunto().id())
+                            .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
+                    // cursoDoDatabase.setAssunto(assuntoDoDatabase);
+                    return this.cursoRepository.saveAndFlush(CursoEntity.builder()
+                            .id(cursoDoDatabase.getId())
+                            .titulo(dto.titulo())
+                            .instituicao(dto.instituicao())
+                            .cargaHoraria(dto.cargaHoraria())
+                            .dataConclusao(dto.dataConclusao())
+                            .preco(dto.preco())
+                            .link(dto.link())
+                            .assunto(assuntoDoDatabase)
                             .build());
-
-                    return ResponseEntity
-                            .ok()
-                            .body(CursoDTO.builder()
-                                    .id(cursoAtualizado.getId())
-                                    .titulo(cursoAtualizado.getInstituicao())
-                                    .cargaHoraria(cursoAtualizado.getCargaHoraria())
-                                    .dataConclusao(cursoAtualizado.getDataConclusao())
-                                    .preco(cursoAtualizado.getPreco())
-                                    .link(cursoAtualizado.getLink())
-                                    .assunto(AssuntoDTO.builder()
-                                            .id(assuntoAtualizado.getId())
-                                            .tema(assuntoAtualizado.getTema())
-                                            .build())
-                                    .build());
                 })
-                .orElseThrow();
+                .map(CursoDTOResponse::new)
+                .map(cursoDTOResponse ->
+                    ResponseEntity
+                        .ok()
+                        .body(cursoDTOResponse)
+                )
+                .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.CURSO_NAO_ENCONTRADO));
     }
 
     @Override
@@ -165,7 +137,7 @@ public non-sealed class CursoService extends AService<CursoDTO, CursoDTOResponse
                     this.cursoRepository.deleteById(cursoEntity.getId());
                     return ResponseEntity
                             .ok()
-                            .body("Curso Deletado!");
+                            .body(MensagensPadrao.CURSO_DELETADO);
                 })
                 .orElseThrow();
     }

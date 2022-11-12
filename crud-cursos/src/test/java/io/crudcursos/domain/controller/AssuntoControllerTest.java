@@ -1,11 +1,9 @@
 package io.crudcursos.domain.controller;
 
-import io.crudcursos.domain.dto.AssuntoDTO;
 import io.crudcursos.domain.dto.AssuntoDTOResponse;
+import io.crudcursos.domain.dto.AssuntoDTORequest;
 import io.crudcursos.domain.entity.AssuntoEntity;
 import io.crudcursos.domain.entity.filtros.AssuntoFiltro;
-import io.crudcursos.domain.excecoes.ExcecoesDeBeanValidationTratadas;
-import io.crudcursos.domain.excecoes.ExcecoesGeraisTratadas;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
 import io.crudcursos.domain.excecoes.RecursoNaoEncontradoException;
 import io.crudcursos.domain.repository.AssuntoRepository;
@@ -14,13 +12,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.TestPropertySource;
-
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -30,7 +24,7 @@ class AssuntoControllerTest {
     private static final Long ID_INEXISTENTE = 10101010101L;
 
     @Autowired
-    private AController<AssuntoDTO, AssuntoDTOResponse, AssuntoFiltro, Long> controller;
+    private AController<AssuntoDTORequest, AssuntoDTOResponse, AssuntoFiltro, Long> controller;
 
     @MockBean
     private AssuntoRepository assuntoRepository;
@@ -54,18 +48,17 @@ class AssuntoControllerTest {
                 .tema("Python")
                 .build();
         Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity);
-        var assuntoDTO = AssuntoDTO.builder()
-                .tema("Python")
-                .build();
-        var response = controller.criar(assuntoDTO);
+
+        var assuntoDTORequest = new AssuntoDTORequest(null, "Python");
+        var response = controller.criar(assuntoDTORequest);
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(AssuntoDTOResponse.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Assertions.assertNotNull(response.getBody().id());
-        Assertions.assertEquals(assuntoDTO.getTema(), response.getBody().tema());
+        Assertions.assertNotNull(response.getBody().getId());
+        Assertions.assertEquals(assuntoDTORequest.tema(), response.getBody().getTema());
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
     }
 
@@ -113,7 +106,7 @@ class AssuntoControllerTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(AssuntoDTO.class, response.getBody().getClass());
+        Assertions.assertEquals(AssuntoDTOResponse.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody().getId());
         Assertions.assertEquals(assuntoEntity.getTema(), response.getBody().getTema());
@@ -145,12 +138,12 @@ class AssuntoControllerTest {
         Mockito.when(this.assuntoRepository.saveAndFlush(Mockito.any())).thenReturn(assuntoEntity2);
 
         var response = this.controller.atualizar(
-                assuntoEntity2.getId(), AssuntoDTO.builder().tema("Golang + Atual").build());
+                assuntoEntity2.getId(), new AssuntoDTORequest(null, "Golang + Atual"));
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(AssuntoDTO.class, response.getBody().getClass());
+        Assertions.assertEquals(AssuntoDTOResponse.class, response.getBody().getClass());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals(assuntoEntity.getId(), response.getBody().getId());
         Assertions.assertEquals(assuntoEntity2.getId(), response.getBody().getId());
@@ -163,7 +156,7 @@ class AssuntoControllerTest {
     @Test
     void atualizar_teste2_lancarExcecaoRecursoNaoEncontradoException_quandoIdNaoExistir() {
         Throwable thrown = catchThrowable(() -> {
-            this.controller.atualizar(ID_INEXISTENTE, AssuntoDTO.builder().tema("Teste2 de Atualizar").build());
+            this.controller.atualizar(ID_INEXISTENTE, new AssuntoDTORequest(null, "Teste2 de Atualizar"));
         });
         assertThat(thrown).isInstanceOf(RecursoNaoEncontradoException.class).hasMessage(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO);
         Mockito.verify(this.assuntoRepository, Mockito.times(1)).findById(Mockito.anyLong());

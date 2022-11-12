@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public sealed abstract class AService<D extends IDTO<ID>, R extends IDTO<ID>, E extends IEntity<ID>, F extends IFiltro, ID> permits AssuntoService, CursoService{
+public sealed abstract class AService<R extends IDTO<ID>, S extends IDTO<ID>, F extends IFiltro, E extends IEntity<ID>, ID> permits AssuntoService, CursoService{
 
-    public abstract ResponseEntity<R> criar(D dto);
-    public abstract ResponseEntity<Page<D>> buscarTodos(F filtro, Pageable paginacao);
-    public abstract ResponseEntity<D> consultarPorId(ID id);
-    public abstract ResponseEntity<D> atualizar(ID id, D dto);
+    public abstract ResponseEntity<S> criar(R dto);
+    public abstract ResponseEntity<Page<S>> buscarTodos(F filtro, Pageable paginacao);
+    public abstract ResponseEntity<S> consultarPorId(ID id);
+    public abstract ResponseEntity<S> atualizar(ID id, R dto);
     public abstract ResponseEntity<?> deletarPorId(ID id);
 }
