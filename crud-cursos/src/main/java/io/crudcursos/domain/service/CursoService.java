@@ -1,10 +1,8 @@
 package io.crudcursos.domain.service;
 
 import io.crudcursos.domain.dto.AssuntoDTOResponse;
-import io.crudcursos.domain.dto.AssuntoDTORequest;
-import io.crudcursos.domain.dto.CursoDTOResponse;
 import io.crudcursos.domain.dto.CursoDTORequest;
-import io.crudcursos.domain.entity.AssuntoEntity;
+import io.crudcursos.domain.dto.CursoDTOResponse;
 import io.crudcursos.domain.entity.CursoEntity;
 import io.crudcursos.domain.entity.filtros.CursoFiltro;
 import io.crudcursos.domain.excecoes.MensagensPadrao;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.net.URI;
 import java.util.Optional;
 
@@ -37,29 +36,27 @@ public non-sealed class CursoService extends AService<CursoDTORequest, CursoDTOR
     @Override
     public ResponseEntity<CursoDTOResponse> criar(CursoDTORequest dto) {
         return Optional.of(dto)
-                .map(cursoNovo -> {
-                    this.assuntoRepository.findById(cursoNovo.assunto().id())
+                .map(CursoEntity::new)
+                .map(cursoEntityNovo -> {
+                    var assuntoEncontrado = this.assuntoRepository.findById(cursoEntityNovo.getAssunto().getId())
                             .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
-
-                    var cursoSalvo = this.cursoRepository.saveAndFlush(new CursoEntity(cursoNovo));
-
-                    return ResponseEntity
-                            .created(URI.create("/" + cursoSalvo.getId()))
-                            .body(new CursoDTOResponse(cursoSalvo));
+                    cursoEntityNovo.setAssunto(assuntoEncontrado);
+                    return this.cursoRepository.saveAndFlush(cursoEntityNovo);
                 })
+                .map(CursoDTOResponse::new)
+                .map(cursoDTOResponse -> ResponseEntity
+                        .created(URI.create("/" + cursoDTOResponse.getId()))
+                        .body(cursoDTOResponse)
+                )
                 .orElseThrow(() -> new NullPointerException(MensagensPadrao.CURSO_NULO));
     }
 
     @Override
     public ResponseEntity<Page<CursoDTOResponse>> buscarTodos(CursoFiltro filtro, Pageable paginacao) {
-        System.out.println("----- buscarTodos Service -----");
         return ResponseEntity
                 .ok()
                 .body(this.cursoRepository.findAll(configurarFiltro(filtro), paginacao)
-                    .map(cursoEntity ->
-                        {
-                            System.out.println("----- buscarTodos Map -----");
-                            var cursoDTO = CursoDTOResponse.builder()
+                        .map(cursoEntity -> CursoDTOResponse.builder()
                                 .id(cursoEntity.getId())
                                 .titulo(cursoEntity.getTitulo())
                                 .instituicao(cursoEntity.getInstituicao())
@@ -67,11 +64,11 @@ public non-sealed class CursoService extends AService<CursoDTORequest, CursoDTOR
                                 .dataConclusao(cursoEntity.getDataConclusao())
                                 .preco(cursoEntity.getPreco())
                                 .link(cursoEntity.getLink())
-                                .build();
-                            return cursoDTO;
-                        }
-                    )
-                );
+                                .assunto(AssuntoDTOResponse.builder()
+                                        .id(cursoEntity.getAssunto().getId())
+                                        .tema(cursoEntity.getAssunto().getTema())
+                                        .build())
+                                .build()));
     }
 
         private Example<CursoEntity> configurarFiltro(CursoFiltro filtro) {
@@ -97,10 +94,11 @@ public non-sealed class CursoService extends AService<CursoDTORequest, CursoDTOR
     @Override
     public ResponseEntity<CursoDTOResponse> consultarPorId(Long id) {
         return this.cursoRepository.findById(id)
-                .map(cursoDoDatabase ->
+                .map(CursoDTOResponse::new)
+                .map(cursoDTOResponse ->
                     ResponseEntity
                             .ok()
-                            .body(new CursoDTOResponse(cursoDoDatabase))
+                            .body(cursoDTOResponse)
                 )
                 .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.CURSO_NAO_ENCONTRADO));
     }
@@ -111,8 +109,8 @@ public non-sealed class CursoService extends AService<CursoDTORequest, CursoDTOR
                 .map(cursoDoDatabase -> {
                     var assuntoDoDatabase = this.assuntoRepository.findById(dto.assunto().id())
                             .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
-
-                    var cursoAtualizado = this.cursoRepository.saveAndFlush(CursoEntity.builder()
+                    // cursoDoDatabase.setAssunto(assuntoDoDatabase);
+                    return this.cursoRepository.saveAndFlush(CursoEntity.builder()
                             .id(cursoDoDatabase.getId())
                             .titulo(dto.titulo())
                             .instituicao(dto.instituicao())
@@ -122,11 +120,13 @@ public non-sealed class CursoService extends AService<CursoDTORequest, CursoDTOR
                             .link(dto.link())
                             .assunto(assuntoDoDatabase)
                             .build());
-
-                    return ResponseEntity
-                            .ok()
-                            .body(new CursoDTOResponse(cursoAtualizado));
                 })
+                .map(CursoDTOResponse::new)
+                .map(cursoDTOResponse ->
+                    ResponseEntity
+                        .ok()
+                        .body(cursoDTOResponse)
+                )
                 .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.CURSO_NAO_ENCONTRADO));
     }
 

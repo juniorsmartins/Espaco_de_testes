@@ -32,6 +32,7 @@ public final class AssuntoEntity implements Serializable, IEntity<Long> {
     private List<CursoEntity> cursos;
 
     public AssuntoEntity(AssuntoDTORequest assuntoDTORequest) {
+        this.id = assuntoDTORequest.id();
         this.tema = assuntoDTORequest.tema();
     }
 }

@@ -31,12 +31,13 @@ public non-sealed class AssuntoService extends AService<AssuntoDTORequest, Assun
     @Override
     public ResponseEntity<AssuntoDTOResponse> criar(AssuntoDTORequest dto) {
         return Optional.of(dto)
-                .map(assuntoDTORequest -> {
-                    var assuntoSalvo = this.assuntoRepository.saveAndFlush(new AssuntoEntity(assuntoDTORequest));
-                    return ResponseEntity
-                            .created(URI.create("/" + assuntoSalvo.getId()))
-                            .body(new AssuntoDTOResponse(assuntoSalvo));
-                })
+                .map(AssuntoEntity::new)
+                .map(assuntoEntity -> this.assuntoRepository.saveAndFlush(assuntoEntity))
+                .map(AssuntoDTOResponse::new)
+                .map(assuntoDTOResponse -> ResponseEntity
+                        .created(URI.create("/" + assuntoDTOResponse.getId()))
+                        .body(assuntoDTOResponse)
+                )
                 .orElseThrow(() -> new NullPointerException(MensagensPadrao.ASSUNTO_NULO));
     }
 
@@ -45,7 +46,7 @@ public non-sealed class AssuntoService extends AService<AssuntoDTORequest, Assun
         return ResponseEntity
                 .ok()
                 .body(this.assuntoRepository.findAll(configurarFiltro(filtro), paginacao)
-                        .map(assuntoDoDatabase -> new AssuntoDTOResponse(assuntoDoDatabase)));
+                        .map(AssuntoDTOResponse::new));
     }
 
         private Example<AssuntoEntity> configurarFiltro(AssuntoFiltro filtro) {
@@ -65,10 +66,11 @@ public non-sealed class AssuntoService extends AService<AssuntoDTORequest, Assun
     @Override
     public ResponseEntity<AssuntoDTOResponse> consultarPorId(Long id) {
         return this.assuntoRepository.findById(id)
-                .map(assuntoDoDatabase ->
+                .map(AssuntoDTOResponse::new)
+                .map(assuntoDTOResponse ->
                     ResponseEntity
                             .ok()
-                            .body(new AssuntoDTOResponse(assuntoDoDatabase))
+                            .body(assuntoDTOResponse)
                 )
                 .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
@@ -77,15 +79,16 @@ public non-sealed class AssuntoService extends AService<AssuntoDTORequest, Assun
     @Override
     public ResponseEntity<AssuntoDTOResponse> atualizar(Long id, AssuntoDTORequest dto) {
         return this.assuntoRepository.findById(id)
-                .map(assuntoDoDatabase -> {
-                    var assuntoAtualizado = this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
-                            .id(assuntoDoDatabase.getId())
-                            .tema(dto.tema())
-                            .build());
-                    return ResponseEntity
-                            .ok()
-                            .body(new AssuntoDTOResponse(assuntoAtualizado));
-                })
+                .map(assuntoDoDatabase -> this.assuntoRepository.saveAndFlush(AssuntoEntity.builder()
+                        .id(assuntoDoDatabase.getId())
+                        .tema(dto.tema())
+                        .build())
+                )
+                .map(AssuntoDTOResponse::new)
+                .map(assuntoDTOResponse -> ResponseEntity
+                        .ok()
+                        .body(assuntoDTOResponse)
+                )
                 .orElseThrow(() -> new RecursoNaoEncontradoException(MensagensPadrao.ASSUNTO_NAO_ENCONTRADO));
     }
 
